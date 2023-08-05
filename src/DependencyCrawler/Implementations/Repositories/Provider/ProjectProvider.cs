@@ -1,6 +1,6 @@
-using DependencyCrawler.Contracts.Interfaces;
 using DependencyCrawler.Contracts.Interfaces.Model;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;

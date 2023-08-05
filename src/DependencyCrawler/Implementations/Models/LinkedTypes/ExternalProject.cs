@@ -1,20 +1,15 @@
+using System.Reflection;
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Implementations.Data.Enum;
-using Microsoft.Build.Construction;
 
-namespace DependencyCrawler.Implementations.Models;
+namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-public class InternalProject : IProject
+public class ExternalProject : IProject
 {
 	public IDictionary<string, PackageReference> PackageReferences { get; set; } =
 		new Dictionary<string, PackageReference>();
 
-	public IDictionary<string, ProjectReference> ProjectReferences { get; set; } =
-		new Dictionary<string, ProjectReference>();
-
-	public required ProjectRootElement ProjectRootElement { get; set; }
-
-	public ProjectType ProjectType => ProjectType.Internal;
+	public required Assembly? Assembly { get; set; }
 	public required string Name { get; init; }
 
 	public IDictionary<string, IReference> Dependencies
@@ -22,11 +17,6 @@ public class InternalProject : IProject
 		get
 		{
 			var allDependencies = new Dictionary<string, IReference>();
-			foreach (var projectReference in ProjectReferences)
-			{
-				allDependencies.TryAdd(projectReference.Key, projectReference.Value);
-			}
-
 			foreach (var packageReference in PackageReferences)
 			{
 				allDependencies.TryAdd(packageReference.Key, packageReference.Value);
@@ -37,6 +27,8 @@ public class InternalProject : IProject
 	}
 
 	public IDictionary<string, IReference> ReferencedBy { get; set; } = new Dictionary<string, IReference>();
+
+	public ProjectType ProjectType => ProjectType.External;
 
 	public IDictionary<string, IProjectNamespace> Namespaces { get; set; } =
 		new Dictionary<string, IProjectNamespace>();

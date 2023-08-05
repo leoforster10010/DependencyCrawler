@@ -1,4 +1,4 @@
-﻿using DependencyCrawler.Contracts.Interfaces;
+﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Repositories;
 using DependencyCrawler.Implementations.Repositories.Factories;
 using DependencyCrawler.Implementations.Repositories.Loader;

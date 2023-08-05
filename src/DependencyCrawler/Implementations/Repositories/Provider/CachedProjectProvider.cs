@@ -1,0 +1,29 @@
+using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Implementations.Models.CachedTypes;
+
+namespace DependencyCrawler.Implementations.Repositories.Provider;
+
+public class CachedProjectProvider : ICachedProjectProvider
+{
+	private readonly IDictionary<string, CachedProject> _cachedProjects = new Dictionary<string, CachedProject>();
+
+	public Guid? GetCachedProjectId(string projectName)
+	{
+		return _cachedProjects.TryGetValue(projectName, out var project)
+			? project.Id
+			: null;
+	}
+
+	public Guid? GetCachedNamespaceId(string namespaceName)
+	{
+		var cachedProject =
+			_cachedProjects.Values.FirstOrDefault(x => x.Namespaces.Any(y => y.Name == namespaceName));
+
+		return cachedProject?.Namespaces.First(x => x.Name == namespaceName).Id;
+	}
+
+	public void AddCachedProject(CachedProject cachedProject)
+	{
+		_cachedProjects.TryAdd(cachedProject.Name, cachedProject);
+	}
+}

@@ -1,7 +1,7 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 
-namespace DependencyCrawler.Contracts.Interfaces;
+namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 public interface IProjectProvider
 {

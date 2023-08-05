@@ -1,4 +1,4 @@
-﻿using DependencyCrawler.Contracts.Interfaces;
+﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;

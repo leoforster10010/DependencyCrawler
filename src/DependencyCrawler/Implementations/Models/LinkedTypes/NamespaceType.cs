@@ -1,6 +1,6 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 
-namespace DependencyCrawler.Implementations.Models;
+namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
 public class NamespaceType : INamespaceType
 {

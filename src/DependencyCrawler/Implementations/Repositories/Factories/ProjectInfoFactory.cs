@@ -1,5 +1,5 @@
 using System.Reflection;
-using DependencyCrawler.Contracts.Interfaces;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 using Microsoft.Build.Construction;

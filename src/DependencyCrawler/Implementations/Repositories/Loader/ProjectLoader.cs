@@ -1,8 +1,8 @@
-using DependencyCrawler.Contracts.Interfaces;
 using DependencyCrawler.Contracts.Interfaces.Model;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;

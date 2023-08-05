@@ -1,7 +1,7 @@
-using DependencyCrawler.Contracts.Interfaces;
 using DependencyCrawler.Contracts.Interfaces.Model;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;

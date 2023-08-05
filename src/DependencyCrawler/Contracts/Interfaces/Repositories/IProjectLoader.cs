@@ -1,6 +1,6 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 
-namespace DependencyCrawler.Contracts.Interfaces;
+namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 public interface IProjectLoader
 {

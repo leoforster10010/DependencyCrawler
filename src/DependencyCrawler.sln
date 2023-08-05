@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler", "DependencyCrawler\DependencyCrawler.csproj", "{6A284030-A9D3-4061-BD52-554C90B3B2D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler", "DependencyCrawler\DependencyCrawler.csproj", "{6A284030-A9D3-4061-BD52-554C90B3B2D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.QueryClient", "DependencyCrawler.QueryClient\DependencyCrawler.QueryClient.csproj", "{1907209E-A374-4653-BD19-F426A1679C52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.MongoDB", "DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj", "{AB452712-28C1-47AB-ACF5-70D1B447A3AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Json", "DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj", "{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{1907209E-A374-4653-BD19-F426A1679C52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1907209E-A374-4653-BD19-F426A1679C52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1907209E-A374-4653-BD19-F426A1679C52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB452712-28C1-47AB-ACF5-70D1B447A3AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB452712-28C1-47AB-ACF5-70D1B447A3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB452712-28C1-47AB-ACF5-70D1B447A3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB452712-28C1-47AB-ACF5-70D1B447A3AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
