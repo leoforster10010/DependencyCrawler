@@ -11,4 +11,5 @@ public interface IProjectProvider
 	void AddInternalProject(InternalProject internalProject);
 	void AddExternalProject(ExternalProject externalProject);
 	void AddUnresolvedProject(string name);
+	void Clear();
 }

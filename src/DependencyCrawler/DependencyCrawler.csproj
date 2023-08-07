@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\Repositories\DataAccess\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

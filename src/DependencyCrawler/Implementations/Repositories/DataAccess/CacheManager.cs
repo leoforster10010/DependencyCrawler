@@ -1,25 +1,26 @@
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Implementations.Models;
 using Microsoft.Extensions.Logging;
 
-namespace DependencyCrawler.Implementations.Repositories;
+namespace DependencyCrawler.Implementations.Repositories.DataAccess;
 
 public class CacheManager : ICacheManager
 {
 	private readonly ICachedProjectLoader _cachedProjectLoader;
-	private readonly ICachedProjectProvider _cachedProjectProvider;
 	private readonly ICacher _cacher;
 	private readonly IDictionary<Guid, Cache> _caches = new Dictionary<Guid, Cache>();
 	private readonly ILogger<CacheManager> _logger;
+	private readonly IProjectLoader _projectLoader;
 	private Cache? _activeCache;
 
-	public CacheManager(ICacher cacher, ICachedProjectProvider cachedProjectProvider, ILogger<CacheManager> logger,
-		ICachedProjectLoader cachedProjectLoader)
+	public CacheManager(ICacher cacher, ILogger<CacheManager> logger,
+		ICachedProjectLoader cachedProjectLoader, IProjectLoader projectLoader)
 	{
 		_cacher = cacher;
-		_cachedProjectProvider = cachedProjectProvider;
 		_logger = logger;
 		_cachedProjectLoader = cachedProjectLoader;
+		_projectLoader = projectLoader;
 	}
 
 	public IReadOnlyList<Cache> Caches => _caches.Values.ToList().AsReadOnly();
@@ -42,10 +43,7 @@ public class CacheManager : ICacheManager
 			_activeCache = value;
 			_activeCache.State = CacheState.Inactive;
 
-			foreach (var cachedProject in _activeCache.CachedProjects)
-			{
-				_cachedProjectProvider.AddCachedProject(cachedProject);
-			}
+			_projectLoader.LoadProjectsFromCache(_activeCache);
 		}
 	}
 
@@ -69,7 +67,6 @@ public class CacheManager : ICacheManager
 			return;
 		}
 
-		_cachedProjectProvider.Clear();
 		ActiveCache = cache;
 	}
 
@@ -99,8 +96,8 @@ public class CacheManager : ICacheManager
 			return;
 		}
 
-		_cachedProjectLoader.CacheAllProjects();
-		ActiveCache.CachedProjects = _cachedProjectProvider.CachedProjects.ToList();
+
+		ActiveCache.CachedProjects = _cachedProjectLoader.GetCachedProjects();
 		SaveAllCaches();
 	}
 
@@ -112,18 +109,18 @@ public class CacheManager : ICacheManager
 			return;
 		}
 
-		_cachedProjectLoader.CacheAllProjects();
-		cache.CachedProjects = _cachedProjectProvider.CachedProjects.ToList();
+
+		cache.CachedProjects = _cachedProjectLoader.GetCachedProjects();
 		SaveAllCaches();
 	}
 
 	public void SaveAsNewCache(string? name = null)
 	{
-		_cachedProjectLoader.CacheAllProjects();
+		_cachedProjectLoader.GetCachedProjects();
 
 		var cache = new Cache
 		{
-			CachedProjects = _cachedProjectProvider.CachedProjects.ToList(),
+			CachedProjects = _cachedProjectLoader.GetCachedProjects(),
 			Name = name
 		};
 

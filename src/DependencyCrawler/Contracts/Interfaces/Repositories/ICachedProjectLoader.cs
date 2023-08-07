@@ -1,6 +1,8 @@
+using DependencyCrawler.Implementations.Models.CachedTypes;
+
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 public interface ICachedProjectLoader
 {
-	void CacheAllProjects();
+	IList<CachedProject> GetCachedProjects();
 }

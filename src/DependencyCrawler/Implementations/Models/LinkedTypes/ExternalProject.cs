@@ -1,4 +1,3 @@
-using System.Reflection;
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Implementations.Data.Enum;
 
@@ -9,7 +8,6 @@ public class ExternalProject : IProject
 	public IDictionary<string, PackageReference> PackageReferences { get; set; } =
 		new Dictionary<string, PackageReference>();
 
-	public required Assembly? Assembly { get; set; }
 	public required string Name { get; init; }
 
 	public IDictionary<string, IReference> Dependencies

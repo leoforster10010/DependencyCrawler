@@ -115,6 +115,7 @@ public class CachedTypeFactory : ICachedTypeFactory
 			cachedProjectReferences.Add(new CachedProjectReference
 			{
 				Using = GetReferencedProjectId(projectReference),
+				UsedProjectName = projectReference.Using.Name,
 				UsedBy = cachedProject.Id
 			});
 		}
@@ -140,6 +141,7 @@ public class CachedTypeFactory : ICachedTypeFactory
 			cachedPackageReferences.Add(new CachedPackageReference
 			{
 				Using = GetReferencedProjectId(packageReference),
+				UsedProjectName = packageReference.UsedBy.Name,
 				UsedBy = cachedProject.Id,
 				Version = packageReference.Version
 			});

@@ -1,5 +1,6 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Implementations.Models.CachedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 
@@ -7,17 +8,19 @@ public class CachedProjectLoader : ICachedProjectLoader
 {
 	private readonly ICachedProjectProvider _cachedProjectProvider;
 	private readonly ICachedTypeFactory _cachedTypeFactory;
+	private readonly IProjectLoader _projectLoader;
 	private readonly IProjectProvider _projectProvider;
 
 	public CachedProjectLoader(ICachedProjectProvider cachedProjectProvider, ICachedTypeFactory cachedTypeFactory,
-		IProjectProvider projectProvider)
+		IProjectProvider projectProvider, IProjectLoader projectLoader)
 	{
 		_cachedProjectProvider = cachedProjectProvider;
 		_cachedTypeFactory = cachedTypeFactory;
 		_projectProvider = projectProvider;
+		_projectLoader = projectLoader;
 	}
 
-	public void CacheAllProjects()
+	public IList<CachedProject> GetCachedProjects()
 	{
 		var projects = _projectProvider.AllProjects.Values;
 
@@ -25,6 +28,8 @@ public class CachedProjectLoader : ICachedProjectLoader
 		{
 			CacheProject(project);
 		}
+
+		return _cachedProjectProvider.CachedProjects;
 	}
 
 	private void CacheProject(IProject project)

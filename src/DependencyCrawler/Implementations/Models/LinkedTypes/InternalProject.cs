@@ -1,6 +1,5 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Implementations.Data.Enum;
-using Microsoft.Build.Construction;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
@@ -11,8 +10,6 @@ public class InternalProject : IProject
 
 	public IDictionary<string, ProjectReference> ProjectReferences { get; set; } =
 		new Dictionary<string, ProjectReference>();
-
-	public required ProjectRootElement ProjectRootElement { get; set; }
 
 	public ProjectType ProjectType => ProjectType.Internal;
 	public required string Name { get; init; }

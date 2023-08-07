@@ -36,8 +36,7 @@ public class ProjectInfoFactory : IProjectInfoFactory
 		{
 			return new ExternalProjectInfo
 			{
-				Name = dllFilePath.GetDllName(),
-				Assembly = null
+				Name = dllFilePath.GetDllName()
 			};
 		}
 
@@ -74,7 +73,6 @@ public class ProjectInfoFactory : IProjectInfoFactory
 
 		return new InternalProjectInfo
 		{
-			ProjectRootElement = projectRootElement,
 			Name = name,
 			Namespaces = namespaces,
 			PackageReferences = packageReferences,
@@ -91,7 +89,6 @@ public class ProjectInfoFactory : IProjectInfoFactory
 		return new ExternalProjectInfo
 		{
 			Name = name,
-			Assembly = assembly,
 			Namespaces = namespaces,
 			PackageReferences = packageReferences
 		};

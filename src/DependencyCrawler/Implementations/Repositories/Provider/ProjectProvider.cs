@@ -67,4 +67,11 @@ public class ProjectProvider : IProjectProvider
 			Name = name
 		});
 	}
+
+	public void Clear()
+	{
+		_externalProjects.Clear();
+		_internalProjects.Clear();
+		_unresolvedProjects.Clear();
+	}
 }

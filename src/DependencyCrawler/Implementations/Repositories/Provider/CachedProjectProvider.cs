@@ -3,6 +3,7 @@ using DependencyCrawler.Implementations.Models.CachedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
+//ToDo Singleton -> only used from CTF
 public class CachedProjectProvider : ICachedProjectProvider
 {
 	private readonly IDictionary<string, CachedProject> _cachedProjects = new Dictionary<string, CachedProject>();
@@ -14,7 +15,7 @@ public class CachedProjectProvider : ICachedProjectProvider
 			: null;
 	}
 
-	public ICollection<CachedProject> CachedProjects => _cachedProjects.Values;
+	public IList<CachedProject> CachedProjects => _cachedProjects.Values.ToList();
 
 	public Guid? GetCachedNamespaceId(string namespaceName)
 	{
