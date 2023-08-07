@@ -14,12 +14,19 @@ public class CachedProjectProvider : ICachedProjectProvider
 			: null;
 	}
 
+	public ICollection<CachedProject> CachedProjects => _cachedProjects.Values;
+
 	public Guid? GetCachedNamespaceId(string namespaceName)
 	{
 		var cachedProject =
 			_cachedProjects.Values.FirstOrDefault(x => x.Namespaces.Any(y => y.Name == namespaceName));
 
 		return cachedProject?.Namespaces.First(x => x.Name == namespaceName).Id;
+	}
+
+	public void Clear()
+	{
+		_cachedProjects.Clear();
 	}
 
 	public void AddCachedProject(CachedProject cachedProject)

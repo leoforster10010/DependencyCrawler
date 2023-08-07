@@ -17,7 +17,7 @@ public class CachedProjectLoader : ICachedProjectLoader
 		_projectProvider = projectProvider;
 	}
 
-	public void CacheLinkedProjects()
+	public void CacheAllProjects()
 	{
 		var projects = _projectProvider.AllProjects.Values;
 
