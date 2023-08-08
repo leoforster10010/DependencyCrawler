@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-public class TypeUsingDirective : ITypeUsingDirective
+internal class TypeUsingDirective : ITypeUsingDirective
 {
 	public string Name => ReferencedNamespace.Name;
 	public required TypeUsingDirectiveState State { get; set; }
@@ -11,4 +11,10 @@ public class TypeUsingDirective : ITypeUsingDirective
 	public required INamespaceType ParentType { get; set; }
 	public IProjectNamespace ParentNamespace => ParentType.ParentNamespace;
 	public IProject ParentProject => ParentType.ParentProject;
+	public string NameReadOnly => Name;
+	public TypeUsingDirectiveState StateReadOnlyReadOnly => State;
+	public IReadOnlyProjectNamespace ReferencedNamespaceReadOnly => ReferencedNamespace;
+	public IReadOnlyNamespaceType ParentTypeReadOnly => ParentType;
+	public IReadOnlyProjectNamespace ParentNamespaceReadOnly => ParentNamespace;
+	public IReadOnlyProject ParentProjectReadOnly => ParentProject;
 }

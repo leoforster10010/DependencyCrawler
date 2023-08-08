@@ -7,7 +7,7 @@ using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;
 
-public class LinkedTypeFactory : ILinkedTypeFactory
+internal class LinkedTypeFactory : ILinkedTypeFactory
 {
 	public PackageReference GetPackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
 		IProject referencedProject)

@@ -2,7 +2,7 @@ using DependencyCrawler.Contracts.Interfaces.Model;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-public class UnresolvedNamespace : IProjectNamespace
+internal class UnresolvedNamespace : IProjectNamespace
 {
 	public required string Name { get; init; }
 	public IProject ParentProject { get; set; } = new UnresolvedProject();
@@ -11,4 +11,16 @@ public class UnresolvedNamespace : IProjectNamespace
 
 	public IDictionary<string, ITypeUsingDirective> TypeUsingDirectives =>
 		new Dictionary<string, ITypeUsingDirective>();
+
+	public string NameReadOnly => Name;
+	public IReadOnlyProject ParentProjectReadOnly => ParentProject;
+
+	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> NamespaceTypesReadOnly =>
+		new Dictionary<string, IReadOnlyNamespaceType>();
+
+	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> UsingTypesReadOnly =>
+		new Dictionary<string, IReadOnlyNamespaceType>();
+
+	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly =>
+		new Dictionary<string, IReadOnlyTypeUsingDirective>();
 }

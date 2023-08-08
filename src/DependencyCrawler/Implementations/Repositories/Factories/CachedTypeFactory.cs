@@ -6,7 +6,7 @@ using DependencyCrawler.Implementations.Models.LinkedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;
 
-public class CachedTypeFactory : ICachedTypeFactory
+internal class CachedTypeFactory : ICachedTypeFactory
 {
 	private readonly ICachedProjectProvider _cachedProjectProvider;
 

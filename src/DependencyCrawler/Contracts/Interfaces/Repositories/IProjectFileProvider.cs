@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-public interface IProjectFileProvider
+internal interface IProjectFileProvider
 {
 	IEnumerable<string> GetProjectFiles();
 	string? GetProjectFile(string projectName);

@@ -1,6 +1,6 @@
 namespace DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
-public class ExternalProjectInfo
+internal class ExternalProjectInfo
 {
 	public required string Name { get; set; }
 	public static bool External => true;

@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
-public class TypeInfo
+internal class TypeInfo
 {
 	public required string Name { get; set; }
 	public IList<UsingDirectiveInfo> UsingDirectives { get; set; } = new List<UsingDirectiveInfo>();

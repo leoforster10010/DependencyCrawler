@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
-public class ProjectProvider : IProjectProvider
+internal class ProjectProvider : IProjectProvider, IReadOnlyProjectProvider
 {
 	private readonly IDictionary<string, ExternalProject> _externalProjects = new Dictionary<string, ExternalProject>();
 	private readonly IDictionary<string, InternalProject> _internalProjects = new Dictionary<string, InternalProject>();
@@ -74,4 +74,10 @@ public class ProjectProvider : IProjectProvider
 		_internalProjects.Clear();
 		_unresolvedProjects.Clear();
 	}
+
+	public IReadOnlyList<IReadOnlyProject> InternalProjectsReadOnly => _internalProjects.Select(x => x.Value).ToList();
+	public IReadOnlyList<IReadOnlyProject> ExternalProjectsReadOnly => _externalProjects.Select(x => x.Value).ToList();
+
+	public IReadOnlyDictionary<string, IReadOnlyProject> AllProjectsReadOnly =>
+		AllProjects.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProject);
 }

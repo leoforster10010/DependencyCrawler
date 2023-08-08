@@ -1,6 +1,6 @@
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IProjectNamespace
+internal interface IProjectNamespace : IReadOnlyProjectNamespace
 {
 	public string Name { get; init; }
 	public IProject ParentProject { get; set; }

@@ -4,7 +4,7 @@ using DependencyCrawler.Implementations.Models.CachedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 
-public class CachedProjectLoader : ICachedProjectLoader
+internal class CachedProjectLoader : ICachedProjectLoader
 {
 	private readonly ICachedProjectProvider _cachedProjectProvider;
 	private readonly ICachedTypeFactory _cachedTypeFactory;

@@ -3,22 +3,19 @@ using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 using Microsoft.Build.Construction;
-using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;
 
-public class ProjectInfoFactory : IProjectInfoFactory
+internal class ProjectInfoFactory : IProjectInfoFactory
 {
 	private readonly IExternalProjectInfoLoader _externalProjectInfoLoader;
 	private readonly IInternalProjectInfoLoader _internalProjectInfoLoader;
-	private readonly ILogger<ProjectInfoFactory> _logger;
 
 	public ProjectInfoFactory(IInternalProjectInfoLoader internalProjectInfoLoader,
-		IExternalProjectInfoLoader externalProjectInfoLoader, ILogger<ProjectInfoFactory> logger)
+		IExternalProjectInfoLoader externalProjectInfoLoader)
 	{
 		_internalProjectInfoLoader = internalProjectInfoLoader;
 		_externalProjectInfoLoader = externalProjectInfoLoader;
-		_logger = logger;
 	}
 
 	public InternalProjectInfo GetInternalProjectInfo(string csprojFilePath)

@@ -6,7 +6,7 @@ using TypeInfo = DependencyCrawler.Implementations.Models.UnlinkedTypes.TypeInfo
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 
-public class ExternalProjectInfoLoader : IExternalProjectInfoLoader
+internal class ExternalProjectInfoLoader : IExternalProjectInfoLoader
 {
 	public IList<NamespaceInfo> LoadNamespaces(Assembly assembly)
 	{

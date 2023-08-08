@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 
-public class ProjectLoader : IProjectLoader
+internal class ProjectLoader : IProjectLoader
 {
 	private readonly IDllFileProvider _dllFileProvider;
 	private readonly ILinkedTypeFactory _linkedTypeFactory;
@@ -41,13 +41,6 @@ public class ProjectLoader : IProjectLoader
 		}
 
 		LinkUsingDirectives();
-	}
-
-	public IProject LoadProjectByName(string name)
-	{
-		LoadProject(name);
-		LinkUsingDirectives();
-		return _projectProvider.AllProjects[name];
 	}
 
 	public void LoadProjectsFromCache(Cache cache)

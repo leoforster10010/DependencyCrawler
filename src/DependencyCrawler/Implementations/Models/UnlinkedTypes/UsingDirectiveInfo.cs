@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
-public class UsingDirectiveInfo
+internal class UsingDirectiveInfo
 {
 	public required string Namespace { get; set; }
 }

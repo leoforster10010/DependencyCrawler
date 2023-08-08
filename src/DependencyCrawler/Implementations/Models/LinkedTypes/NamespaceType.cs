@@ -2,7 +2,7 @@ using DependencyCrawler.Contracts.Interfaces.Model;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-public class NamespaceType : INamespaceType
+internal class NamespaceType : INamespaceType
 {
 	public required string Name { get; init; }
 	public string FullName => $"{ParentNamespace.Name}.{Name}";
@@ -11,4 +11,12 @@ public class NamespaceType : INamespaceType
 
 	public IDictionary<string, ITypeUsingDirective> UsingDirectives { get; set; } =
 		new Dictionary<string, ITypeUsingDirective>();
+
+	public string NameReadOnly => Name;
+	public string FullNameReadOnly => FullName;
+	public IReadOnlyProjectNamespace ParentNamespaceReadOnly => ParentNamespace;
+	public IReadOnlyProject ParentProjectReadOnly => ParentProject;
+
+	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
+		UsingDirectives.ToDictionary(x => x.Key, x => x.Value as IReadOnlyTypeUsingDirective);
 }

@@ -2,7 +2,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IProject
+internal interface IProject : IReadOnlyProject
 {
 	public string Name { get; init; }
 	public ProjectType ProjectType { get; }

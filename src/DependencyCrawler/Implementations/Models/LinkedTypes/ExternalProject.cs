@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-public class ExternalProject : IProject
+internal class ExternalProject : IProject
 {
 	public IDictionary<string, PackageReference> PackageReferences { get; set; } =
 		new Dictionary<string, PackageReference>();
@@ -60,4 +60,22 @@ public class ExternalProject : IProject
 			return projectUsingDirectives;
 		}
 	}
+
+	public string NameReadOnly => Name;
+	public ProjectType ProjectTypeReadOnly => ProjectType;
+
+	public IReadOnlyDictionary<string, IReadOnlyReference> DependenciesReadOnly =>
+		Dependencies.ToDictionary(x => x.Key, x => x.Value as IReadOnlyReference);
+
+	public IReadOnlyDictionary<string, IReadOnlyReference> ReferencedByReadOnly =>
+		ReferencedBy.ToDictionary(x => x.Key, x => x.Value as IReadOnlyReference);
+
+	public IReadOnlyDictionary<string, IReadOnlyProjectNamespace> NamespacesReadOnly =>
+		Namespaces.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProjectNamespace);
+
+	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> TypesReadOnly =>
+		Types.ToDictionary(x => x.Key, x => x.Value as IReadOnlyNamespaceType);
+
+	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
+		UsingDirectives.ToDictionary(x => x.Key, x => x.Value as IReadOnlyTypeUsingDirective);
 }

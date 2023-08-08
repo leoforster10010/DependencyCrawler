@@ -2,7 +2,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface ITypeUsingDirective
+internal interface ITypeUsingDirective : IReadOnlyTypeUsingDirective
 {
 	public string Name { get; }
 	public TypeUsingDirectiveState State { get; set; }

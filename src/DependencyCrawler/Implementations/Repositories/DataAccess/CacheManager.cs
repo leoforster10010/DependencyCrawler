@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.DataAccess;
 
-public class CacheManager : ICacheManager
+internal class CacheManager : ICacheManager
 {
 	private readonly ICachedProjectLoader _cachedProjectLoader;
 	private readonly ICacher _cacher;

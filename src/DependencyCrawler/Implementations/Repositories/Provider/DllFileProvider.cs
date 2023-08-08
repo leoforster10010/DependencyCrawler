@@ -3,7 +3,7 @@ using DependencyCrawler.Framework.Extensions;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
-public class DllFileProvider : IDllFileProvider
+internal class DllFileProvider : IDllFileProvider
 {
 	private const string Extension = "*.dll";
 	private readonly List<string> _dllFiles;

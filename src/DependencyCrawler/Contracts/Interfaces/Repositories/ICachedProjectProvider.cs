@@ -2,7 +2,7 @@ using DependencyCrawler.Implementations.Models.CachedTypes;
 
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-public interface ICachedProjectProvider
+internal interface ICachedProjectProvider
 {
 	IList<CachedProject> CachedProjects { get; }
 	Guid? GetCachedProjectId(string name);

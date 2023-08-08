@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Models.LinkedTypes;
 
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-public interface IProjectProvider
+internal interface IProjectProvider
 {
 	IEnumerable<InternalProject> InternalProjects { get; }
 	IEnumerable<ExternalProject> ExternalProjects { get; }

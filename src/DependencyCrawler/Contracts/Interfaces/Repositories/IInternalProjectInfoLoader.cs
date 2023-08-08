@@ -2,7 +2,7 @@
 
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-public interface IInternalProjectInfoLoader
+internal interface IInternalProjectInfoLoader
 {
 	IEnumerable<NamespaceInfo> LoadNamespaces(string projectName);
 }

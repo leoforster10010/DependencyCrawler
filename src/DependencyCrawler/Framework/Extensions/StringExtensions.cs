@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Framework.Extensions;
 
-public static class StringExtensions
+internal static class StringExtensions
 {
 	public static string GetProjectName(this string include)
 	{

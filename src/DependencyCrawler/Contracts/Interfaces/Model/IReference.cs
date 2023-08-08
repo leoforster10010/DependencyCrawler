@@ -2,7 +2,7 @@
 
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IReference
+internal interface IReference : IReadOnlyReference
 {
 	public IProject Using { get; set; }
 	public IProject UsedBy { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
-public class ProjectReferenceInfo
+internal class ProjectReferenceInfo
 {
 	public required string Using { get; set; }
 	public required string UsedBy { get; set; }

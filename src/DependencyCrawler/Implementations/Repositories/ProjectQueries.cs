@@ -4,7 +4,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Repositories;
 
-public class ProjectQueries : IProjectQueries
+internal class ProjectQueries : IProjectQueries
 {
 	private readonly IProjectProvider _projectProvider;
 
@@ -13,7 +13,7 @@ public class ProjectQueries : IProjectQueries
 		_projectProvider = projectProvider;
 	}
 
-	public IEnumerable<IProject> GetInternalTopLevelProjects()
+	public IEnumerable<IReadOnlyProject> GetInternalTopLevelProjects()
 	{
 		var toplevelProjects = _projectProvider.InternalProjects
 			.Where(x => !x.Dependencies.Any() ||
@@ -22,14 +22,14 @@ public class ProjectQueries : IProjectQueries
 		return toplevelProjects;
 	}
 
-	public IEnumerable<IProject> GetSubLevelProjects()
+	public IEnumerable<IReadOnlyProject> GetSubLevelProjects()
 	{
 		var projects = _projectProvider.AllProjects;
 		return projects.Where(x => projects.All(y => y.Value.Dependencies.All(z => z.Value.Using != x.Value)))
 			.Select(x => x.Value);
 	}
 
-	public IEnumerable<IProject> GetTopLevelProjects()
+	public IEnumerable<IReadOnlyProject> GetTopLevelProjects()
 	{
 		var toplevelProjects = _projectProvider.AllProjects.Values
 			.Where(x => !x.Dependencies.Any());

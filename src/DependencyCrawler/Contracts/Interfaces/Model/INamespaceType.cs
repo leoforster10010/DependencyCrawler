@@ -1,6 +1,6 @@
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface INamespaceType
+internal interface INamespaceType : IReadOnlyNamespaceType
 {
 	public string Name { get; init; }
 	public string FullName { get; }

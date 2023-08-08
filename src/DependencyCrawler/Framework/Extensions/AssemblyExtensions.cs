@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
 namespace DependencyCrawler.Framework.Extensions;
 
-public static class AssemblyExtensions
+internal static class AssemblyExtensions
 {
 	public static string GetProjectName(this Assembly assembly)
 	{

@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-public interface IDllFileProvider
+internal interface IDllFileProvider
 {
 	IEnumerable<string> GetDllFiles();
 	string? GetDllFile(string projectName);

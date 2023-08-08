@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
-public class ProjectFileProvider : IProjectFileProvider
+internal class ProjectFileProvider : IProjectFileProvider
 {
 	private const string Extension = "*.csproj";
 	private readonly IEnumerable<string> _projectFiles;

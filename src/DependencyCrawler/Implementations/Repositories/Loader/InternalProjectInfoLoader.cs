@@ -4,7 +4,7 @@ using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 
-public class InternalProjectInfoLoader : IInternalProjectInfoLoader
+internal class InternalProjectInfoLoader : IInternalProjectInfoLoader
 {
 	private readonly IProjectFileProvider _projectFileProvider;
 

@@ -3,7 +3,7 @@ using Microsoft.Build.Construction;
 
 namespace DependencyCrawler.Framework.Extensions;
 
-public static class ProjectRootElementExtensions
+internal static class ProjectRootElementExtensions
 {
 	public static IEnumerable<PackageReferenceInfo> GetPackageReferences(this ProjectRootElement projectRootElement)
 	{
