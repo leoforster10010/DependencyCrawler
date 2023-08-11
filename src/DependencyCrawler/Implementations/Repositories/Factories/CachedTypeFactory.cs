@@ -15,12 +15,12 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		_cachedProjectProvider = cachedProjectProvider;
 	}
 
-	public CachedProject GetCachedProject(IProject project)
+	public CachedProject GetCachedProject(IReadOnlyProject project)
 	{
 		var cachedProject = new CachedProject
 		{
-			Name = project.Name,
-			ProjectType = project.ProjectType
+			Name = project.NameReadOnly,
+			ProjectType = project.ProjectTypeReadOnly
 		};
 
 		cachedProject.PackageReferences = GetCachedPackageReferences(cachedProject, project);
@@ -30,15 +30,15 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		return cachedProject;
 	}
 
-	private IList<CachedProjectNamespace> GetCachedNamespaces(IProject project)
+	private IList<CachedProjectNamespace> GetCachedNamespaces(IReadOnlyProject project)
 	{
 		var cachedProjectNamespaces = new List<CachedProjectNamespace>();
 
-		foreach (var projectNamespace in project.Namespaces.Values)
+		foreach (var projectNamespace in project.NamespacesReadOnly.Values)
 		{
 			cachedProjectNamespaces.Add(new CachedProjectNamespace
 			{
-				Name = projectNamespace.Name,
+				Name = projectNamespace.NameReadOnly,
 				NamespaceTypes = GetCachedTypes(projectNamespace)
 			});
 		}
@@ -46,15 +46,15 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		return cachedProjectNamespaces;
 	}
 
-	private IList<CachedNamespaceType> GetCachedTypes(IProjectNamespace projectNamespace)
+	private IList<CachedNamespaceType> GetCachedTypes(IReadOnlyProjectNamespace projectNamespace)
 	{
 		var cachedNamespaceTypes = new List<CachedNamespaceType>();
 
-		foreach (var namespaceType in projectNamespace.NamespaceTypes.Values)
+		foreach (var namespaceType in projectNamespace.NamespaceTypesReadOnly.Values)
 		{
 			cachedNamespaceTypes.Add(new CachedNamespaceType
 			{
-				Name = namespaceType.Name,
+				Name = namespaceType.NameReadOnly,
 				UsingDirectives = GetCachedUsingDirectives(namespaceType)
 			});
 		}
@@ -62,45 +62,47 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		return cachedNamespaceTypes;
 	}
 
-	private IList<CachedTypeUsingDirective> GetCachedUsingDirectives(INamespaceType namespaceType)
+	private IList<CachedTypeUsingDirective> GetCachedUsingDirectives(IReadOnlyNamespaceType namespaceType)
 	{
 		var cachedTypeUsingDirectives = new List<CachedTypeUsingDirective>();
 
 		var linkedUsingDirectives =
-			namespaceType.UsingDirectives.Values.Where(x => x.State is TypeUsingDirectiveState.Linked);
+			namespaceType.UsingDirectivesReadOnly.Values.Where(x => x.StateReadOnly is TypeUsingDirectiveState.Linked);
 		foreach (var typeUsingDirective in linkedUsingDirectives)
 		{
 			cachedTypeUsingDirectives.Add(new CachedTypeUsingDirective
 			{
-				Name = typeUsingDirective.Name,
-				State = typeUsingDirective.State,
-				ReferencedNamespaceId = GetCachedNamespaceId(typeUsingDirective.ReferencedNamespace)
+				Name = typeUsingDirective.NameReadOnly,
+				State = typeUsingDirective.StateReadOnly,
+				ReferencedNamespaceId = GetCachedNamespaceId(typeUsingDirective.ReferencedNamespaceReadOnly)
 			});
 		}
 
 		return cachedTypeUsingDirectives;
 	}
 
-	private Guid GetCachedNamespaceId(IProjectNamespace referencedNamespace)
+	private Guid GetCachedNamespaceId(IReadOnlyProjectNamespace referencedNamespace)
 	{
-		var cachedNamespaceId = _cachedProjectProvider.GetCachedNamespaceId(referencedNamespace.Name);
+		var cachedNamespaceId = _cachedProjectProvider.GetCachedNamespaceId(referencedNamespace.NameReadOnly);
 
 		if (cachedNamespaceId is not null)
 		{
 			return (Guid)cachedNamespaceId;
 		}
 
-		var referencedCachedProject = GetCachedProject(referencedNamespace.ParentProject);
+		var referencedCachedProject = GetCachedProject(referencedNamespace.ParentProjectReadOnly);
 		_cachedProjectProvider.AddCachedProject(referencedCachedProject);
 
-		return referencedCachedProject.Namespaces.First(x => x.Name == referencedNamespace.Name).Id;
+		return referencedCachedProject.Namespaces.First(x => x.Name == referencedNamespace.NameReadOnly).Id;
 	}
 
 
-	private IList<CachedProjectReference> GetCachedProjectReferences(CachedProject cachedProject, IProject project)
+	private IList<CachedProjectReference> GetCachedProjectReferences(CachedProject cachedProject,
+		IReadOnlyProject project)
 	{
-		var projectReferences = project.Dependencies.Values
-			.Where(x => x.ReferenceType == ReferenceType.Project)
+		//ToDo test: do we smell an exception?
+		var projectReferences = project.DependenciesReadOnly.Values
+			.Where(x => x.ReferenceTypeReadOnly == ReferenceType.Project)
 			.Select(x => x as ProjectReference);
 
 		var cachedProjectReferences = new List<CachedProjectReference>();
@@ -123,10 +125,12 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		return cachedProjectReferences;
 	}
 
-	private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject, IProject project)
+	private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject,
+		IReadOnlyProject project)
 	{
-		var packageReferences = project.Dependencies.Values
-			.Where(x => x.ReferenceType == ReferenceType.Package)
+		//ToDo test: do we smell an exception?
+		var packageReferences = project.DependenciesReadOnly.Values
+			.Where(x => x.ReferenceTypeReadOnly == ReferenceType.Package)
 			.Select(x => x as PackageReference);
 
 		var cachedPackageReferences = new List<CachedPackageReference>();

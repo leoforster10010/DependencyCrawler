@@ -1,5 +1,6 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Repositories;
+using DependencyCrawler.Implementations.Repositories.DataAccess;
 using DependencyCrawler.Implementations.Repositories.Factories;
 using DependencyCrawler.Implementations.Repositories.Loader;
 using DependencyCrawler.Implementations.Repositories.Provider;
@@ -11,18 +12,22 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddDependencyCrawler(this IServiceCollection services)
 	{
-		services.AddTransient<IProjectQueries, ProjectQueries>();
+		services.AddTransient<IProjectQueriesReadOnly, ProjectQueriesReadOnly>();
 
-		services.AddTransient<IInternalProjectInfoLoader, InternalProjectInfoLoader>();
-		services.AddTransient<IExternalProjectInfoLoader, ExternalProjectInfoLoader>();
+		services.AddTransient<ICacheManager, CacheManager>();
+
 		services.AddTransient<IProjectLoader, ProjectLoader>();
+		services.AddTransient<ICachedProjectLoader, CachedProjectLoader>();
 
 		services.AddTransient<IProjectInfoFactory, ProjectInfoFactory>();
 		services.AddTransient<ILinkedTypeFactory, LinkedTypeFactory>();
+		services.AddTransient<ICachedTypeFactory, CachedTypeFactory>();
 
 		services.AddSingleton<IProjectProvider, ProjectProvider>();
+		services.AddTransient<IReadOnlyProjectProvider, ReadOnlyProjectProvider>();
 		services.AddSingleton<IProjectFileProvider, ProjectFileProvider>();
 		services.AddSingleton<IDllFileProvider, DllFileProvider>();
+		services.AddTransient<ICachedProjectProvider, CachedProjectProvider>();
 
 		return services;
 	}

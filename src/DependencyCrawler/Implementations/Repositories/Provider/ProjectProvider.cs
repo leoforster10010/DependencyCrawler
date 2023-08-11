@@ -5,40 +5,37 @@ using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
-internal class ProjectProvider : IProjectProvider, IReadOnlyProjectProvider
+internal class ProjectProvider : IProjectProvider
 {
-	private readonly IDictionary<string, ExternalProject> _externalProjects = new Dictionary<string, ExternalProject>();
-	private readonly IDictionary<string, InternalProject> _internalProjects = new Dictionary<string, InternalProject>();
 	private readonly ILogger<ProjectProvider> _logger;
-
-	private readonly IDictionary<string, UnresolvedProject> _unresolvedProjects =
-		new Dictionary<string, UnresolvedProject>();
 
 	public ProjectProvider(ILogger<ProjectProvider> logger)
 	{
 		_logger = logger;
 	}
 
-	public IEnumerable<InternalProject> InternalProjects => _internalProjects.Select(x => x.Value);
+	public IDictionary<string, UnresolvedProject> UnresolvedProjects { get; } =
+		new Dictionary<string, UnresolvedProject>();
 
-	public IEnumerable<ExternalProject> ExternalProjects => _externalProjects.Select(x => x.Value);
+	public IDictionary<string, InternalProject> InternalProjects { get; } = new Dictionary<string, InternalProject>();
+	public IDictionary<string, ExternalProject> ExternalProjects { get; } = new Dictionary<string, ExternalProject>();
 
 	public IDictionary<string, IProject> AllProjects
 	{
 		get
 		{
 			var allProjects = new Dictionary<string, IProject>();
-			foreach (var internalProject in _internalProjects)
+			foreach (var internalProject in InternalProjects)
 			{
 				allProjects.TryAdd(internalProject.Key, internalProject.Value);
 			}
 
-			foreach (var externalProject in _externalProjects)
+			foreach (var externalProject in ExternalProjects)
 			{
 				allProjects.TryAdd(externalProject.Key, externalProject.Value);
 			}
 
-			foreach (var unresolvedProject in _unresolvedProjects)
+			foreach (var unresolvedProject in UnresolvedProjects)
 			{
 				allProjects.TryAdd(unresolvedProject.Key, unresolvedProject.Value);
 			}
@@ -50,34 +47,25 @@ internal class ProjectProvider : IProjectProvider, IReadOnlyProjectProvider
 	public void AddInternalProject(InternalProject internalProject)
 	{
 		_logger.LogInformation($"Added {internalProject.Name} to InternalProjects");
-		_internalProjects.TryAdd(internalProject.Name, internalProject);
+		InternalProjects.TryAdd(internalProject.Name, internalProject);
 	}
 
 	public void AddExternalProject(ExternalProject externalProject)
 	{
 		_logger.LogInformation($"Added {externalProject.Name} to ExternalProjects");
-		_externalProjects.TryAdd(externalProject.Name, externalProject);
+		ExternalProjects.TryAdd(externalProject.Name, externalProject);
 	}
 
-	public void AddUnresolvedProject(string name)
+	public void AddUnresolvedProject(UnresolvedProject unresolvedProject)
 	{
-		_logger.LogWarning($"Added {name} to UnresolvedProjects");
-		_unresolvedProjects.TryAdd(name, new UnresolvedProject
-		{
-			Name = name
-		});
+		_logger.LogWarning($"Added {unresolvedProject.Name} to UnresolvedProjects");
+		UnresolvedProjects.TryAdd(unresolvedProject.Name, unresolvedProject);
 	}
 
 	public void Clear()
 	{
-		_externalProjects.Clear();
-		_internalProjects.Clear();
-		_unresolvedProjects.Clear();
+		ExternalProjects.Clear();
+		InternalProjects.Clear();
+		UnresolvedProjects.Clear();
 	}
-
-	public IReadOnlyList<IReadOnlyProject> InternalProjectsReadOnly => _internalProjects.Select(x => x.Value).ToList();
-	public IReadOnlyList<IReadOnlyProject> ExternalProjectsReadOnly => _externalProjects.Select(x => x.Value).ToList();
-
-	public IReadOnlyDictionary<string, IReadOnlyProject> AllProjectsReadOnly =>
-		AllProjects.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProject);
 }

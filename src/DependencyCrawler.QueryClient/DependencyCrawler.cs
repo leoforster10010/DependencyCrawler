@@ -7,11 +7,11 @@ namespace DependencyCrawler.QueryClient;
 public class DependencyCrawler : IDependencyCrawler
 {
 	private readonly IProjectLoader _projectLoader;
-	private readonly IProjectQueries _projectQueries;
+	private readonly IProjectQueriesReadOnly _projectQueries;
 	private readonly IReadOnlyProjectProvider _readOnlyProjectProvider;
 
 	public DependencyCrawler(IReadOnlyProjectProvider readOnlyProjectProvider, IProjectLoader projectLoader,
-		IProjectQueries projectQueries)
+		IProjectQueriesReadOnly projectQueries)
 	{
 		_readOnlyProjectProvider = readOnlyProjectProvider;
 		_projectLoader = projectLoader;

@@ -1,4 +1,4 @@
-﻿namespace DependencyCrawler.Contracts.Interfaces;
+﻿namespace DependencyCrawler.QueryClient;
 
 public interface IDependencyCrawler
 {

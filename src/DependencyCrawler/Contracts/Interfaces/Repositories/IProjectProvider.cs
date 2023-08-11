@@ -5,11 +5,11 @@ namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 internal interface IProjectProvider
 {
-	IEnumerable<InternalProject> InternalProjects { get; }
-	IEnumerable<ExternalProject> ExternalProjects { get; }
+	IDictionary<string, InternalProject> InternalProjects { get; }
+	IDictionary<string, ExternalProject> ExternalProjects { get; }
 	IDictionary<string, IProject> AllProjects { get; }
 	void AddInternalProject(InternalProject internalProject);
 	void AddExternalProject(ExternalProject externalProject);
-	void AddUnresolvedProject(string name);
+	void AddUnresolvedProject(UnresolvedProject unresolvedProject);
 	void Clear();
 }

@@ -1,0 +1,16 @@
+﻿EditAccess to ProjectProvider:
+- ProjectLoader
+- ReadOnlyProjectProvider
+
+Domain?: 
+- ReadOnlyInterfaces
+
+State:
+- State:
+	- Timestamp of creation
+	- ParentState (ReadOnlyDataContext)
+	- MainState (CoreDataContext)
+	- CloneState (ClonedDataContext)
+
+DataContextCloning
+DataContextComparing

@@ -12,7 +12,7 @@ internal class TypeUsingDirective : ITypeUsingDirective
 	public IProjectNamespace ParentNamespace => ParentType.ParentNamespace;
 	public IProject ParentProject => ParentType.ParentProject;
 	public string NameReadOnly => Name;
-	public TypeUsingDirectiveState StateReadOnlyReadOnly => State;
+	public TypeUsingDirectiveState StateReadOnly => State;
 	public IReadOnlyProjectNamespace ReferencedNamespaceReadOnly => ReferencedNamespace;
 	public IReadOnlyNamespaceType ParentTypeReadOnly => ParentType;
 	public IReadOnlyProjectNamespace ParentNamespaceReadOnly => ParentNamespace;

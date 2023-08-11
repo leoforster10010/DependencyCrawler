@@ -8,21 +8,20 @@ internal class CachedProjectLoader : ICachedProjectLoader
 {
 	private readonly ICachedProjectProvider _cachedProjectProvider;
 	private readonly ICachedTypeFactory _cachedTypeFactory;
-	private readonly IProjectLoader _projectLoader;
-	private readonly IProjectProvider _projectProvider;
+	private readonly IReadOnlyProjectProvider _readOnlyProjectProvider;
 
 	public CachedProjectLoader(ICachedProjectProvider cachedProjectProvider, ICachedTypeFactory cachedTypeFactory,
-		IProjectProvider projectProvider, IProjectLoader projectLoader)
+		IReadOnlyProjectProvider readOnlyProjectProvider)
 	{
 		_cachedProjectProvider = cachedProjectProvider;
 		_cachedTypeFactory = cachedTypeFactory;
-		_projectProvider = projectProvider;
-		_projectLoader = projectLoader;
+		_readOnlyProjectProvider = readOnlyProjectProvider;
 	}
 
 	public IList<CachedProject> GetCachedProjects()
 	{
-		var projects = _projectProvider.AllProjects.Values;
+		_cachedProjectProvider.Clear();
+		var projects = _readOnlyProjectProvider.AllProjectsReadOnly.Values;
 
 		foreach (var project in projects)
 		{
@@ -32,7 +31,7 @@ internal class CachedProjectLoader : ICachedProjectLoader
 		return _cachedProjectProvider.CachedProjects;
 	}
 
-	private void CacheProject(IProject project)
+	private void CacheProject(IReadOnlyProject project)
 	{
 		var cachedProject = _cachedTypeFactory.GetCachedProject(project);
 		_cachedProjectProvider.AddCachedProject(cachedProject);

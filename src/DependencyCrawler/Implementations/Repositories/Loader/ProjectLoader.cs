@@ -4,7 +4,6 @@ using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Data.Enum;
 using DependencyCrawler.Implementations.Models;
 using DependencyCrawler.Implementations.Models.CachedTypes;
-using DependencyCrawler.Implementations.Models.LinkedTypes;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
@@ -33,6 +32,7 @@ internal class ProjectLoader : IProjectLoader
 
 	public void LoadAllProjects()
 	{
+		_projectProvider.Clear();
 		var csprojFiles = _projectFileProvider.GetProjectFiles();
 
 		foreach (var csprojFile in csprojFiles)
@@ -58,8 +58,7 @@ internal class ProjectLoader : IProjectLoader
 
 	private void LoadProjectFromCache(Guid id)
 	{
-		var cache = _cache;
-		var cachedProject = cache?.CachedProjects.FirstOrDefault(x => x.Id == id);
+		var cachedProject = _cache?.CachedProjects.FirstOrDefault(x => x.Id == id);
 
 		if (cachedProject is null)
 		{
@@ -86,78 +85,6 @@ internal class ProjectLoader : IProjectLoader
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
-	}
-
-	private void LoadInternalProject(CachedProject cachedProject)
-	{
-		if (_projectProvider.AllProjects.ContainsKey(cachedProject.Name))
-		{
-			return;
-		}
-
-		var internalProject = new InternalProject
-		{
-			Name = cachedProject.Name
-		};
-		_projectProvider.AddInternalProject(internalProject);
-
-		foreach (var cachedPackageReference in cachedProject.PackageReferences)
-		{
-			var referencedProject =
-				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
-			var packageReference =
-				_linkedTypeFactory.GetPackageReference(cachedPackageReference, internalProject, referencedProject);
-			internalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
-		}
-
-		foreach (var cachedProjectReference in cachedProject.ProjectReferences)
-		{
-			var referencedProject =
-				GetProjectOrLoadFromCache(cachedProjectReference.UsedProjectName, cachedProjectReference.Using);
-			var projectReference =
-				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
-			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
-		}
-
-		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
-		{
-			var projectNamespace = _linkedTypeFactory.GetProjectNamespace(cachedProjectNamespace, internalProject);
-			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
-		}
-	}
-
-	private void LoadExternalProject(CachedProject cachedProject)
-	{
-		if (_projectProvider.AllProjects.ContainsKey(cachedProject.Name))
-		{
-			return;
-		}
-
-		var externalProject = new ExternalProject
-		{
-			Name = cachedProject.Name
-		};
-		_projectProvider.AddExternalProject(externalProject);
-
-		foreach (var cachedPackageReference in cachedProject.PackageReferences)
-		{
-			var referencedProject =
-				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
-			var packageReference =
-				_linkedTypeFactory.GetPackageReference(cachedPackageReference, externalProject, referencedProject);
-			externalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
-		}
-
-		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
-		{
-			var projectNamespace = _linkedTypeFactory.GetProjectNamespace(cachedProjectNamespace, externalProject);
-			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
-		}
-	}
-
-	private void LoadUnresolvedProject(CachedProject cachedProject)
-	{
-		_projectProvider.AddUnresolvedProject(cachedProject.Name);
 	}
 
 	private void LoadProject(string name)
@@ -194,7 +121,7 @@ internal class ProjectLoader : IProjectLoader
 
 		var internalProjects = _projectProvider.InternalProjects.ToList();
 		var unlinkedUsingDirectives = internalProjects.SelectMany(x =>
-				x.Namespaces.Values.SelectMany(y =>
+				x.Value.Namespaces.Values.SelectMany(y =>
 					y.NamespaceTypes.Values.SelectMany(z => z.UsingDirectives.Values)))
 			.Where(x => x.State == TypeUsingDirectiveState.Unlinked).ToList();
 
@@ -254,22 +181,21 @@ internal class ProjectLoader : IProjectLoader
 
 	private void LoadUnresolvedProject(string name)
 	{
-		_projectProvider.AddUnresolvedProject(name);
+		var unresolvedProject = _linkedTypeFactory.CreateUnresolvedProject(name);
+		_projectProvider.AddUnresolvedProject(unresolvedProject);
 	}
 
 	private void LoadInternalProject(string csprojFile)
 	{
-		if (_projectProvider.InternalProjects.Any(x => x.Name == csprojFile.GetProjectName()))
+		if (_projectProvider.InternalProjects.Any(x => x.Value.Name == csprojFile.GetProjectName()))
 		{
 			return;
 		}
 
 		var internalProjectInfo = _projectInfoFactory.GetInternalProjectInfo(csprojFile);
 
-		var internalProject = new InternalProject
-		{
-			Name = internalProjectInfo.Name
-		};
+		var internalProject = _linkedTypeFactory.CreateInternalProject(internalProjectInfo);
+
 		_projectProvider.AddInternalProject(internalProject);
 
 		foreach (var packageReferenceInfo in internalProjectInfo.PackageReferences)
@@ -287,27 +213,19 @@ internal class ProjectLoader : IProjectLoader
 				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
 			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
 		}
-
-		foreach (var namespaceInfo in internalProjectInfo.Namespaces)
-		{
-			var projectNamespace = _linkedTypeFactory.GetProjectNamespace(namespaceInfo, internalProject);
-			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
-		}
 	}
 
 	private void LoadExternalProject(string dllFile)
 	{
-		if (_projectProvider.ExternalProjects.Any(x => x.Name == dllFile.GetDllName()))
+		if (_projectProvider.ExternalProjects.Any(x => x.Value.Name == dllFile.GetDllName()))
 		{
 			return;
 		}
 
 		var externalProjectInfo = _projectInfoFactory.GetExternalProjectInfo(dllFile);
 
-		var externalProject = new ExternalProject
-		{
-			Name = externalProjectInfo.Name
-		};
+		var externalProject = _linkedTypeFactory.CreateExternalProject(externalProjectInfo);
+
 		_projectProvider.AddExternalProject(externalProject);
 
 		foreach (var packageReferenceInfo in externalProjectInfo.PackageReferences)
@@ -317,11 +235,62 @@ internal class ProjectLoader : IProjectLoader
 				_linkedTypeFactory.GetPackageReference(packageReferenceInfo, externalProject, referencedProject);
 			externalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
 		}
+	}
 
-		foreach (var namespaceInfo in externalProjectInfo.Namespaces)
+	private void LoadInternalProject(CachedProject cachedProject)
+	{
+		if (_projectProvider.AllProjects.ContainsKey(cachedProject.Name))
 		{
-			var projectNamespace = _linkedTypeFactory.GetProjectNamespace(namespaceInfo, externalProject);
-			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+			return;
 		}
+
+		var internalProject = _linkedTypeFactory.CreateInternalProject(cachedProject);
+
+		_projectProvider.AddInternalProject(internalProject);
+
+		foreach (var cachedPackageReference in cachedProject.PackageReferences)
+		{
+			var referencedProject =
+				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
+			var packageReference =
+				_linkedTypeFactory.GetPackageReference(cachedPackageReference, internalProject, referencedProject);
+			internalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+		}
+
+		foreach (var cachedProjectReference in cachedProject.ProjectReferences)
+		{
+			var referencedProject =
+				GetProjectOrLoadFromCache(cachedProjectReference.UsedProjectName, cachedProjectReference.Using);
+			var projectReference =
+				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
+			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
+		}
+	}
+
+	private void LoadExternalProject(CachedProject cachedProject)
+	{
+		if (_projectProvider.AllProjects.ContainsKey(cachedProject.Name))
+		{
+			return;
+		}
+
+		var externalProject = _linkedTypeFactory.CreateExternalProject(cachedProject);
+
+		_projectProvider.AddExternalProject(externalProject);
+
+		foreach (var cachedPackageReference in cachedProject.PackageReferences)
+		{
+			var referencedProject =
+				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
+			var packageReference =
+				_linkedTypeFactory.GetPackageReference(cachedPackageReference, externalProject, referencedProject);
+			externalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+		}
+	}
+
+	private void LoadUnresolvedProject(CachedProject cachedProject)
+	{
+		var unresolvedProject = _linkedTypeFactory.CreateUnresolvedProject(cachedProject);
+		_projectProvider.AddUnresolvedProject(unresolvedProject);
 	}
 }

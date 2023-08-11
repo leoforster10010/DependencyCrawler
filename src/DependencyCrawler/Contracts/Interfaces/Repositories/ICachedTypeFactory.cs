@@ -5,5 +5,5 @@ namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 internal interface ICachedTypeFactory
 {
-	CachedProject GetCachedProject(IProject project);
+	CachedProject GetCachedProject(IReadOnlyProject project);
 }

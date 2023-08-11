@@ -13,10 +13,13 @@ internal interface ILinkedTypeFactory
 	ProjectReference GetProjectReference(IProject parentProject,
 		IProject referencedProject);
 
-	ProjectNamespace GetProjectNamespace(NamespaceInfo namespaceInfo, IProject parentProject);
-
 	PackageReference GetPackageReference(CachedPackageReference cachedPackageReference, IProject parentProject,
 		IProject referencedProject);
 
-	ProjectNamespace GetProjectNamespace(CachedProjectNamespace cachedProjectNamespace, IProject parentProject);
+	InternalProject CreateInternalProject(CachedProject cachedProject);
+	ExternalProject CreateExternalProject(CachedProject cachedProject);
+	UnresolvedProject CreateUnresolvedProject(CachedProject cachedProject);
+	InternalProject CreateInternalProject(InternalProjectInfo internalProjectInfo);
+	ExternalProject CreateExternalProject(ExternalProjectInfo externalProjectInfo);
+	UnresolvedProject CreateUnresolvedProject(string name);
 }

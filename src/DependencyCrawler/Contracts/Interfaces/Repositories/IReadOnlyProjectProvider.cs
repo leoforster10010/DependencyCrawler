@@ -4,7 +4,7 @@ namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 public interface IReadOnlyProjectProvider
 {
-	IReadOnlyList<IReadOnlyProject> InternalProjectsReadOnly { get; }
-	IReadOnlyList<IReadOnlyProject> ExternalProjectsReadOnly { get; }
+	IReadOnlyDictionary<string, IReadOnlyInternalProject> InternalProjectsReadOnly { get; }
+	IReadOnlyDictionary<string, IReadOnlyExternalProject> ExternalProjectsReadOnly { get; }
 	IReadOnlyDictionary<string, IReadOnlyProject> AllProjectsReadOnly { get; }
 }

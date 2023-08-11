@@ -3,19 +3,17 @@ using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 using Microsoft.Build.Construction;
+using TypeInfo = DependencyCrawler.Implementations.Models.UnlinkedTypes.TypeInfo;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;
 
 internal class ProjectInfoFactory : IProjectInfoFactory
 {
-	private readonly IExternalProjectInfoLoader _externalProjectInfoLoader;
-	private readonly IInternalProjectInfoLoader _internalProjectInfoLoader;
+	private readonly IProjectFileProvider _projectFileProvider;
 
-	public ProjectInfoFactory(IInternalProjectInfoLoader internalProjectInfoLoader,
-		IExternalProjectInfoLoader externalProjectInfoLoader)
+	public ProjectInfoFactory(IProjectFileProvider projectFileProvider)
 	{
-		_internalProjectInfoLoader = internalProjectInfoLoader;
-		_externalProjectInfoLoader = externalProjectInfoLoader;
+		_projectFileProvider = projectFileProvider;
 	}
 
 	public InternalProjectInfo GetInternalProjectInfo(string csprojFilePath)
@@ -66,7 +64,7 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 		var name = projectRootElement.FullPath.GetProjectName();
 		var packageReferences = projectRootElement.GetPackageReferences().ToList();
 		var projectReferences = projectRootElement.GetProjectReferences().ToList();
-		var namespaces = _internalProjectInfoLoader.LoadNamespaces(name).ToList();
+		var namespaces = GetNamespaces(name).ToList();
 
 		return new InternalProjectInfo
 		{
@@ -81,7 +79,7 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 	{
 		var name = assembly.GetProjectName();
 		var packageReferences = assembly.GetPackageReferenceInfos().ToList();
-		var namespaces = _externalProjectInfoLoader.LoadNamespaces(assembly);
+		var namespaces = GetNamespaces(assembly);
 
 		return new ExternalProjectInfo
 		{
@@ -89,5 +87,92 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 			Namespaces = namespaces,
 			PackageReferences = packageReferences
 		};
+	}
+
+	private IList<NamespaceInfo> GetNamespaces(Assembly assembly)
+	{
+		var namespaces = assembly.GetNamespaces().ToList();
+		foreach (var ns in namespaces)
+		{
+			ns.Types = GetTypeInfos(assembly, ns);
+		}
+
+		return namespaces;
+	}
+
+	private IList<TypeInfo> GetTypeInfos(Assembly assembly, NamespaceInfo ns)
+	{
+		var types = assembly.GetTypesSafe().Where(x => x.Namespace == ns.Name).Select(x => new TypeInfo
+		{
+			Name = x.Name
+		}).ToList();
+		return types;
+	}
+
+
+	private IEnumerable<NamespaceInfo> GetNamespaces(string projectName)
+	{
+		var typeFiles = GetProjectTypes(projectName);
+		var namespaces = new List<NamespaceInfo>();
+
+		foreach (var typeFile in typeFiles)
+		{
+			var ns = GetNamespace(typeFile, projectName);
+
+			if (namespaces.All(x => x.Name != ns.Name))
+			{
+				namespaces.Add(ns);
+			}
+
+			var namespaceInfo = namespaces.First(x => x.Name == ns.Name);
+			namespaceInfo.Types.Add(GetTypeInfo(typeFile));
+		}
+
+		return namespaces;
+	}
+
+	private TypeInfo GetTypeInfo(string typeFile)
+	{
+		var typeInfo = new TypeInfo
+		{
+			Name = typeFile.GetClassName(),
+			UsingDirectives = GetUsingDirectivesForType(typeFile)
+		};
+
+		return typeInfo;
+	}
+
+	private IList<UsingDirectiveInfo> GetUsingDirectivesForType(string typeFile)
+	{
+		var usingDirectives = File.ReadAllLines(typeFile)
+			.Where(x => x.StartsWith("using"))
+			.Select(x => new UsingDirectiveInfo
+			{
+				Namespace = x.GetUsingDirective()
+			});
+
+		return usingDirectives.ToList();
+	}
+
+	private NamespaceInfo GetNamespace(string typeFile, string projectName)
+	{
+		var namespaceLine = File.ReadAllLines(typeFile).FirstOrDefault(x => x.StartsWith("namespace")) ?? projectName;
+
+		var namespaceString = namespaceLine.Remove("namespace ").Remove(";").Trim();
+
+		return new NamespaceInfo
+		{
+			Name = namespaceString
+		};
+	}
+
+	private IEnumerable<string> GetProjectTypes(string projectName)
+	{
+		const string extension = "*.cs";
+		var directory = _projectFileProvider.GetProjectDirectory(projectName);
+
+		return directory != null
+			? Directory.GetFiles(directory, extension, SearchOption.AllDirectories)
+			: Enumerable.Empty<string>();
 	}
 }

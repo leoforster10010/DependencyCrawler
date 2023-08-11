@@ -9,6 +9,101 @@ namespace DependencyCrawler.Implementations.Repositories.Factories;
 
 internal class LinkedTypeFactory : ILinkedTypeFactory
 {
+	public InternalProject CreateInternalProject(CachedProject cachedProject)
+	{
+		if (cachedProject.ProjectType is not ProjectType.Internal)
+		{
+			throw new Exception("Wrong ProjectType, can't create an InternalProject out of this type");
+		}
+
+		var internalProject = new InternalProject
+		{
+			Name = cachedProject.Name
+		};
+
+		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
+		{
+			var projectNamespace = GetProjectNamespace(cachedProjectNamespace, internalProject);
+			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+		}
+
+		return internalProject;
+	}
+
+	public ExternalProject CreateExternalProject(CachedProject cachedProject)
+	{
+		if (cachedProject.ProjectType is not ProjectType.External)
+		{
+			throw new Exception("Wrong ProjectType, can't create an ExternalProject out of this type");
+		}
+
+		var externalProject = new ExternalProject
+		{
+			Name = cachedProject.Name
+		};
+
+		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
+		{
+			var projectNamespace = GetProjectNamespace(cachedProjectNamespace, externalProject);
+			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+		}
+
+		return externalProject;
+	}
+
+	public UnresolvedProject CreateUnresolvedProject(CachedProject cachedProject)
+	{
+		if (cachedProject.ProjectType is not ProjectType.Unresolved)
+		{
+			throw new Exception("Wrong ProjectType, can't create an UnresolvedProject out of this type");
+		}
+
+		return new UnresolvedProject
+		{
+			Name = cachedProject.Name
+		};
+	}
+
+	public InternalProject CreateInternalProject(InternalProjectInfo internalProjectInfo)
+	{
+		var internalProject = new InternalProject
+		{
+			Name = internalProjectInfo.Name
+		};
+
+		foreach (var namespaceInfo in internalProjectInfo.Namespaces)
+		{
+			var projectNamespace = GetProjectNamespace(namespaceInfo, internalProject);
+			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+		}
+
+		return internalProject;
+	}
+
+	public ExternalProject CreateExternalProject(ExternalProjectInfo externalProjectInfo)
+	{
+		var externalProject = new ExternalProject
+		{
+			Name = externalProjectInfo.Name
+		};
+
+		foreach (var namespaceInfo in externalProjectInfo.Namespaces)
+		{
+			var projectNamespace = GetProjectNamespace(namespaceInfo, externalProject);
+			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+		}
+
+		return externalProject;
+	}
+
+	public UnresolvedProject CreateUnresolvedProject(string name)
+	{
+		return new UnresolvedProject
+		{
+			Name = name
+		};
+	}
+
 	public PackageReference GetPackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
 		IProject referencedProject)
 	{
@@ -50,7 +145,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		return projectReference;
 	}
 
-	public ProjectNamespace GetProjectNamespace(NamespaceInfo namespaceInfo, IProject parentProject)
+	private ProjectNamespace GetProjectNamespace(NamespaceInfo namespaceInfo, IProject parentProject)
 	{
 		var projectNamespace = new ProjectNamespace
 		{
@@ -67,7 +162,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		return projectNamespace;
 	}
 
-	public ProjectNamespace GetProjectNamespace(CachedProjectNamespace cachedProjectNamespace, IProject parentProject)
+	private ProjectNamespace GetProjectNamespace(CachedProjectNamespace cachedProjectNamespace, IProject parentProject)
 	{
 		var projectNamespace = new ProjectNamespace
 		{
