@@ -89,6 +89,8 @@ internal class ProjectLoader : IProjectLoader
 
 	private void LoadProject(string name)
 	{
+		//ToDo Rework: consider version, if PackageReference load as external
+
 		_logger.LogInformation($"Loading {name}...");
 		if (_projectFileProvider.GetIsInternal(name))
 		{
@@ -130,7 +132,8 @@ internal class ProjectLoader : IProjectLoader
 		foreach (var usingDirective in unlinkedUsingDirectives)
 		{
 			var referencedProject =
-				_projectProvider.AllProjects.Values.FirstOrDefault(x => x.Namespaces.ContainsKey(usingDirective.Name));
+				_projectProvider.AllProjects.Values.FirstOrDefault(x =>
+					x.Namespaces.ContainsKey(usingDirective.Name) || x.Types.ContainsKey(usingDirective.Name));
 
 			if (referencedProject is null)
 			{
@@ -138,7 +141,13 @@ internal class ProjectLoader : IProjectLoader
 				continue;
 			}
 
-			var referencedNamespace = referencedProject.Namespaces[usingDirective.Name];
+			if (referencedProject.Namespaces.TryGetValue(usingDirective.Name, out var referencedNamespace))
+			{
+			}
+			else
+			{
+				referencedNamespace = referencedProject.Types[usingDirective.Name].ParentNamespace;
+			}
 
 			usingDirective.ReferencedNamespace = referencedNamespace;
 			usingDirective.State = TypeUsingDirectiveState.Linked;
