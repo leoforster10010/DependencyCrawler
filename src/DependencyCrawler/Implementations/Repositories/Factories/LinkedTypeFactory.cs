@@ -77,6 +77,13 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
 		}
 
+		//Adding HeadNamespace
+		internalProject.Namespaces.TryAdd(internalProject.Name, new ProjectNamespace
+		{
+			Name = internalProject.Name,
+			ParentProject = internalProject
+		});
+
 		return internalProject;
 	}
 
@@ -92,6 +99,13 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			var projectNamespace = GetProjectNamespace(namespaceInfo, externalProject);
 			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
 		}
+
+		//Adding HeadNamespace
+		externalProject.Namespaces.TryAdd(externalProject.Name, new ProjectNamespace
+		{
+			Name = externalProject.Name,
+			ParentProject = externalProject
+		});
 
 		return externalProject;
 	}

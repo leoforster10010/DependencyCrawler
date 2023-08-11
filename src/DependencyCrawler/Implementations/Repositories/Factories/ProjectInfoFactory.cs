@@ -19,9 +19,19 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 	public InternalProjectInfo GetInternalProjectInfo(string csprojFilePath)
 	{
 		var projectRootElement = GetProjectRootElement(csprojFilePath);
-		var projectInfo = GetInternalProjectInfo(projectRootElement);
 
-		return projectInfo;
+		var name = projectRootElement.FullPath.GetProjectName();
+		var packageReferences = projectRootElement.GetPackageReferences().ToList();
+		var projectReferences = projectRootElement.GetProjectReferences().ToList();
+		var namespaces = GetNamespaces(name).ToList();
+
+		return new InternalProjectInfo
+		{
+			Name = name,
+			Namespaces = namespaces,
+			PackageReferences = packageReferences,
+			ProjectReferences = projectReferences
+		};
 	}
 
 	public ExternalProjectInfo GetExternalProjectInfo(string dllFilePath)
@@ -29,15 +39,23 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 		var assembly = GetAssembly(dllFilePath);
 		if (assembly is null)
 		{
+			//ToDo: if failed try other dll?
 			return new ExternalProjectInfo
 			{
 				Name = dllFilePath.GetDllName()
 			};
 		}
 
-		var externalProjectInfo = GetExternalProjectInfo(assembly);
+		var name = assembly.GetProjectName();
+		var packageReferences = assembly.GetPackageReferenceInfos().ToList();
+		var namespaces = GetNamespaces(assembly);
 
-		return externalProjectInfo;
+		return new ExternalProjectInfo
+		{
+			Name = name,
+			Namespaces = namespaces,
+			PackageReferences = packageReferences
+		};
 	}
 
 	private ProjectRootElement GetProjectRootElement(string csprojFilePath)
@@ -57,36 +75,6 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 			//ignored
 			return null;
 		}
-	}
-
-	private InternalProjectInfo GetInternalProjectInfo(ProjectRootElement projectRootElement)
-	{
-		var name = projectRootElement.FullPath.GetProjectName();
-		var packageReferences = projectRootElement.GetPackageReferences().ToList();
-		var projectReferences = projectRootElement.GetProjectReferences().ToList();
-		var namespaces = GetNamespaces(name).ToList();
-
-		return new InternalProjectInfo
-		{
-			Name = name,
-			Namespaces = namespaces,
-			PackageReferences = packageReferences,
-			ProjectReferences = projectReferences
-		};
-	}
-
-	private ExternalProjectInfo GetExternalProjectInfo(Assembly assembly)
-	{
-		var name = assembly.GetProjectName();
-		var packageReferences = assembly.GetPackageReferenceInfos().ToList();
-		var namespaces = GetNamespaces(assembly);
-
-		return new ExternalProjectInfo
-		{
-			Name = name,
-			Namespaces = namespaces,
-			PackageReferences = packageReferences
-		};
 	}
 
 	private IList<NamespaceInfo> GetNamespaces(Assembly assembly)

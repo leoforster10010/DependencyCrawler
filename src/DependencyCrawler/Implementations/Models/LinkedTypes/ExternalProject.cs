@@ -5,6 +5,8 @@ namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
 internal class ExternalProject : IExternalProject
 {
+	//ToDo: if InternalProject with same Name exists, link to it
+
 	public IDictionary<string, IPackageReference> PackageReferences { get; set; } =
 		new Dictionary<string, IPackageReference>();
 
