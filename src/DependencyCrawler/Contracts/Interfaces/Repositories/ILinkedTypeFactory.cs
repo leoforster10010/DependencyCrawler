@@ -22,4 +22,7 @@ internal interface ILinkedTypeFactory
 	InternalProject CreateInternalProject(InternalProjectInfo internalProjectInfo);
 	ExternalProject CreateExternalProject(ExternalProjectInfo externalProjectInfo);
 	UnresolvedProject CreateUnresolvedProject(string name);
+
+	ProjectReference GetProjectReference(CachedProjectReference cachedProjectReference, IProject parentProject,
+		IProject referencedProject);
 }

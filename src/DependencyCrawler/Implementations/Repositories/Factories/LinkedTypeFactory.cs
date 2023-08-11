@@ -18,7 +18,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 
 		var internalProject = new InternalProject
 		{
-			Name = cachedProject.Name
+			Name = cachedProject.Name,
+			Id = cachedProject.Id
 		};
 
 		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
@@ -39,7 +40,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 
 		var externalProject = new ExternalProject
 		{
-			Name = cachedProject.Name
+			Name = cachedProject.Name,
+			Id = cachedProject.Id
 		};
 
 		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
@@ -60,7 +62,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 
 		return new UnresolvedProject
 		{
-			Name = cachedProject.Name
+			Name = cachedProject.Name,
+			Id = cachedProject.Id
 		};
 	}
 
@@ -139,7 +142,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		{
 			Version = cachedPackageReference.Version,
 			Using = referencedProject,
-			UsedBy = parentProject
+			UsedBy = parentProject,
+			Id = cachedPackageReference.Id
 		};
 		referencedProject.ReferencedBy.TryAdd(packageReference.UsedBy.Name, packageReference);
 
@@ -153,6 +157,20 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		{
 			Using = referencedProject,
 			UsedBy = parentProject
+		};
+		referencedProject.ReferencedBy.TryAdd(projectReference.UsedBy.Name, projectReference);
+
+		return projectReference;
+	}
+
+	public ProjectReference GetProjectReference(CachedProjectReference cachedProjectReference, IProject parentProject,
+		IProject referencedProject)
+	{
+		var projectReference = new ProjectReference
+		{
+			Using = referencedProject,
+			UsedBy = parentProject,
+			Id = cachedProjectReference.Id
 		};
 		referencedProject.ReferencedBy.TryAdd(projectReference.UsedBy.Name, projectReference);
 
@@ -181,7 +199,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		var projectNamespace = new ProjectNamespace
 		{
 			Name = cachedProjectNamespace.Name,
-			ParentProject = parentProject
+			ParentProject = parentProject,
+			Id = cachedProjectNamespace.Id
 		};
 
 		foreach (var typeInfo in cachedProjectNamespace.NamespaceTypes)
@@ -215,7 +234,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		var namespaceType = new NamespaceType
 		{
 			Name = cachedNamespaceType.Name,
-			ParentNamespace = parentNamespace
+			ParentNamespace = parentNamespace,
+			Id = cachedNamespaceType.Id
 		};
 
 		foreach (var usingDirectiveInfo in cachedNamespaceType.UsingDirectives)
@@ -249,7 +269,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		{
 			ReferencedNamespace = new UnresolvedNamespace
 			{
-				Name = cachedTypeUsingDirective.Name
+				Name = cachedTypeUsingDirective.Name,
+				Id = cachedTypeUsingDirective.ReferencedNamespaceId
 			},
 			ParentType = parentType,
 			State = TypeUsingDirectiveState.Unlinked

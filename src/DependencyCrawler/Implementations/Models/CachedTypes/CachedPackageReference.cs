@@ -1,8 +1,9 @@
 using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 
 namespace DependencyCrawler.Implementations.Models.CachedTypes;
 
-public class CachedPackageReference
+public class CachedPackageReference : Entity
 {
 	public required Guid Using { get; set; }
 	public required string UsedProjectName { get; set; }

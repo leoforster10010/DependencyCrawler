@@ -1,8 +1,9 @@
 using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IReadOnlyTypeUsingDirective
+public interface IReadOnlyTypeUsingDirective : IEntity
 {
 	public string NameReadOnly { get; }
 	public TypeUsingDirectiveState StateReadOnly { get; }

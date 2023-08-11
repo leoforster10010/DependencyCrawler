@@ -1,10 +1,10 @@
 using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 
 namespace DependencyCrawler.Implementations.Models.CachedTypes;
 
-public class CachedProject
+public class CachedProject : Entity
 {
-	public Guid Id { get; } = Guid.NewGuid();
 	public required string Name { get; init; }
 	public required ProjectType ProjectType { get; init; }
 

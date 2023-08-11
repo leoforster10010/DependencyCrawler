@@ -12,5 +12,9 @@ State:
 	- MainState (CoreDataContext)
 	- CloneState (ClonedDataContext)
 
-DataContextCloning
-DataContextComparing
+DataContextCloning:
+	- same Id, new object/Reference
+DataContextComparing:
+	- same Id?
+	-> data changed?
+	-> return changes

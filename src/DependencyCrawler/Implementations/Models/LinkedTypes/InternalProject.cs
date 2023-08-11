@@ -3,22 +3,22 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class InternalProject : IInternalProject
+internal class InternalProject : Entity, IInternalProject
 {
-	public IDictionary<string, IPackageReference> PackageReferences { get; set; } =
-		new Dictionary<string, IPackageReference>();
+	public IDictionary<Guid, IPackageReference> PackageReferences { get; set; } =
+		new Dictionary<Guid, IPackageReference>();
 
-	public IDictionary<string, IProjectReference> ProjectReferences { get; set; } =
-		new Dictionary<string, IProjectReference>();
+	public IDictionary<Guid, IProjectReference> ProjectReferences { get; set; } =
+		new Dictionary<Guid, IProjectReference>();
 
 	public ProjectType ProjectType => ProjectType.Internal;
 	public required string Name { get; init; }
 
-	public IDictionary<string, IReference> Dependencies
+	public IDictionary<Guid, IReference> Dependencies
 	{
 		get
 		{
-			var allDependencies = new Dictionary<string, IReference>();
+			var allDependencies = new Dictionary<Guid, IReference>();
 			foreach (var projectReference in ProjectReferences)
 			{
 				allDependencies.TryAdd(projectReference.Key, projectReference.Value);
@@ -33,35 +33,35 @@ internal class InternalProject : IInternalProject
 		}
 	}
 
-	public IDictionary<string, IReference> ReferencedBy { get; set; } = new Dictionary<string, IReference>();
+	public IDictionary<Guid, IReference> ReferencedBy { get; set; } = new Dictionary<Guid, IReference>();
 
-	public IDictionary<string, IProjectNamespace> Namespaces { get; set; } =
-		new Dictionary<string, IProjectNamespace>();
+	public IDictionary<Guid, IProjectNamespace> Namespaces { get; set; } =
+		new Dictionary<Guid, IProjectNamespace>();
 
-	public IDictionary<string, INamespaceType> Types
+	public IDictionary<Guid, INamespaceType> Types
 	{
 		get
 		{
-			var projectTypes = new Dictionary<string, INamespaceType>();
+			var projectTypes = new Dictionary<Guid, INamespaceType>();
 			var types = Namespaces.Values.SelectMany(x => x.NamespaceTypes.Values);
 			foreach (var type in types)
 			{
-				projectTypes.TryAdd(type.FullName, type);
+				projectTypes.TryAdd(type.Id, type);
 			}
 
 			return projectTypes;
 		}
 	}
 
-	public IDictionary<string, ITypeUsingDirective> UsingDirectives
+	public IDictionary<Guid, ITypeUsingDirective> UsingDirectives
 	{
 		get
 		{
-			var projectUsingDirectives = new Dictionary<string, ITypeUsingDirective>();
+			var projectUsingDirectives = new Dictionary<Guid, ITypeUsingDirective>();
 			var usingDirectives = Namespaces.Values.SelectMany(x => x.TypeUsingDirectives.Values);
 			foreach (var usingDirective in usingDirectives)
 			{
-				projectUsingDirectives.TryAdd(usingDirective.Name, usingDirective);
+				projectUsingDirectives.TryAdd(usingDirective.Id, usingDirective);
 			}
 
 			return projectUsingDirectives;
@@ -71,24 +71,24 @@ internal class InternalProject : IInternalProject
 	public string NameReadOnly => Name;
 	public ProjectType ProjectTypeReadOnly => ProjectType;
 
-	public IReadOnlyDictionary<string, IReadOnlyReference> DependenciesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyReference> DependenciesReadOnly =>
 		Dependencies.ToDictionary(x => x.Key, x => x.Value as IReadOnlyReference);
 
-	public IReadOnlyDictionary<string, IReadOnlyReference> ReferencedByReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyReference> ReferencedByReadOnly =>
 		ReferencedBy.ToDictionary(x => x.Key, x => x.Value as IReadOnlyReference);
 
-	public IReadOnlyDictionary<string, IReadOnlyProjectNamespace> NamespacesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyProjectNamespace> NamespacesReadOnly =>
 		Namespaces.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProjectNamespace);
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> TypesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> TypesReadOnly =>
 		Types.ToDictionary(x => x.Key, x => x.Value as IReadOnlyNamespaceType);
 
-	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
 		UsingDirectives.ToDictionary(x => x.Key, x => x.Value as IReadOnlyTypeUsingDirective);
 
-	public IReadOnlyDictionary<string, IReadOnlyPackageReference> PackageReferencesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyPackageReference> PackageReferencesReadOnly =>
 		PackageReferences.ToDictionary(x => x.Key, x => x.Value as IReadOnlyPackageReference);
 
-	public IReadOnlyDictionary<string, IReadOnlyProjectReference> ProjectReferencesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyProjectReference> ProjectReferencesReadOnly =>
 		ProjectReferences.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProjectReference);
 }

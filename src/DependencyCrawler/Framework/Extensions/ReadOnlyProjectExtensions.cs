@@ -21,10 +21,10 @@ public static class ReadOnlyProjectExtensions
 			       ContainsDependency(dependency.UsingReadOnly.DependenciesReadOnly.Values.ToList(), projectName));
 	}
 
-	public static IReadOnlyDictionary<string, IReadOnlyProject> GetAllDependenciesRecursive(
+	public static IReadOnlyDictionary<Guid, IReadOnlyProject> GetAllDependenciesRecursive(
 		this IReadOnlyProject project)
 	{
-		var dependencies = new Dictionary<string, IReadOnlyProject>();
+		var dependencies = new Dictionary<Guid, IReadOnlyProject>();
 
 		foreach (var dependency in project.DependenciesReadOnly)
 		{
@@ -40,9 +40,9 @@ public static class ReadOnlyProjectExtensions
 		return dependencies;
 	}
 
-	public static IReadOnlyDictionary<string, IReadOnlyProject> GetAllReferencesRecursive(this IReadOnlyProject project)
+	public static IReadOnlyDictionary<Guid, IReadOnlyProject> GetAllReferencesRecursive(this IReadOnlyProject project)
 	{
-		var references = new Dictionary<string, IReadOnlyProject>();
+		var references = new Dictionary<Guid, IReadOnlyProject>();
 
 		foreach (var reference in project.ReferencedByReadOnly)
 		{

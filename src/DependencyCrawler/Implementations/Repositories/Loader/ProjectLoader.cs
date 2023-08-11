@@ -271,7 +271,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject =
 				GetProjectOrLoadFromCache(cachedProjectReference.UsedProjectName, cachedProjectReference.Using);
 			var projectReference =
-				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
+				_linkedTypeFactory.GetProjectReference(cachedProjectReference, internalProject, referencedProject);
 			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
 		}
 	}

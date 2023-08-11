@@ -1,6 +1,7 @@
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Data.Enum;
 using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Implementations.Models.LinkedTypes;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.DataAccess;
@@ -138,4 +139,160 @@ internal class CacheManager : ICacheManager
 		_caches.Clear();
 		LoadCaches();
 	}
+}
+
+internal class State<T, TReadOnly> : Entity
+{
+	private StateType _stateType;
+
+	private State()
+	{
+		ParentState = this;
+	}
+
+	public State<T, TReadOnly> ParentState { get; init; }
+	public Dictionary<Guid, State<T, TReadOnly>> ChildStates { get; } = new();
+	public State<T, TReadOnly> ActiveMainState => GetActiveMainState();
+	public bool IsRootState => ReferenceEquals(this, ParentState);
+	public bool Locked => ChildStates.Any();
+
+	public required StateType StateType
+	{
+		get => _stateType;
+		init => _stateType = value;
+	}
+
+	public required IDataContext<T, TReadOnly> DataContext { private get; init; }
+	public IReadOnlyDataContext<T, TReadOnly> ReadOnlyDataContext => DataContext;
+
+	public static State<T, TReadOnly> CreateRootState(IDataContext<T, TReadOnly> dataContext)
+	{
+		return new State<T, TReadOnly>
+		{
+			StateType = StateType.Main,
+			DataContext = dataContext
+		};
+	}
+
+	public State<T, TReadOnly> CreateChildState()
+	{
+		if (StateType is not StateType.Main)
+		{
+			throw new Exception("Can't create new state out of branch-state!");
+		}
+
+		var mainState = new State<T, TReadOnly>
+		{
+			ParentState = this,
+			StateType = StateType.Main,
+			DataContext = ReadOnlyDataContext.Clone()
+		};
+		var branchState = new State<T, TReadOnly>
+		{
+			ParentState = this,
+			StateType = StateType.Branch,
+			DataContext = ReadOnlyDataContext.Clone()
+		};
+		ChildStates.TryAdd(mainState.Id, mainState);
+		ChildStates.TryAdd(branchState.Id, branchState);
+
+		return branchState;
+	}
+
+	public bool TryGetDataContext(out IDataContext<T, TReadOnly> dataContext)
+	{
+		if (Locked)
+		{
+			dataContext = new EmptyDataContext<T, TReadOnly>();
+			return false;
+		}
+
+		dataContext = DataContext;
+		return true;
+	}
+
+	public void SetAsMainState()
+	{
+		if (Locked)
+		{
+			throw new Exception("Can't change the type of locked state!");
+		}
+
+		if (StateType is StateType.Main)
+		{
+			return;
+		}
+
+		ActiveMainState.SetBranch();
+		SetMain();
+	}
+
+	private void SetMain()
+	{
+		_stateType = StateType.Main;
+
+		if (IsRootState)
+		{
+			return;
+		}
+
+		ParentState.SetMain();
+	}
+
+	private void SetBranch()
+	{
+		_stateType = StateType.Branch;
+
+		if (IsRootState)
+		{
+			return;
+		}
+
+		ParentState.SetBranch();
+	}
+
+	private State<T, TReadOnly> GetActiveMainState()
+	{
+		if (StateType is not StateType.Main)
+		{
+			return ParentState.GetActiveMainState();
+		}
+
+		if (StateType is StateType.Main && !Locked)
+		{
+			return this;
+		}
+
+		var childState = ChildStates.Values.First(x => x.StateType is StateType.Main);
+		return childState.GetActiveMainState();
+	}
+}
+
+internal class EmptyDataContext<T, TReadOnly> : IDataContext<T, TReadOnly>
+{
+	public TReadOnly DataReadOnly => default!;
+
+	public IDataContext<T, TReadOnly> Clone()
+	{
+		throw new NotImplementedException();
+	}
+
+	public T Data { get; init; } = default!;
+}
+
+internal interface IDataContext<T, TReadOnly> : IReadOnlyDataContext<T, TReadOnly>
+{
+	public T Data { get; init; }
+}
+
+internal interface IReadOnlyDataContext<T, TReadOnly>
+{
+	public TReadOnly DataReadOnly { get; }
+	public IDataContext<T, TReadOnly> Clone();
+}
+
+internal enum StateType
+{
+	Main,
+	Branch
 }
