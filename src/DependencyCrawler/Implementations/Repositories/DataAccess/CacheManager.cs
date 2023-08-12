@@ -176,24 +176,23 @@ internal class State<T, TReadOnly> : Entity
 
 	public State<T, TReadOnly> CreateChildState()
 	{
-		if (StateType is not StateType.Main)
+		if (StateType is StateType.Main)
 		{
-			throw new Exception("Can't create new state out of branch-state!");
+			var mainState = new State<T, TReadOnly>
+			{
+				ParentState = this,
+				StateType = StateType.Main,
+				DataContext = ReadOnlyDataContext.Clone()
+			};
+			ChildStates.TryAdd(mainState.Id, mainState);
 		}
 
-		var mainState = new State<T, TReadOnly>
-		{
-			ParentState = this,
-			StateType = StateType.Main,
-			DataContext = ReadOnlyDataContext.Clone()
-		};
 		var branchState = new State<T, TReadOnly>
 		{
 			ParentState = this,
 			StateType = StateType.Branch,
 			DataContext = ReadOnlyDataContext.Clone()
 		};
-		ChildStates.TryAdd(mainState.Id, mainState);
 		ChildStates.TryAdd(branchState.Id, branchState);
 
 		return branchState;
