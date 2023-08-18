@@ -3,25 +3,31 @@ using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Data.Enum;
 using DependencyCrawler.Implementations.Models.CachedTypes;
 using DependencyCrawler.Implementations.Models.LinkedTypes;
+using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Factories;
 
 internal class CachedTypeFactory : ICachedTypeFactory
 {
 	private readonly ICachedProjectProvider _cachedProjectProvider;
+	private readonly ILogger<CachedTypeFactory> _logger;
 
-	public CachedTypeFactory(ICachedProjectProvider cachedProjectProvider)
+	public CachedTypeFactory(ICachedProjectProvider cachedProjectProvider, ILogger<CachedTypeFactory> logger)
 	{
 		_cachedProjectProvider = cachedProjectProvider;
+		_logger = logger;
 	}
 
 	public CachedProject GetCachedProject(IReadOnlyProject project)
 	{
+		_logger.LogInformation($"Caching {project.NameReadOnly}...");
 		var cachedProject = new CachedProject
 		{
 			Name = project.NameReadOnly,
 			ProjectType = project.ProjectTypeReadOnly
 		};
+
+		_cachedProjectProvider.AddCachedProject(cachedProject);
 
 		cachedProject.PackageReferences = GetCachedPackageReferences(cachedProject, project);
 		cachedProject.ProjectReferences = GetCachedProjectReferences(cachedProject, project);
@@ -91,7 +97,6 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		}
 
 		var referencedCachedProject = GetCachedProject(referencedNamespace.ParentProjectReadOnly);
-		_cachedProjectProvider.AddCachedProject(referencedCachedProject);
 
 		return referencedCachedProject.Namespaces.First(x => x.Name == referencedNamespace.NameReadOnly).Id;
 	}
@@ -128,6 +133,12 @@ internal class CachedTypeFactory : ICachedTypeFactory
 	private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject,
 		IReadOnlyProject project)
 	{
+		if (project.NameReadOnly.ToLower() is "mscorlib" or "system" ||
+		    project.NameReadOnly.ToLower().StartsWith("system."))
+		{
+			return new List<CachedPackageReference>();
+		}
+
 		//ToDo test: do we smell an exception?
 		var packageReferences = project.DependenciesReadOnly.Values
 			.Where(x => x.ReferenceTypeReadOnly == ReferenceType.Package)
@@ -164,7 +175,6 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		}
 
 		var referencedCachedProject = GetCachedProject(reference.Using);
-		_cachedProjectProvider.AddCachedProject(referencedCachedProject);
 
 		return referencedCachedProject.Id;
 	}

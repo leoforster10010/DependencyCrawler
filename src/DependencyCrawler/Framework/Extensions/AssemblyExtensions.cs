@@ -25,9 +25,9 @@ internal static class AssemblyExtensions
 		return packageReferenceInfos;
 	}
 
-	public static IEnumerable<NamespaceInfo> GetNamespaces(this Assembly assembly)
+	public static IEnumerable<NamespaceInfo> GetNamespaces(this Assembly assembly, IEnumerable<Type> types)
 	{
-		var typeNamespaces = assembly.GetTypesSafe().Select(x => x.Namespace);
+		var typeNamespaces = types.Select(x => x.GetNamespace());
 
 		var namespaces = typeNamespaces.Distinct().Select(x => new NamespaceInfo
 		{
@@ -54,7 +54,7 @@ internal static class AssemblyExtensions
 		{
 			try
 			{
-				if (type.Namespace is not null)
+				if (type.FullName is not null)
 				{
 					safeTypes.Add(type);
 				}
@@ -66,5 +66,13 @@ internal static class AssemblyExtensions
 		}
 
 		return safeTypes;
+	}
+}
+
+internal static class TypeExtensions
+{
+	public static string GetNamespace(this Type type)
+	{
+		return type.FullName!.Remove(type.Name).Remove("+");
 	}
 }

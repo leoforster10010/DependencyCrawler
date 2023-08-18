@@ -2,7 +2,7 @@ using DependencyCrawler.Implementations.Models;
 
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
-internal interface ICacheManager
+public interface ICacheManager
 {
 	IReadOnlyList<Cache> Caches { get; }
 	Cache? ActiveCache { get; }
