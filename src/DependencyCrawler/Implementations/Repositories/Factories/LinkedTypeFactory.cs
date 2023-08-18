@@ -25,7 +25,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
 		{
 			var projectNamespace = GetProjectNamespace(cachedProjectNamespace, internalProject);
-			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+			internalProject.Namespaces.TryAdd(projectNamespace.Id, projectNamespace);
 		}
 
 		return internalProject;
@@ -47,7 +47,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var cachedProjectNamespace in cachedProject.Namespaces)
 		{
 			var projectNamespace = GetProjectNamespace(cachedProjectNamespace, externalProject);
-			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+			externalProject.Namespaces.TryAdd(projectNamespace.Id, projectNamespace);
 		}
 
 		return externalProject;
@@ -77,15 +77,16 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var namespaceInfo in internalProjectInfo.Namespaces)
 		{
 			var projectNamespace = GetProjectNamespace(namespaceInfo, internalProject);
-			internalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+			internalProject.Namespaces.TryAdd(projectNamespace.Id, projectNamespace);
 		}
 
-		//Adding HeadNamespace
-		internalProject.Namespaces.TryAdd(internalProject.Name, new ProjectNamespace
+		//Adding RootNamespace
+		var rootNamespace = new ProjectNamespace
 		{
 			Name = internalProject.Name,
 			ParentProject = internalProject
-		});
+		};
+		internalProject.Namespaces.TryAdd(rootNamespace.Id, rootNamespace);
 
 		return internalProject;
 	}
@@ -100,15 +101,16 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var namespaceInfo in externalProjectInfo.Namespaces)
 		{
 			var projectNamespace = GetProjectNamespace(namespaceInfo, externalProject);
-			externalProject.Namespaces.TryAdd(projectNamespace.Name, projectNamespace);
+			externalProject.Namespaces.TryAdd(projectNamespace.Id, projectNamespace);
 		}
 
-		//Adding HeadNamespace
-		externalProject.Namespaces.TryAdd(externalProject.Name, new ProjectNamespace
+		//Adding RootNamespace
+		var rootNamespace = new ProjectNamespace
 		{
 			Name = externalProject.Name,
 			ParentProject = externalProject
-		});
+		};
+		externalProject.Namespaces.TryAdd(rootNamespace.Id, rootNamespace);
 
 		return externalProject;
 	}
@@ -130,7 +132,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			Using = referencedProject,
 			UsedBy = parentProject
 		};
-		referencedProject.ReferencedBy.TryAdd(packageReference.UsedBy.Name, packageReference);
+		referencedProject.ReferencedBy.TryAdd(packageReference.Id, packageReference);
 
 		return packageReference;
 	}
@@ -145,7 +147,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			UsedBy = parentProject,
 			Id = cachedPackageReference.Id
 		};
-		referencedProject.ReferencedBy.TryAdd(packageReference.UsedBy.Name, packageReference);
+		referencedProject.ReferencedBy.TryAdd(packageReference.Id, packageReference);
 
 		return packageReference;
 	}
@@ -158,7 +160,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			Using = referencedProject,
 			UsedBy = parentProject
 		};
-		referencedProject.ReferencedBy.TryAdd(projectReference.UsedBy.Name, projectReference);
+		referencedProject.ReferencedBy.TryAdd(projectReference.Id, projectReference);
 
 		return projectReference;
 	}
@@ -172,7 +174,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 			UsedBy = parentProject,
 			Id = cachedProjectReference.Id
 		};
-		referencedProject.ReferencedBy.TryAdd(projectReference.UsedBy.Name, projectReference);
+		referencedProject.ReferencedBy.TryAdd(projectReference.Id, projectReference);
 
 		return projectReference;
 	}
@@ -188,7 +190,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var typeInfo in namespaceInfo.Types)
 		{
 			var namespaceType = GetNamespaceType(typeInfo, projectNamespace);
-			projectNamespace.NamespaceTypes.TryAdd(namespaceType.FullName, namespaceType);
+			projectNamespace.NamespaceTypes.TryAdd(namespaceType.Id, namespaceType);
 		}
 
 		return projectNamespace;
@@ -206,7 +208,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var typeInfo in cachedProjectNamespace.NamespaceTypes)
 		{
 			var namespaceType = GetNamespaceType(typeInfo, projectNamespace);
-			projectNamespace.NamespaceTypes.TryAdd(namespaceType.FullName, namespaceType);
+			projectNamespace.NamespaceTypes.TryAdd(namespaceType.Id, namespaceType);
 		}
 
 		return projectNamespace;
@@ -223,7 +225,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var usingDirectiveInfo in typeInfo.UsingDirectives)
 		{
 			var typeUsingDirective = GetTypeUsingDirective(usingDirectiveInfo, namespaceType);
-			namespaceType.UsingDirectives.TryAdd(typeUsingDirective.Name, typeUsingDirective);
+			namespaceType.UsingDirectives.TryAdd(typeUsingDirective.Id, typeUsingDirective);
 		}
 
 		return namespaceType;
@@ -241,7 +243,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		foreach (var usingDirectiveInfo in cachedNamespaceType.UsingDirectives)
 		{
 			var typeUsingDirective = GetTypeUsingDirective(usingDirectiveInfo, namespaceType);
-			namespaceType.UsingDirectives.TryAdd(typeUsingDirective.Name, typeUsingDirective);
+			namespaceType.UsingDirectives.TryAdd(typeUsingDirective.Id, typeUsingDirective);
 		}
 
 		return namespaceType;

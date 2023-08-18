@@ -133,7 +133,7 @@ internal class ProjectLoader : IProjectLoader
 		{
 			var referencedProject =
 				_projectProvider.AllProjects.Values.FirstOrDefault(x =>
-					x.Namespaces.ContainsKey(usingDirective.Name) || x.Types.ContainsKey(usingDirective.Name));
+					x.Namespaces.Values.Any(y => y.Name == usingDirective.Name) || x.Types.Values.Any(y => y.Name == usingDirective.Name));
 
 			if (referencedProject is null)
 			{
@@ -141,17 +141,17 @@ internal class ProjectLoader : IProjectLoader
 				continue;
 			}
 
-			if (referencedProject.Namespaces.TryGetValue(usingDirective.Name, out var referencedNamespace))
+			if (referencedProject.Namespaces.TryGetValue(usingDirective.Id, out var referencedNamespace))
 			{
 			}
 			else
 			{
-				referencedNamespace = referencedProject.Types[usingDirective.Name].ParentNamespace;
+				referencedNamespace = referencedProject.Types[usingDirective.Id].ParentNamespace;
 			}
 
 			usingDirective.ReferencedNamespace = referencedNamespace;
 			usingDirective.State = TypeUsingDirectiveState.Linked;
-			referencedNamespace.UsingTypes.TryAdd(usingDirective.Name, usingDirective.ParentType);
+			referencedNamespace.UsingTypes.TryAdd(usingDirective.Id, usingDirective.ParentType);
 		}
 
 		var linkedDirectivesCount = unlinkedUsingDirectives.Count(x => x.State == TypeUsingDirectiveState.Linked);
@@ -212,7 +212,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject = GetProjectOrLoad(packageReferenceInfo.Using);
 			var packageReference =
 				_linkedTypeFactory.GetPackageReference(packageReferenceInfo, internalProject, referencedProject);
-			internalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+			internalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 
 		foreach (var projectReferenceInfo in internalProjectInfo.ProjectReferences)
@@ -220,7 +220,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject = GetProjectOrLoad(projectReferenceInfo.Using);
 			var projectReference =
 				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
-			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
+			internalProject.ProjectReferences.TryAdd(projectReference.Id, projectReference);
 		}
 	}
 
@@ -242,7 +242,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject = GetProjectOrLoad(packageReferenceInfo.Using);
 			var packageReference =
 				_linkedTypeFactory.GetPackageReference(packageReferenceInfo, externalProject, referencedProject);
-			externalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+			externalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 	}
 
@@ -263,7 +263,7 @@ internal class ProjectLoader : IProjectLoader
 				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
 			var packageReference =
 				_linkedTypeFactory.GetPackageReference(cachedPackageReference, internalProject, referencedProject);
-			internalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+			internalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 
 		foreach (var cachedProjectReference in cachedProject.ProjectReferences)
@@ -272,7 +272,7 @@ internal class ProjectLoader : IProjectLoader
 				GetProjectOrLoadFromCache(cachedProjectReference.UsedProjectName, cachedProjectReference.Using);
 			var projectReference =
 				_linkedTypeFactory.GetProjectReference(cachedProjectReference, internalProject, referencedProject);
-			internalProject.ProjectReferences.TryAdd(projectReference.Using.Name, projectReference);
+			internalProject.ProjectReferences.TryAdd(projectReference.Id, projectReference);
 		}
 	}
 
@@ -293,7 +293,7 @@ internal class ProjectLoader : IProjectLoader
 				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
 			var packageReference =
 				_linkedTypeFactory.GetPackageReference(cachedPackageReference, externalProject, referencedProject);
-			externalProject.PackageReferences.TryAdd(packageReference.Using.Name, packageReference);
+			externalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 	}
 
