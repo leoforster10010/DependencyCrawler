@@ -24,7 +24,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		var cachedProject = new CachedProject
 		{
 			Name = project.NameReadOnly,
-			ProjectType = project.ProjectTypeReadOnly
+			ProjectType = project.ProjectTypeReadOnly,
+			Id = project.Id
 		};
 
 		_cachedProjectProvider.AddCachedProject(cachedProject);
@@ -45,7 +46,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			cachedProjectNamespaces.Add(new CachedProjectNamespace
 			{
 				Name = projectNamespace.NameReadOnly,
-				NamespaceTypes = GetCachedTypes(projectNamespace)
+				NamespaceTypes = GetCachedTypes(projectNamespace),
+				Id = projectNamespace.Id
 			});
 		}
 
@@ -61,7 +63,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			cachedNamespaceTypes.Add(new CachedNamespaceType
 			{
 				Name = namespaceType.NameReadOnly,
-				UsingDirectives = GetCachedUsingDirectives(namespaceType)
+				UsingDirectives = GetCachedUsingDirectives(namespaceType),
+				Id = namespaceType.Id
 			});
 		}
 
@@ -80,7 +83,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			{
 				Name = typeUsingDirective.NameReadOnly,
 				State = typeUsingDirective.StateReadOnly,
-				ReferencedNamespaceId = GetCachedNamespaceId(typeUsingDirective.ReferencedNamespaceReadOnly)
+				ReferencedNamespaceId = GetCachedNamespaceId(typeUsingDirective.ReferencedNamespaceReadOnly),
+				Id = typeUsingDirective.Id
 			});
 		}
 
@@ -123,7 +127,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			{
 				Using = GetReferencedProjectId(projectReference),
 				UsedProjectName = projectReference.Using.Name,
-				UsedBy = cachedProject.Id
+				UsedBy = cachedProject.Id,
+				Id = projectReference.Id
 			});
 		}
 
@@ -158,7 +163,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 				Using = GetReferencedProjectId(packageReference),
 				UsedProjectName = packageReference.UsedBy.Name,
 				UsedBy = cachedProject.Id,
-				Version = packageReference.Version
+				Version = packageReference.Version,
+				Id = packageReference.Id
 			});
 		}
 

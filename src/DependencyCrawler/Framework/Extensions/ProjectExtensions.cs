@@ -21,9 +21,9 @@ internal static class ProjectExtensions
 			       ContainsDependency(dependency.Using.Dependencies.Values.ToList(), projectName));
 	}
 
-	public static IDictionary<string, IProject> GetAllDependenciesRecursive(this IProject project)
+	public static IDictionary<Guid, IProject> GetAllDependenciesRecursive(this IProject project)
 	{
-		var dependencies = new Dictionary<string, IProject>();
+		var dependencies = new Dictionary<Guid, IProject>();
 
 		foreach (var dependency in project.Dependencies)
 		{
@@ -39,9 +39,9 @@ internal static class ProjectExtensions
 		return dependencies;
 	}
 
-	public static IDictionary<string, IProject> GetAllReferencesRecursive(this IProject project)
+	public static IDictionary<Guid, IProject> GetAllReferencesRecursive(this IProject project)
 	{
-		var references = new Dictionary<string, IProject>();
+		var references = new Dictionary<Guid, IProject>();
 
 		foreach (var reference in project.ReferencedBy)
 		{

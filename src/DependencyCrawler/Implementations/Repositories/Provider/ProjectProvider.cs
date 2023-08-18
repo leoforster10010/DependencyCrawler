@@ -1,6 +1,7 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Models.LinkedTypes;
+using DependencyCrawler.Implementations.Repositories.DataAccess;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
@@ -68,4 +69,25 @@ internal class ProjectProvider : IProjectProvider
 		InternalProjects.Clear();
 		UnresolvedProjects.Clear();
 	}
+
+	public IReadOnlyDictionary<string, IReadOnlyInternalProject> InternalProjectsReadOnly =>
+		InternalProjects.ToDictionary(x => x.Key, x => x.Value as IReadOnlyInternalProject);
+
+	public IReadOnlyDictionary<string, IReadOnlyExternalProject> ExternalProjectsReadOnly =>
+		ExternalProjects.ToDictionary(x => x.Key, x => x.Value as IReadOnlyExternalProject);
+
+	public IReadOnlyDictionary<string, IReadOnlyProject> AllProjectsReadOnly =>
+		AllProjects.ToDictionary(x => x.Key, x => x.Value as IReadOnlyProject);
+}
+
+internal class ProjectDataContext : IDataContext<IProjectProvider, IReadOnlyProjectProvider>
+{
+	public IReadOnlyProjectProvider DataReadOnly => Data;
+
+	public IDataContext<IProjectProvider, IReadOnlyProjectProvider> Clone()
+	{
+		throw new NotImplementedException();
+	}
+
+	public required IProjectProvider Data { get; init; }
 }

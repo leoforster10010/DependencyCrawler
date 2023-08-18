@@ -6,9 +6,9 @@ internal interface IProject : IReadOnlyProject
 {
 	public string Name { get; init; }
 	public ProjectType ProjectType { get; }
-	public IDictionary<string, IReference> Dependencies { get; }
-	public IDictionary<string, IReference> ReferencedBy { get; set; }
-	public IDictionary<string, IProjectNamespace> Namespaces { get; set; }
-	public IDictionary<string, INamespaceType> Types { get; }
-	public IDictionary<string, ITypeUsingDirective> UsingDirectives { get; }
+	public IDictionary<Guid, IReference> Dependencies { get; }
+	public IDictionary<Guid, IReference> ReferencedBy { get; set; }
+	public IDictionary<Guid, IProjectNamespace> Namespaces { get; set; }
+	public IDictionary<Guid, INamespaceType> Types { get; }
+	public IDictionary<Guid, ITypeUsingDirective> UsingDirectives { get; }
 }

@@ -2,24 +2,24 @@ using DependencyCrawler.Contracts.Interfaces.Model;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class ProjectNamespace : IProjectNamespace
+internal class ProjectNamespace : Entity, IProjectNamespace
 {
 	public required string Name { get; init; }
 	public required IProject ParentProject { get; set; }
-	public IDictionary<string, INamespaceType> NamespaceTypes { get; set; } = new Dictionary<string, INamespaceType>();
+	public IDictionary<Guid, INamespaceType> NamespaceTypes { get; set; } = new Dictionary<Guid, INamespaceType>();
 
-	public IDictionary<string, INamespaceType> UsingTypes { get; set; } =
-		new Dictionary<string, INamespaceType>();
+	public IDictionary<Guid, INamespaceType> UsingTypes { get; set; } =
+		new Dictionary<Guid, INamespaceType>();
 
-	public IDictionary<string, ITypeUsingDirective> TypeUsingDirectives
+	public IDictionary<Guid, ITypeUsingDirective> TypeUsingDirectives
 	{
 		get
 		{
-			var namespaceUsingDirectives = new Dictionary<string, ITypeUsingDirective>();
+			var namespaceUsingDirectives = new Dictionary<Guid, ITypeUsingDirective>();
 			var usingDirectives = NamespaceTypes.Values.SelectMany(x => x.UsingDirectives.Values);
 			foreach (var usingDirective in usingDirectives)
 			{
-				namespaceUsingDirectives.TryAdd(usingDirective.Name, usingDirective);
+				namespaceUsingDirectives.TryAdd(usingDirective.Id, usingDirective);
 			}
 
 			return namespaceUsingDirectives;
@@ -29,12 +29,12 @@ internal class ProjectNamespace : IProjectNamespace
 	public string NameReadOnly => Name;
 	public IReadOnlyProject ParentProjectReadOnly => ParentProject;
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> NamespaceTypesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> NamespaceTypesReadOnly =>
 		NamespaceTypes.ToDictionary(x => x.Key, x => x.Value as IReadOnlyNamespaceType);
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> UsingTypesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> UsingTypesReadOnly =>
 		UsingTypes.ToDictionary(x => x.Key, x => x.Value as IReadOnlyNamespaceType);
 
-	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly =>
+	public IReadOnlyDictionary<Guid, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly =>
 		TypeUsingDirectives.ToDictionary(x => x.Key, x => x.Value as IReadOnlyTypeUsingDirective);
 }

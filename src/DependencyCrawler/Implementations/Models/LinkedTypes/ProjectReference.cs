@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class ProjectReference : IProjectReference
+internal class ProjectReference : Entity, IProjectReference
 {
 	public required IProject Using { get; set; }
 	public required IProject UsedBy { get; set; }

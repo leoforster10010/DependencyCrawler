@@ -1,10 +1,12 @@
+using DependencyCrawler.Implementations.Models.LinkedTypes;
+
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IReadOnlyProjectNamespace
+public interface IReadOnlyProjectNamespace : IEntity
 {
 	public string NameReadOnly { get; }
 	public IReadOnlyProject ParentProjectReadOnly { get; }
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> NamespaceTypesReadOnly { get; }
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> UsingTypesReadOnly { get; }
-	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly { get; }
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> NamespaceTypesReadOnly { get; }
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> UsingTypesReadOnly { get; }
+	public IReadOnlyDictionary<Guid, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly { get; }
 }

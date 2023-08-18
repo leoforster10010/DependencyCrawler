@@ -6,5 +6,5 @@ internal interface INamespaceType : IReadOnlyNamespaceType
 	public string FullName { get; }
 	public IProjectNamespace ParentNamespace { get; set; }
 	public IProject ParentProject { get; }
-	public IDictionary<string, ITypeUsingDirective> UsingDirectives { get; set; }
+	public IDictionary<Guid, ITypeUsingDirective> UsingDirectives { get; set; }
 }

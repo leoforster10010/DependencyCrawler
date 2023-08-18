@@ -2,6 +2,6 @@ namespace DependencyCrawler.Contracts.Interfaces.Model;
 
 public interface IReadOnlyInternalProject : IReadOnlyProject
 {
-	public IReadOnlyDictionary<string, IReadOnlyPackageReference> PackageReferencesReadOnly { get; }
-	public IReadOnlyDictionary<string, IReadOnlyProjectReference> ProjectReferencesReadOnly { get; }
+	public IReadOnlyDictionary<Guid, IReadOnlyPackageReference> PackageReferencesReadOnly { get; }
+	public IReadOnlyDictionary<Guid, IReadOnlyProjectReference> ProjectReferencesReadOnly { get; }
 }

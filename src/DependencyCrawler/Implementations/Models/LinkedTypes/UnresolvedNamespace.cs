@@ -2,25 +2,25 @@ using DependencyCrawler.Contracts.Interfaces.Model;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class UnresolvedNamespace : IProjectNamespace
+internal class UnresolvedNamespace : Entity, IProjectNamespace
 {
 	public required string Name { get; init; }
 	public IProject ParentProject { get; set; } = new UnresolvedProject();
-	public IDictionary<string, INamespaceType> NamespaceTypes { get; set; } = new Dictionary<string, INamespaceType>();
-	public IDictionary<string, INamespaceType> UsingTypes { get; set; } = new Dictionary<string, INamespaceType>();
+	public IDictionary<Guid, INamespaceType> NamespaceTypes { get; set; } = new Dictionary<Guid, INamespaceType>();
+	public IDictionary<Guid, INamespaceType> UsingTypes { get; set; } = new Dictionary<Guid, INamespaceType>();
 
-	public IDictionary<string, ITypeUsingDirective> TypeUsingDirectives =>
-		new Dictionary<string, ITypeUsingDirective>();
+	public IDictionary<Guid, ITypeUsingDirective> TypeUsingDirectives =>
+		new Dictionary<Guid, ITypeUsingDirective>();
 
 	public string NameReadOnly => Name;
 	public IReadOnlyProject ParentProjectReadOnly => ParentProject;
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> NamespaceTypesReadOnly =>
-		new Dictionary<string, IReadOnlyNamespaceType>();
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> NamespaceTypesReadOnly =>
+		new Dictionary<Guid, IReadOnlyNamespaceType>();
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> UsingTypesReadOnly =>
-		new Dictionary<string, IReadOnlyNamespaceType>();
+	public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> UsingTypesReadOnly =>
+		new Dictionary<Guid, IReadOnlyNamespaceType>();
 
-	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly =>
-		new Dictionary<string, IReadOnlyTypeUsingDirective>();
+	public IReadOnlyDictionary<Guid, IReadOnlyTypeUsingDirective> TypeUsingDirectivesReadOnly =>
+		new Dictionary<Guid, IReadOnlyTypeUsingDirective>();
 }
