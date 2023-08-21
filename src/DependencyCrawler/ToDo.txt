@@ -14,3 +14,22 @@ State:
 
 DataContextCloning
 DataContextComparing
+
+CC commands:
+- ls projects internal/external
+	- ns
+	- types
+	- dependencies
+	- ud
+- project info:
+	- ns
+	- types
+	- ud
+	- dependencies
+	- references
+	- "-a": list indirect references & dependencies
+- evaluate dependencies
+- cache:
+	- activate cache
+	- delete cache
+	- 

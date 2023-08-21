@@ -44,7 +44,7 @@ public interface IEntity
 
 public abstract class Entity : IEquatable<Entity>, IEntity
 {
-	public Guid Id { get; init; } = new();
+	public Guid Id { get; init; } = Guid.NewGuid();
 
 	public override bool Equals(object? obj)
 	{

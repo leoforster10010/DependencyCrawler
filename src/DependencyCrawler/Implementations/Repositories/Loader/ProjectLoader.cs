@@ -133,7 +133,8 @@ internal class ProjectLoader : IProjectLoader
 		{
 			var referencedProject =
 				_projectProvider.AllProjects.Values.FirstOrDefault(x =>
-					x.Namespaces.Values.Any(y => y.Name == usingDirective.Name) || x.Types.Values.Any(y => y.Name == usingDirective.Name));
+					x.Namespaces.Values.Any(y => y.Name == usingDirective.Name) ||
+					x.Types.Values.Any(y => y.Name == usingDirective.Name));
 
 			if (referencedProject is null)
 			{
@@ -141,12 +142,16 @@ internal class ProjectLoader : IProjectLoader
 				continue;
 			}
 
-			if (referencedProject.Namespaces.TryGetValue(usingDirective.Id, out var referencedNamespace))
+			IProjectNamespace referencedNamespace;
+			if (referencedProject.Namespaces.Any(x => x.Value.Name == usingDirective.Name))
 			{
+				referencedNamespace =
+					referencedProject.Namespaces.First(x => x.Value.Name == usingDirective.Name).Value;
 			}
 			else
 			{
-				referencedNamespace = referencedProject.Types[usingDirective.Id].ParentNamespace;
+				referencedNamespace = referencedProject.Types
+					.First(x => x.Value.Name == usingDirective.Name).Value.ParentNamespace;
 			}
 
 			usingDirective.ReferencedNamespace = referencedNamespace;

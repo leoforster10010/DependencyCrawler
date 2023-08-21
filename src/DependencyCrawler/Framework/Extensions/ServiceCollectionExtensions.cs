@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
 		services.AddTransient<IReadOnlyProjectProvider, ReadOnlyProjectProvider>();
 		services.AddSingleton<IProjectFileProvider, ProjectFileProvider>();
 		services.AddSingleton<IDllFileProvider, DllFileProvider>();
-		services.AddTransient<ICachedProjectProvider, CachedProjectProvider>();
+		services.AddSingleton<ICachedProjectProvider, CachedProjectProvider>();
 
 		return services;
 	}

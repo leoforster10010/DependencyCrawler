@@ -1,19 +1,12 @@
 ﻿using System.Text.Json;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Implementations.Models;
-using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Data.Json;
 
 public class JsonCacher : ICacher
 {
-	private readonly ILogger<JsonCacher> _logger;
 	private readonly string _path = Directory.GetCurrentDirectory(); //ToDo
-
-	public JsonCacher(ILogger<JsonCacher> logger)
-	{
-		_logger = logger;
-	}
 
 	public void SaveCaches(IEnumerable<Cache> caches)
 	{
@@ -26,13 +19,13 @@ public class JsonCacher : ICacher
 				WriteIndented = true
 			});
 
-			File.WriteAllText(jsonPayload, cache.Id + ".json");
+			File.WriteAllText(cache.Name + "_" + cache.Id + ".json", jsonPayload);
 		}
 	}
 
 	public IEnumerable<Cache> GetAvailableCaches()
 	{
-		var files = Directory.GetFiles(_path, ".json");
+		var files = Directory.GetFiles(_path, "*.json");
 		var caches = new List<Cache>();
 
 		foreach (var file in files)
@@ -64,16 +57,15 @@ public class JsonCacher : ICacher
 			var cache = JsonSerializer.Deserialize<Cache>(jsonPayload);
 			return cache;
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
-			_logger.LogError(e.ToString());
 			return null;
 		}
 	}
 
 	private IEnumerable<string> GetCacheFiles()
 	{
-		var files = Directory.GetFiles(_path, ".json");
+		var files = Directory.GetFiles(_path, "*.json");
 		var cacheFiles = new List<string>();
 		foreach (var file in files)
 		{

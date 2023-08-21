@@ -83,26 +83,12 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			{
 				Name = typeUsingDirective.NameReadOnly,
 				State = typeUsingDirective.StateReadOnly,
-				ReferencedNamespaceId = GetCachedNamespaceId(typeUsingDirective.ReferencedNamespaceReadOnly),
+				ReferencedNamespaceId = typeUsingDirective.ReferencedNamespaceReadOnly.Id,
 				Id = typeUsingDirective.Id
 			});
 		}
 
 		return cachedTypeUsingDirectives;
-	}
-
-	private Guid GetCachedNamespaceId(IReadOnlyProjectNamespace referencedNamespace)
-	{
-		var cachedNamespaceId = _cachedProjectProvider.GetCachedNamespaceId(referencedNamespace.NameReadOnly);
-
-		if (cachedNamespaceId is not null)
-		{
-			return (Guid)cachedNamespaceId;
-		}
-
-		var referencedCachedProject = GetCachedProject(referencedNamespace.ParentProjectReadOnly);
-
-		return referencedCachedProject.Namespaces.First(x => x.Name == referencedNamespace.NameReadOnly).Id;
 	}
 
 
@@ -125,7 +111,7 @@ internal class CachedTypeFactory : ICachedTypeFactory
 
 			cachedProjectReferences.Add(new CachedProjectReference
 			{
-				Using = GetReferencedProjectId(projectReference),
+				Using = projectReference.Using.Id,
 				UsedProjectName = projectReference.Using.Name,
 				UsedBy = cachedProject.Id,
 				Id = projectReference.Id
@@ -160,7 +146,7 @@ internal class CachedTypeFactory : ICachedTypeFactory
 
 			cachedPackageReferences.Add(new CachedPackageReference
 			{
-				Using = GetReferencedProjectId(packageReference),
+				Using = packageReference.Using.Id,
 				UsedProjectName = packageReference.UsedBy.Name,
 				UsedBy = cachedProject.Id,
 				Version = packageReference.Version,
@@ -169,19 +155,5 @@ internal class CachedTypeFactory : ICachedTypeFactory
 		}
 
 		return cachedPackageReferences;
-	}
-
-
-	private Guid GetReferencedProjectId(IReference reference)
-	{
-		var cachedProjectId = _cachedProjectProvider.GetCachedProjectId(reference.Using.Name);
-		if (cachedProjectId is not null)
-		{
-			return (Guid)cachedProjectId;
-		}
-
-		var referencedCachedProject = GetCachedProject(reference.Using);
-
-		return referencedCachedProject.Id;
 	}
 }
