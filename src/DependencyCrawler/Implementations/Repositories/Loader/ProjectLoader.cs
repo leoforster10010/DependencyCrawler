@@ -40,7 +40,7 @@ internal class ProjectLoader : IProjectLoader
             LoadInternalProject(csprojFile);
         }
 
-        //LinkUsingDirectives();
+        LinkUsingDirectives();
     }
 
     public void LoadProjectsFromCache(Cache cache)
@@ -53,7 +53,7 @@ internal class ProjectLoader : IProjectLoader
             LoadProjectFromCache(cachedProject);
         }
 
-        //LinkUsingDirectives();
+        LinkUsingDirectives();
     }
 
     private void LoadProjectFromCache(Guid id)
