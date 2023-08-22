@@ -9,151 +9,145 @@ namespace DependencyCrawler.Implementations.Repositories.Factories;
 
 internal class CachedTypeFactory : ICachedTypeFactory
 {
-	private readonly ICachedProjectProvider _cachedProjectProvider;
-	private readonly ILogger<CachedTypeFactory> _logger;
+    private readonly ICachedProjectProvider _cachedProjectProvider;
+    private readonly ILogger<CachedTypeFactory> _logger;
 
-	public CachedTypeFactory(ICachedProjectProvider cachedProjectProvider, ILogger<CachedTypeFactory> logger)
-	{
-		_cachedProjectProvider = cachedProjectProvider;
-		_logger = logger;
-	}
+    public CachedTypeFactory(ICachedProjectProvider cachedProjectProvider, ILogger<CachedTypeFactory> logger)
+    {
+        _cachedProjectProvider = cachedProjectProvider;
+        _logger = logger;
+    }
 
-	public CachedProject GetCachedProject(IReadOnlyProject project)
-	{
-		_logger.LogInformation($"Caching {project.NameReadOnly}...");
-		var cachedProject = new CachedProject
-		{
-			Name = project.NameReadOnly,
-			ProjectType = project.ProjectTypeReadOnly,
-			Id = project.Id
-		};
+    public CachedProject GetCachedProject(IReadOnlyProject project)
+    {
+        _logger.LogInformation($"Caching {project.NameReadOnly}...");
+        var cachedProject = new CachedProject
+        {
+            Name = project.NameReadOnly,
+            ProjectType = project.ProjectTypeReadOnly,
+            Id = project.Id
+        };
 
-		_cachedProjectProvider.AddCachedProject(cachedProject);
+        _cachedProjectProvider.AddCachedProject(cachedProject);
 
-		cachedProject.PackageReferences = GetCachedPackageReferences(cachedProject, project);
-		cachedProject.ProjectReferences = GetCachedProjectReferences(cachedProject, project);
-		cachedProject.Namespaces = GetCachedNamespaces(project);
+        cachedProject.PackageReferences = GetCachedPackageReferences(cachedProject, project);
+        cachedProject.ProjectReferences = GetCachedProjectReferences(cachedProject, project);
+        cachedProject.Namespaces = GetCachedNamespaces(project);
 
-		return cachedProject;
-	}
+        return cachedProject;
+    }
 
-	private IList<CachedProjectNamespace> GetCachedNamespaces(IReadOnlyProject project)
-	{
-		var cachedProjectNamespaces = new List<CachedProjectNamespace>();
+    private IList<CachedProjectNamespace> GetCachedNamespaces(IReadOnlyProject project)
+    {
+        var cachedProjectNamespaces = new List<CachedProjectNamespace>();
 
-		foreach (var projectNamespace in project.NamespacesReadOnly.Values)
-		{
-			cachedProjectNamespaces.Add(new CachedProjectNamespace
-			{
-				Name = projectNamespace.NameReadOnly,
-				NamespaceTypes = GetCachedTypes(projectNamespace),
-				Id = projectNamespace.Id
-			});
-		}
+        foreach (var projectNamespace in project.NamespacesReadOnly.Values)
+        {
+            cachedProjectNamespaces.Add(new CachedProjectNamespace
+            {
+                Name = projectNamespace.NameReadOnly,
+                NamespaceTypes = GetCachedTypes(projectNamespace),
+                Id = projectNamespace.Id
+            });
+        }
 
-		return cachedProjectNamespaces;
-	}
+        return cachedProjectNamespaces;
+    }
 
-	private IList<CachedNamespaceType> GetCachedTypes(IReadOnlyProjectNamespace projectNamespace)
-	{
-		var cachedNamespaceTypes = new List<CachedNamespaceType>();
+    private IList<CachedNamespaceType> GetCachedTypes(IReadOnlyProjectNamespace projectNamespace)
+    {
+        var cachedNamespaceTypes = new List<CachedNamespaceType>();
 
-		foreach (var namespaceType in projectNamespace.NamespaceTypesReadOnly.Values)
-		{
-			cachedNamespaceTypes.Add(new CachedNamespaceType
-			{
-				Name = namespaceType.NameReadOnly,
-				UsingDirectives = GetCachedUsingDirectives(namespaceType),
-				Id = namespaceType.Id
-			});
-		}
+        foreach (var namespaceType in projectNamespace.NamespaceTypesReadOnly.Values)
+        {
+            cachedNamespaceTypes.Add(new CachedNamespaceType
+            {
+                Name = namespaceType.NameReadOnly,
+                UsingDirectives = GetCachedUsingDirectives(namespaceType),
+                Id = namespaceType.Id
+            });
+        }
 
-		return cachedNamespaceTypes;
-	}
+        return cachedNamespaceTypes;
+    }
 
-	private IList<CachedTypeUsingDirective> GetCachedUsingDirectives(IReadOnlyNamespaceType namespaceType)
-	{
-		var cachedTypeUsingDirectives = new List<CachedTypeUsingDirective>();
+    private IList<CachedTypeUsingDirective> GetCachedUsingDirectives(IReadOnlyNamespaceType namespaceType)
+    {
+        var cachedTypeUsingDirectives = new List<CachedTypeUsingDirective>();
 
-		var linkedUsingDirectives =
-			namespaceType.UsingDirectivesReadOnly.Values.Where(x => x.StateReadOnly is TypeUsingDirectiveState.Linked);
-		foreach (var typeUsingDirective in linkedUsingDirectives)
-		{
-			cachedTypeUsingDirectives.Add(new CachedTypeUsingDirective
-			{
-				Name = typeUsingDirective.NameReadOnly,
-				State = typeUsingDirective.StateReadOnly,
-				ReferencedNamespaceId = typeUsingDirective.ReferencedNamespaceReadOnly.Id,
-				Id = typeUsingDirective.Id
-			});
-		}
+        var linkedUsingDirectives =
+            namespaceType.UsingDirectivesReadOnly.Values.Where(x => x.StateReadOnly is TypeUsingDirectiveState.Linked);
+        foreach (var typeUsingDirective in linkedUsingDirectives)
+        {
+            cachedTypeUsingDirectives.Add(new CachedTypeUsingDirective
+            {
+                Name = typeUsingDirective.NameReadOnly,
+                State = typeUsingDirective.StateReadOnly,
+                ReferencedNamespaceId = typeUsingDirective.ReferencedNamespaceReadOnly.Id,
+                Id = typeUsingDirective.Id
+            });
+        }
 
-		return cachedTypeUsingDirectives;
-	}
+        return cachedTypeUsingDirectives;
+    }
 
 
-	private IList<CachedProjectReference> GetCachedProjectReferences(CachedProject cachedProject,
-		IReadOnlyProject project)
-	{
-		//ToDo test: do we smell an exception?
-		var projectReferences = project.DependenciesReadOnly.Values
-			.Where(x => x.ReferenceTypeReadOnly == ReferenceType.Project)
-			.Select(x => x as ProjectReference);
+    private IList<CachedProjectReference> GetCachedProjectReferences(CachedProject cachedProject,
+        IReadOnlyProject project)
+    {
+        //ToDo test: do we smell an exception?
+        var projectReferences = project.DependenciesReadOnly.Values
+            .Where(x => x.ReferenceTypeReadOnly == ReferenceType.Project)
+            .Select(x => x as ProjectReference);
 
-		var cachedProjectReferences = new List<CachedProjectReference>();
+        var cachedProjectReferences = new List<CachedProjectReference>();
 
-		foreach (var projectReference in projectReferences)
-		{
-			if (projectReference is null)
-			{
-				continue;
-			}
+        foreach (var projectReference in projectReferences)
+        {
+            if (projectReference is null)
+            {
+                continue;
+            }
 
-			cachedProjectReferences.Add(new CachedProjectReference
-			{
-				Using = projectReference.Using.Id,
-				UsedProjectName = projectReference.Using.Name,
-				UsedBy = cachedProject.Id,
-				Id = projectReference.Id
-			});
-		}
+            cachedProjectReferences.Add(new CachedProjectReference
+            {
+                Using = projectReference.Using.Id,
+                UsedProjectName = projectReference.Using.Name,
+                UsedBy = cachedProject.Id,
+                Id = projectReference.Id
+            });
+        }
 
-		return cachedProjectReferences;
-	}
+        return cachedProjectReferences;
+    }
 
-	private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject,
-		IReadOnlyProject project)
-	{
-		if (project.NameReadOnly.ToLower() is "mscorlib" or "system" ||
-		    project.NameReadOnly.ToLower().StartsWith("system."))
-		{
-			return new List<CachedPackageReference>();
-		}
+    private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject,
+        IReadOnlyProject project)
+    {
+        //ToDo test: do we smell an exception?
+        var packageReferences = project.DependenciesReadOnly.Values
+            .Where(x => x.ReferenceTypeReadOnly == ReferenceType.Package)
+            .Select(x => x as PackageReference);
 
-		//ToDo test: do we smell an exception?
-		var packageReferences = project.DependenciesReadOnly.Values
-			.Where(x => x.ReferenceTypeReadOnly == ReferenceType.Package)
-			.Select(x => x as PackageReference);
+        var cachedPackageReferences = new List<CachedPackageReference>();
 
-		var cachedPackageReferences = new List<CachedPackageReference>();
+        foreach (var packageReference in packageReferences)
+        {
+            if (packageReference is null)
+            {
+                continue;
+            }
 
-		foreach (var packageReference in packageReferences)
-		{
-			if (packageReference is null)
-			{
-				continue;
-			}
+            cachedPackageReferences.Add(new CachedPackageReference
+            {
+                Using = packageReference.Using.Id,
+                UsedProjectName = packageReference.Using.Name,
+                UsedBy = cachedProject.Id,
+                Version = packageReference.Version,
+                Id = packageReference.Id
+            });
+        }
 
-			cachedPackageReferences.Add(new CachedPackageReference
-			{
-				Using = packageReference.Using.Id,
-				UsedProjectName = packageReference.UsedBy.Name,
-				UsedBy = cachedProject.Id,
-				Version = packageReference.Version,
-				Id = packageReference.Id
-			});
-		}
-
-		return cachedPackageReferences;
-	}
+        return cachedPackageReferences;
+    }
 }
