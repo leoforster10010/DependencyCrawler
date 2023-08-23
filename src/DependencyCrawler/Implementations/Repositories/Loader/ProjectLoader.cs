@@ -40,6 +40,7 @@ internal class ProjectLoader : IProjectLoader
             LoadInternalProject(csprojFile);
         }
 
+        RemoveReferenceLoops();
         LinkUsingDirectives();
     }
 
@@ -53,6 +54,7 @@ internal class ProjectLoader : IProjectLoader
             LoadProjectFromCache(cachedProject);
         }
 
+        RemoveReferenceLoops();
         LinkUsingDirectives();
     }
 
@@ -117,6 +119,21 @@ internal class ProjectLoader : IProjectLoader
         LoadUnresolvedProject(name);
     }
 
+    private void RemoveReferenceLoops()
+    {
+        _logger.LogInformation("Removing reference-loops...");
+
+        var sublevelProjects = _projectProvider.AllProjects.Where(x => !x.Value.ReferencedBy.Any());
+        var exploredProjects = new Dictionary<Guid, IProject>();
+
+        foreach (var project in sublevelProjects)
+        {
+            project.Value.RemoveReferenceLoops(exploredProjects: exploredProjects);
+        }
+
+        _logger.LogInformation("Reference-loops removed.");
+    }
+
     private void LinkUsingDirectives()
     {
         _logger.LogInformation("Linking UsingDirectives...");
@@ -127,36 +144,52 @@ internal class ProjectLoader : IProjectLoader
                     y.NamespaceTypes.Values.SelectMany(z => z.UsingDirectives.Values)))
             .Where(x => x.State == TypeUsingDirectiveState.Unlinked).ToList();
 
+        var namespaces = _projectProvider.AllProjects.SelectMany(x => x.Value.Namespaces.Values).ToList();
+
+        var namespacesDictionary = _projectProvider.AllProjects.SelectMany(x => x.Value.Namespaces.Values)
+            .GroupBy(x => x.Name)
+            .ToDictionary(x => x.Key, x => x.First());
+
+        var types = namespaces.SelectMany(x => x.NamespaceTypes.Values)
+            .GroupBy(x => x.Name)
+            .ToDictionary(x => x.Key, x => x.First());
+
+        var typesFullname = namespaces.SelectMany(x => x.NamespaceTypes.Values)
+            .GroupBy(x => x.FullName)
+            .ToDictionary(x => x.Key, x => x.First());
+
         _logger.LogInformation($"{unlinkedUsingDirectives.Count} unlinked UsingDirectives found");
 
         foreach (var usingDirective in unlinkedUsingDirectives)
         {
-            var referencedProject =
-                _projectProvider.AllProjects.Values.FirstOrDefault(x =>
-                    x.Namespaces.Values.Any(y => y.Name == usingDirective.Name) ||
-                    x.Types.Values.Any(y => y.Name == usingDirective.Name));
-
-            if (referencedProject is null)
+            if (namespacesDictionary.TryGetValue(usingDirective.Name, out var referencedNamespace))
             {
-                usingDirective.State = TypeUsingDirectiveState.Unresolved;
+                usingDirective.ReferencedNamespace = referencedNamespace;
+                usingDirective.State = TypeUsingDirectiveState.Linked;
+                referencedNamespace.UsingTypes.TryAdd(usingDirective.Id, usingDirective.ParentType);
+
                 continue;
             }
 
-            IProjectNamespace referencedNamespace;
-            if (referencedProject.Namespaces.Any(x => x.Value.Name == usingDirective.Name))
+            if (types.TryGetValue(usingDirective.Name, out var referencedType))
             {
-                referencedNamespace =
-                    referencedProject.Namespaces.First(x => x.Value.Name == usingDirective.Name).Value;
-            }
-            else
-            {
-                referencedNamespace = referencedProject.Types
-                    .First(x => x.Value.Name == usingDirective.Name).Value.ParentNamespace;
+                usingDirective.ReferencedNamespace = referencedType.ParentNamespace;
+                usingDirective.State = TypeUsingDirectiveState.Linked;
+                referencedType.ParentNamespace.UsingTypes.TryAdd(usingDirective.Id, usingDirective.ParentType);
+
+                continue;
             }
 
-            usingDirective.ReferencedNamespace = referencedNamespace;
-            usingDirective.State = TypeUsingDirectiveState.Linked;
-            referencedNamespace.UsingTypes.TryAdd(usingDirective.Id, usingDirective.ParentType);
+            if (typesFullname.TryGetValue(usingDirective.Name, out referencedType))
+            {
+                usingDirective.ReferencedNamespace = referencedType.ParentNamespace;
+                usingDirective.State = TypeUsingDirectiveState.Linked;
+                referencedType.ParentNamespace.UsingTypes.TryAdd(usingDirective.Id, usingDirective.ParentType);
+
+                continue;
+            }
+
+            usingDirective.State = TypeUsingDirectiveState.Unresolved;
         }
 
         var linkedDirectivesCount = unlinkedUsingDirectives.Count(x => x.State == TypeUsingDirectiveState.Linked);
@@ -243,11 +276,11 @@ internal class ProjectLoader : IProjectLoader
         _projectProvider.AddExternalProject(externalProject);
 
         //ToDo Check for Loops in References -> clean them
-        if (externalProject.Name.ToLower() is "mscorlib" or "netstandard" or "system" ||
-            externalProject.Name.ToLower().StartsWith("system."))
-        {
-            return;
-        }
+        //if (externalProject.Name.ToLower() is "mscorlib" or "netstandard" or "system" ||
+        //    externalProject.Name.ToLower().StartsWith("system."))
+        //{
+        //    return;
+        //}
 
         foreach (var packageReferenceInfo in externalProjectInfo.PackageReferences)
         {

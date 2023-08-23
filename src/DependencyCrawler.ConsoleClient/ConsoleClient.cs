@@ -1,5 +1,6 @@
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
+using DependencyCrawler.Implementations.Data.Enum;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -40,6 +41,28 @@ public class ConsoleClient : IConsoleClient
                     "e"
                 },
                 Action = Exit
+            },
+            new()
+            {
+                RequiredParameters = 0,
+                CommandStrings = new List<string>
+                {
+                    "load files",
+                    "load f",
+                    "l files",
+                    "l f"
+                },
+                Action = LoadFiles
+            },
+            new()
+            {
+                RequiredParameters = 0,
+                CommandStrings = new List<string>
+                {
+                    "unresolvedUsingDirectives",
+                    "uud"
+                },
+                Action = ListUnresolvedUsingDirectives
             },
             new()
             {
@@ -176,6 +199,28 @@ public class ConsoleClient : IConsoleClient
         //var dependsRecursive = _readOnlyProjectProvider.AllProjectsReadOnly["a"].DependsOn("b");
         //var dependsRecursiveOverload = _readOnlyProjectProvider.AllProjectsReadOnly["a"]
         //	.DependsOn(_readOnlyProjectProvider.AllProjectsReadOnly["b"]);
+    }
+
+    private void ListUnresolvedUsingDirectives(IList<string> parameters)
+    {
+        var unlinkedUsingDirectives = _readOnlyProjectProvider.InternalProjectsReadOnly.SelectMany(x =>
+                x.Value.NamespacesReadOnly.Values.SelectMany(y =>
+                    y.NamespaceTypesReadOnly.Values.SelectMany(z =>
+                        z.UsingDirectivesReadOnly.Values)))
+            .Where(x => x.StateReadOnly == TypeUsingDirectiveState.Unresolved)
+            .DistinctBy(x => x.NameReadOnly)
+            .OrderBy(x => x.NameReadOnly)
+            .ToList();
+
+        foreach (var unlinkedUsingDirective in unlinkedUsingDirectives)
+        {
+            Console.WriteLine($"{unlinkedUsingDirective.NameReadOnly}");
+        }
+    }
+
+    private void LoadFiles(IList<string> parameters)
+    {
+        _projectLoader.LoadAllProjects();
     }
 
     private void ShowProjectInfo(IList<string> parameters)
@@ -344,6 +389,7 @@ public class ConsoleClient : IConsoleClient
             Console.WriteLine(new string('-', 50));
             Console.WriteLine($"{cache.Name}");
             Console.WriteLine($"{cache.Id}");
+            Console.WriteLine($"{cache.State.ToString()}");
             Console.WriteLine($"{cache.Timestamp}");
         }
     }
@@ -352,7 +398,7 @@ public class ConsoleClient : IConsoleClient
     {
         _cacheManager.LoadCaches();
 
-        if (!_cacheManager.Caches.Any())
+        if (!_cacheManager.Caches.Any(x => x.State is CacheState.Active))
         {
             _projectLoader.LoadAllProjects();
         }
@@ -360,7 +406,9 @@ public class ConsoleClient : IConsoleClient
 
     private void ProcessInput()
     {
+        Console.WriteLine("Waiting for Input:");
         var input = Console.ReadLine();
+        Console.Clear();
 
         if (input is null)
         {

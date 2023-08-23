@@ -75,9 +75,10 @@ internal class CachedTypeFactory : ICachedTypeFactory
     {
         var cachedTypeUsingDirectives = new List<CachedTypeUsingDirective>();
 
-        var linkedUsingDirectives =
-            namespaceType.UsingDirectivesReadOnly.Values.Where(x => x.StateReadOnly is TypeUsingDirectiveState.Linked);
-        foreach (var typeUsingDirective in linkedUsingDirectives)
+        var usingDirectives =
+            namespaceType.UsingDirectivesReadOnly.Values.Where(x =>
+                x.StateReadOnly is TypeUsingDirectiveState.Linked or TypeUsingDirectiveState.Unresolved);
+        foreach (var typeUsingDirective in usingDirectives)
         {
             cachedTypeUsingDirectives.Add(new CachedTypeUsingDirective
             {
@@ -95,7 +96,6 @@ internal class CachedTypeFactory : ICachedTypeFactory
     private IList<CachedProjectReference> GetCachedProjectReferences(CachedProject cachedProject,
         IReadOnlyProject project)
     {
-        //ToDo test: do we smell an exception?
         var projectReferences = project.DependenciesReadOnly.Values
             .Where(x => x.ReferenceTypeReadOnly == ReferenceType.Project)
             .Select(x => x as ProjectReference);
@@ -124,7 +124,6 @@ internal class CachedTypeFactory : ICachedTypeFactory
     private IList<CachedPackageReference> GetCachedPackageReferences(CachedProject cachedProject,
         IReadOnlyProject project)
     {
-        //ToDo test: do we smell an exception?
         var packageReferences = project.DependenciesReadOnly.Values
             .Where(x => x.ReferenceTypeReadOnly == ReferenceType.Package)
             .Select(x => x as PackageReference);
