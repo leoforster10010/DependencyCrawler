@@ -11,6 +11,7 @@ public class ConsoleClient : IConsoleClient
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly ICacheManager _cacheManager;
     private readonly IEnumerable<Command> _commands;
+    private readonly IEvaluationRepository _evaluationRepository;
     private readonly ILogger<ConsoleClient> _logger;
     private readonly IProjectLoader _projectLoader;
     private readonly IProjectQueriesReadOnly _projectQueries;
@@ -18,7 +19,7 @@ public class ConsoleClient : IConsoleClient
 
     public ConsoleClient(IReadOnlyProjectProvider readOnlyProjectProvider, IProjectLoader projectLoader,
         IProjectQueriesReadOnly projectQueries, ICacheManager cacheManager, ILogger<ConsoleClient> logger,
-        IHostApplicationLifetime applicationLifetime)
+        IHostApplicationLifetime applicationLifetime, IEvaluationRepository evaluationRepository)
     {
         _readOnlyProjectProvider = readOnlyProjectProvider;
         _projectLoader = projectLoader;
@@ -26,6 +27,7 @@ public class ConsoleClient : IConsoleClient
         _cacheManager = cacheManager;
         _logger = logger;
         _applicationLifetime = applicationLifetime;
+        _evaluationRepository = evaluationRepository;
 
         _commands = new List<Command>
         {
@@ -35,12 +37,20 @@ public class ConsoleClient : IConsoleClient
                 CommandStrings = new List<string>
                 {
                     "exit",
-                    "close",
                     "quit",
-                    "q",
-                    "e"
+                    "q"
                 },
                 Action = Exit
+            },
+            new()
+            {
+                RequiredParameters = 0,
+                CommandStrings = new List<string>
+                {
+                    "evaluate",
+                    "eval"
+                },
+                Action = Evaluate
             },
             new()
             {
@@ -201,6 +211,28 @@ public class ConsoleClient : IConsoleClient
         //	.DependsOn(_readOnlyProjectProvider.AllProjectsReadOnly["b"]);
     }
 
+    private void Evaluate(IList<string> obj)
+    {
+        var unusedDependencies = _evaluationRepository.GetUnusedDependencies();
+        var alreadyReferencedDependencies = _evaluationRepository.GetAlreadyReferenced();
+
+        Console.WriteLine("Unused Dependencies:");
+        foreach (var unusedDependency in unusedDependencies)
+        {
+            Console.WriteLine(
+                $"{unusedDependency.Value.UsedByReadOnly.NameReadOnly} -> {unusedDependency.Value.UsingReadOnly.NameReadOnly}");
+        }
+
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.WriteLine("Already referenced Dependencies:");
+        foreach (var alreadyReferencedDependency in alreadyReferencedDependencies)
+        {
+            Console.WriteLine(
+                $"{alreadyReferencedDependency.Value.UsedByReadOnly.NameReadOnly} -> {alreadyReferencedDependency.Value.UsingReadOnly.NameReadOnly}");
+        }
+    }
+
     private void ListUnresolvedUsingDirectives(IList<string> parameters)
     {
         var unlinkedUsingDirectives = _readOnlyProjectProvider.InternalProjectsReadOnly.SelectMany(x =>
@@ -258,7 +290,7 @@ public class ConsoleClient : IConsoleClient
         }
 
         Console.WriteLine("References:");
-        foreach (var reference in project.ReferencedByReadOnly.Values)
+        foreach (var reference in project.ReferencesReadOnly.Values)
         {
             Console.WriteLine($"	{reference.UsedByReadOnly.NameReadOnly}");
             Console.WriteLine($"	Type: {reference.ReferenceTypeReadOnly}");
@@ -323,13 +355,13 @@ public class ConsoleClient : IConsoleClient
         if (parameters.Contains("-t"))
         {
             projects = parameters.Contains("-i")
-                ? _projectQueries.GetInternalTopLevelProjects()
-                : _projectQueries.GetTopLevelProjects();
+                ? _projectQueries.GetInternalTopLevelProjects().Values
+                : _projectQueries.GetTopLevelProjects().Values;
         }
 
         if (parameters.Contains("-s"))
         {
-            projects = _projectQueries.GetSubLevelProjects();
+            projects = _projectQueries.GetSubLevelProjects().Values;
         }
 
         foreach (var readOnlyProject in projects)
@@ -443,6 +475,9 @@ public class ConsoleClient : IConsoleClient
         {
             _logger.LogError(e.ToString());
         }
+
+        Console.WriteLine("");
+        Console.WriteLine(new string('=', 50));
     }
 
     private void SaveCache(IList<string> parameters)
@@ -462,11 +497,4 @@ public class ConsoleClient : IConsoleClient
 
         _cacheManager.SaveAsNewCache(parameters.First());
     }
-}
-
-public class Command
-{
-    public required int RequiredParameters { get; init; }
-    public required IList<string> CommandStrings { get; init; }
-    public required Action<IList<string>> Action { get; init; }
 }

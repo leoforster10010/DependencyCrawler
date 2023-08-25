@@ -123,7 +123,7 @@ internal class ProjectLoader : IProjectLoader
     {
         _logger.LogInformation("Removing reference-loops...");
 
-        var sublevelProjects = _projectProvider.AllProjects.Where(x => !x.Value.ReferencedBy.Any());
+        var sublevelProjects = _projectProvider.AllProjects.Where(x => !x.Value.References.Any());
         var exploredProjects = new Dictionary<Guid, IProject>();
 
         foreach (var project in sublevelProjects)

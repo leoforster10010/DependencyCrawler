@@ -5,21 +5,29 @@ namespace DependencyCrawler.Framework.Extensions;
 
 public static class ReadOnlyProjectExtensions
 {
-    public static bool DependsOn(this IReadOnlyProject project, string projectName)
+    public static bool DependsOnReadOnly(this IReadOnlyProject project, IReadOnlyProject dependency,
+        IDictionary<Guid, IReadOnlyReference>? excludedReferences = null,
+        IDictionary<Guid, IReadOnlyReference>? includedReferences = null)
     {
-        return ContainsDependency(project.DependenciesReadOnly.Values.ToList(), projectName);
-    }
+        if (project.DependencyLayerReadOnly <= dependency.DependencyLayerReadOnly)
+        {
+            return false;
+        }
 
-    public static bool DependsOn(this IReadOnlyProject project, IReadOnlyProject dependency)
-    {
-        return ContainsDependency(project.DependenciesReadOnly.Values.ToList(), dependency.NameReadOnly);
-    }
+        var dependencies = project.DependenciesReadOnly;
+        if (excludedReferences is not null)
+        {
+            dependencies = dependencies.Where(x => !excludedReferences.ContainsKey(x.Key))
+                .ToDictionary(x => x.Key, x => x.Value);
+        }
 
-    private static bool ContainsDependency(IList<IReadOnlyReference> dependencies, string projectName)
-    {
-        return dependencies.Any(x => x.UsingReadOnly.NameReadOnly == projectName) ||
-               dependencies.Any(dependency =>
-                   ContainsDependency(dependency.UsingReadOnly.DependenciesReadOnly.Values.ToList(), projectName));
+        if (dependencies.Values.Any(x => x.UsingReadOnly == dependency))
+        {
+            return true;
+        }
+
+
+        return dependencies.Values.Any(x => x.UsingReadOnly.DependsOnReadOnly(dependency));
     }
 
     public static IReadOnlyDictionary<Guid, IReadOnlyProject> GetAllDependenciesRecursive(
@@ -47,7 +55,7 @@ public static class ReadOnlyProjectExtensions
     {
         var references = new Dictionary<Guid, IReadOnlyProject>();
 
-        foreach (var reference in project.ReferencedByReadOnly)
+        foreach (var reference in project.ReferencesReadOnly)
         {
             references.TryAdd(reference.Key, reference.Value.UsedByReadOnly);
             var nestedReferences = reference.Value.UsedByReadOnly.GetAllReferencesRecursive();

@@ -19,4 +19,13 @@ DataContextComparing
 CC commands:
 - project info:
 	- ud
-- evaluate dependencies
+- evaluate dependencies:
+	- find unused:
+		- foreach Dependency any UDs?
+	- find already referenced:
+		- start toplevel internal:
+			group by layer
+			foreach layer, project, dependency:
+				if dependency in other dependency
+				=> "flag"
+		-speed up with layers? 

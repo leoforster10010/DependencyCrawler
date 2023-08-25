@@ -132,7 +132,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
             Using = referencedProject,
             UsedBy = parentProject
         };
-        referencedProject.ReferencedBy.TryAdd(packageReference.Id, packageReference);
+        referencedProject.References.TryAdd(packageReference.Id, packageReference);
 
         return packageReference;
     }
@@ -147,7 +147,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
             UsedBy = parentProject,
             Id = cachedPackageReference.Id
         };
-        referencedProject.ReferencedBy.TryAdd(packageReference.Id, packageReference);
+        referencedProject.References.TryAdd(packageReference.Id, packageReference);
 
         return packageReference;
     }
@@ -160,7 +160,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
             Using = referencedProject,
             UsedBy = parentProject
         };
-        referencedProject.ReferencedBy.TryAdd(projectReference.Id, projectReference);
+        referencedProject.References.TryAdd(projectReference.Id, projectReference);
 
         return projectReference;
     }
@@ -174,7 +174,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
             UsedBy = parentProject,
             Id = cachedProjectReference.Id
         };
-        referencedProject.ReferencedBy.TryAdd(projectReference.Id, projectReference);
+        referencedProject.References.TryAdd(projectReference.Id, projectReference);
 
         return projectReference;
     }

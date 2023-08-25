@@ -5,21 +5,11 @@ namespace DependencyCrawler.Framework.Extensions;
 
 internal static class ProjectExtensions
 {
-    public static bool DependsOn(this IProject project, string projectName)
+    public static bool DependsOn(this IReadOnlyProject project, IReadOnlyProject dependency,
+        IDictionary<Guid, IReference>? excludedReferences = null)
     {
-        return ContainsDependency(project.Dependencies.Values.ToList(), projectName);
-    }
-
-    public static bool DependsOn(this IProject project, IProject dependency)
-    {
-        return ContainsDependency(project.Dependencies.Values.ToList(), dependency.Name);
-    }
-
-    private static bool ContainsDependency(IList<IReference> dependencies, string projectName)
-    {
-        return dependencies.Any(x => x.Using.Name == projectName) ||
-               dependencies.Any(dependency =>
-                   ContainsDependency(dependency.Using.Dependencies.Values.ToList(), projectName));
+        return project.DependsOnReadOnly(dependency,
+            excludedReferences?.ToDictionary(x => x.Key, x => x.Value as IReadOnlyReference));
     }
 
     public static IDictionary<Guid, IProject> GetAllDependenciesRecursive(this IProject project)
@@ -44,7 +34,7 @@ internal static class ProjectExtensions
     {
         var references = new Dictionary<Guid, IProject>();
 
-        foreach (var reference in project.ReferencedBy)
+        foreach (var reference in project.References)
         {
             references.TryAdd(reference.Key, reference.Value.UsedBy);
             var nestedReferences = reference.Value.UsedBy.GetAllReferencesRecursive();
@@ -76,11 +66,11 @@ internal static class ProjectExtensions
             {
                 case ReferenceType.Project:
                     (reference.UsedBy as IInternalProject)?.ProjectReferences.Remove(reference.Id);
-                    project.ReferencedBy.Remove(reference.Id);
+                    project.References.Remove(reference.Id);
                     break;
                 case ReferenceType.Package:
                     reference.UsedBy.PackageReferences.Remove(reference.Id);
-                    project.ReferencedBy.Remove(reference.Id);
+                    project.References.Remove(reference.Id);
                     break;
                 case ReferenceType.Unknown:
                     break;
