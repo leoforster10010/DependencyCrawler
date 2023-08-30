@@ -19,13 +19,13 @@ DataContextComparing
 CC commands:
 - project info:
 	- ud
-- evaluate dependencies:
-	- find unused:
-		- foreach Dependency any UDs?
-	- find already referenced:
-		- start toplevel internal:
-			group by layer
-			foreach layer, project, dependency:
-				if dependency in other dependency
-				=> "flag"
-		-speed up with layers? 
+-help:
+	- Command add Parameters(values, descr)/Flags(values, Descr), Descr
+	- help prints it
+
+Blazor UI:
+- show projectInfo
+- project List/query/group
+- console client see WA link
+- CacheManager:
+	- drop in json file

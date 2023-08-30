@@ -39,7 +39,7 @@ public static class ReadOnlyProjectExtensions
 
         foreach (var dependency in dependenciesToSearch)
         {
-            dependencies.TryAdd(dependency.Key, dependency.Value.UsingReadOnly);
+            dependencies.TryAdd(dependency.Value.UsingReadOnly.Id, dependency.Value.UsingReadOnly);
             var nestedDependencies = dependency.Value.UsingReadOnly.GetAllDependenciesRecursive(internalOnly);
 
             foreach (var nestedDependency in nestedDependencies)
@@ -57,7 +57,7 @@ public static class ReadOnlyProjectExtensions
 
         foreach (var reference in project.ReferencesReadOnly)
         {
-            references.TryAdd(reference.Key, reference.Value.UsedByReadOnly);
+            references.TryAdd(reference.Value.UsedByReadOnly.Id, reference.Value.UsedByReadOnly);
             var nestedReferences = reference.Value.UsedByReadOnly.GetAllReferencesRecursive();
 
             foreach (var nestedReference in nestedReferences)

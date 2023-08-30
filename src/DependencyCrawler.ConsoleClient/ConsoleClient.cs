@@ -1,3 +1,4 @@
+using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Data.Enum;
@@ -268,6 +269,9 @@ public class ConsoleClient : IConsoleClient
 
         Console.WriteLine($"{project.NameReadOnly}");
         Console.WriteLine($"Type: {project.ProjectTypeReadOnly}");
+        Console.WriteLine($"ReferenceLayer: {project.ReferenceLayerReadOnly}");
+        Console.WriteLine($"DependencyLayer: {project.DependencyLayerReadOnly}");
+        Console.WriteLine($"Internal DependencyLayer: {project.DependencyLayerInternalReadOnly}");
         Console.WriteLine("Dependencies:");
 
         foreach (var reference in project.DependenciesReadOnly.Values)
@@ -335,40 +339,66 @@ public class ConsoleClient : IConsoleClient
 
     private void ListProjects(IList<string> parameters)
     {
-        var projects = _readOnlyProjectProvider.AllProjectsReadOnly.Values;
+        var projects = _readOnlyProjectProvider.AllProjectsReadOnly.Values.ToList();
 
         if (parameters.Contains("-i"))
         {
-            projects = _readOnlyProjectProvider.InternalProjectsReadOnly.Values;
+            projects = _readOnlyProjectProvider.InternalProjectsReadOnly.Values.Select(x => x as IReadOnlyProject)
+                .ToList();
         }
 
         if (parameters.Contains("-e"))
         {
-            projects = _readOnlyProjectProvider.ExternalProjectsReadOnly.Values;
-        }
-
-        if (parameters.Contains("-a"))
-        {
-            projects = _readOnlyProjectProvider.AllProjectsReadOnly.Values;
+            projects = _readOnlyProjectProvider.ExternalProjectsReadOnly.Values.Select(x => x as IReadOnlyProject)
+                .ToList();
         }
 
         if (parameters.Contains("-t"))
         {
             projects = parameters.Contains("-i")
-                ? _projectQueries.GetInternalTopLevelProjects().Values
-                : _projectQueries.GetTopLevelProjects().Values;
+                ? _projectQueries.GetInternalTopLevelProjects().Values.Select(x => x as IReadOnlyProject).ToList()
+                : _projectQueries.GetTopLevelProjects().Values.ToList();
         }
 
         if (parameters.Contains("-s"))
         {
-            projects = _projectQueries.GetSubLevelProjects().Values;
+            projects = _projectQueries.GetSubLevelProjects().Values.ToList();
         }
 
-        foreach (var readOnlyProject in projects)
+        if (parameters.Contains("-gdl") || parameters.Contains("-grl"))
         {
-            Console.WriteLine(new string('-', 50));
-            Console.WriteLine(readOnlyProject.NameReadOnly);
-            Console.WriteLine(readOnlyProject.ProjectTypeReadOnly);
+            var layerGrouping = new List<IGrouping<int, IReadOnlyProject>>();
+            if (parameters.Contains("-gdl"))
+            {
+                layerGrouping = parameters.Contains("-i")
+                    ? projects.GroupBy(x => x.DependencyLayerInternalReadOnly).ToList()
+                    : projects.GroupBy(x => x.DependencyLayerReadOnly).ToList();
+            }
+            else if (parameters.Contains("-grl"))
+            {
+                layerGrouping = projects.GroupBy(x => x.ReferenceLayerReadOnly).ToList();
+            }
+
+            foreach (var layer in layerGrouping.OrderBy(x => x.Key))
+            {
+                Console.WriteLine($"Layer: {layer.Key}");
+                Console.WriteLine(new string('-', 50));
+
+                foreach (var readOnlyProject in layer)
+                {
+                    Console.WriteLine(readOnlyProject.NameReadOnly);
+                    Console.WriteLine(readOnlyProject.ProjectTypeReadOnly);
+                }
+            }
+        }
+        else
+        {
+            foreach (var readOnlyProject in projects)
+            {
+                Console.WriteLine(new string('-', 50));
+                Console.WriteLine(readOnlyProject.NameReadOnly);
+                Console.WriteLine(readOnlyProject.ProjectTypeReadOnly);
+            }
         }
     }
 
