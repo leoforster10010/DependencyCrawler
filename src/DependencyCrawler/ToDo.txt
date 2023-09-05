@@ -19,9 +19,8 @@ DataContextComparing
 CC commands:
 - project info:
 	- ud
--help:
-	- Command add Parameters(values, descr)/Flags(values, Descr), Descr
-	- help prints it
+- dependency path:
+	- 
 
 Blazor UI:
 - show projectInfo
@@ -29,3 +28,4 @@ Blazor UI:
 - console client see WA link
 - CacheManager:
 	- drop in json file
+

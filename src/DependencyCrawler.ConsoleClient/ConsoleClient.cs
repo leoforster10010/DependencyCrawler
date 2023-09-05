@@ -194,8 +194,24 @@ public class ConsoleClient : IConsoleClient
 				              Environment.NewLine +
 				              "Available Flags:" + Environment.NewLine +
 				              "-a: Lists the indirect dependencies and references" + Environment.NewLine +
+				              "-r: Lists the dependencies, required by using-Directives. If used i combination with -a, unresolved and required projects also get listed." +
+				              Environment.NewLine +
 				              "-ns: Lists the namespaces of the project" + Environment.NewLine +
 				              "-t: Lists the types of the project"
+			},
+			new()
+			{
+				RequiredParameters = 2,
+				CommandStrings = new List<string>
+				{
+					"dependency path",
+					"dependency p",
+					"d path",
+					"d p"
+				},
+				Action = ShowDependencyPath,
+				Description = "Shows the dependency paths between two projects." + Environment.NewLine +
+				              "Required parameters: two project names"
 			}
 		};
 	}
@@ -209,6 +225,35 @@ public class ConsoleClient : IConsoleClient
 		while (!cancellationToken.IsCancellationRequested)
 		{
 			ProcessInput();
+		}
+	}
+
+	private void ShowDependencyPath(IList<string> parameters)
+	{
+		var project =
+			_readOnlyProjectProvider.AllProjectsReadOnly.Values.FirstOrDefault(x =>
+				x.NameReadOnly.ToLower() == parameters.First());
+		var dependency =
+			_readOnlyProjectProvider.AllProjectsReadOnly.Values.FirstOrDefault(x =>
+				x.NameReadOnly.ToLower() == parameters[1]);
+		if (project is null)
+		{
+			_logger.LogWarning($"Project not found: {parameters.First()}");
+			return;
+		}
+
+		if (dependency is null)
+		{
+			_logger.LogWarning($"Project not found: {parameters[1]}");
+			return;
+		}
+
+		var dependencyPaths = project.GetDependencyPaths(dependency);
+
+		foreach (var dependencyPath in dependencyPaths)
+		{
+			var projectNames = dependencyPath.Select(x => x.NameReadOnly);
+			Console.WriteLine(string.Join(" -> ", projectNames));
 		}
 	}
 
@@ -302,7 +347,7 @@ public class ConsoleClient : IConsoleClient
 			Console.WriteLine("indirect Dependencies:");
 
 
-			foreach (var reference in project.GetAllDependenciesRecursive(parameters.Contains("-i")).Values)
+			foreach (var reference in project.GetAllDependenciesReadOnlyRecursive(parameters.Contains("-i")).Values)
 			{
 				Console.WriteLine($"	{reference.NameReadOnly}");
 				Console.WriteLine(new string('-', 50));
@@ -322,7 +367,18 @@ public class ConsoleClient : IConsoleClient
 		{
 			Console.WriteLine("indirect References:");
 
-			foreach (var reference in project.GetAllReferencesRecursive().Values)
+			foreach (var reference in project.GetAllReferencesReadOnlyRecursive().Values)
+			{
+				Console.WriteLine($"	{reference.NameReadOnly}");
+				Console.WriteLine(new string('-', 50));
+			}
+		}
+
+		if (parameters.Contains("-r"))
+		{
+			Console.WriteLine("required Dependencies:");
+
+			foreach (var reference in project.GetRequiredDependenciesReadOnly(parameters.Contains("-a")).Values)
 			{
 				Console.WriteLine($"	{reference.NameReadOnly}");
 				Console.WriteLine(new string('-', 50));
