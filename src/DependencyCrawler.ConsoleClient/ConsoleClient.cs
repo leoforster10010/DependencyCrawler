@@ -313,7 +313,7 @@ public class ConsoleClient : IConsoleClient
             Console.WriteLine("Commands:");
             foreach (var commandString in command.CommandStrings)
             {
-                Console.WriteLine($"-{commandString}");
+                Console.WriteLine($"{commandString}");
             }
 
             Console.WriteLine("");
