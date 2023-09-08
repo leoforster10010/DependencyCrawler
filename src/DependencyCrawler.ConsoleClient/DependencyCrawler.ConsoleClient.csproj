@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj" />
-    <ProjectReference Include="..\DependencyCrawler\DependencyCrawler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

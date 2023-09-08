@@ -12,6 +12,7 @@ public class ConsoleClient : IConsoleClient
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly ICacheManager _cacheManager;
     private readonly IEnumerable<Command> _commands;
+    private readonly IConfigurationValidator _configurationValidator;
     private readonly IEvaluationRepository _evaluationRepository;
     private readonly ILogger<ConsoleClient> _logger;
     private readonly IProjectLoader _projectLoader;
@@ -20,7 +21,8 @@ public class ConsoleClient : IConsoleClient
 
     public ConsoleClient(IReadOnlyProjectProvider readOnlyProjectProvider, IProjectLoader projectLoader,
         IProjectQueriesReadOnly projectQueries, ICacheManager cacheManager, ILogger<ConsoleClient> logger,
-        IHostApplicationLifetime applicationLifetime, IEvaluationRepository evaluationRepository)
+        IHostApplicationLifetime applicationLifetime, IEvaluationRepository evaluationRepository,
+        IConfigurationValidator configurationValidator)
     {
         _readOnlyProjectProvider = readOnlyProjectProvider;
         _projectLoader = projectLoader;
@@ -29,6 +31,7 @@ public class ConsoleClient : IConsoleClient
         _logger = logger;
         _applicationLifetime = applicationLifetime;
         _evaluationRepository = evaluationRepository;
+        _configurationValidator = configurationValidator;
 
         _commands = new List<Command>
         {
@@ -447,7 +450,6 @@ public class ConsoleClient : IConsoleClient
                     {
                         Console.WriteLine($"		{namespaceType.NameReadOnly}");
                         Console.WriteLine(new string('-', 50));
-                        //ToDo UD / UsingTypes for Namespace
                     }
                 }
 
@@ -577,11 +579,31 @@ public class ConsoleClient : IConsoleClient
 
     private void Load()
     {
+        ValidateConfiguration();
+
         _cacheManager.LoadCaches();
 
         if (!_cacheManager.Caches.Any(x => x.State is CacheState.Active))
         {
             _projectLoader.LoadAllProjects();
+        }
+    }
+
+    private void ValidateConfiguration()
+    {
+        while (!_configurationValidator.IsConfigurationValid())
+        {
+            Console.WriteLine(
+                "The following configurations are invalid. Please update the appsettings.json accordingly.");
+
+            foreach (var invalidConfiguration in _configurationValidator.GetInvalidConfigurations())
+            {
+                Console.WriteLine($"- {invalidConfiguration}");
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("Press enter to continue.");
+            Console.ReadKey();
         }
     }
 

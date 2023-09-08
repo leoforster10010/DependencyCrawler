@@ -1,7 +1,6 @@
 namespace DependencyCrawler.Implementations.Data.Enum;
 
-public enum CacheState
+public enum ConfigurationTypes
 {
-    Active,
-    Inactive
+    Path
 }

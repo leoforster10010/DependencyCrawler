@@ -1,7 +1,6 @@
 namespace DependencyCrawler.Implementations.Data.Enum;
 
-public enum CacheState
+public enum ConfigurationKeys
 {
-    Active,
-    Inactive
+    RootDirectory
 }
