@@ -27,7 +27,7 @@ public class Worker : IHostedService
         {
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _task = Task.Run(() => _dependencyCrawler.Run(_cts.Token), _cts.Token);
-            return _task;
+            return Task.CompletedTask;
         }
         catch (Exception e)
         {
