@@ -1,4 +1,4 @@
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Data.Contracts.Entities;
 
 namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 

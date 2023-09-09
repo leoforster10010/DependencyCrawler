@@ -1,4 +1,4 @@
-﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
+﻿using DependencyCrawler.Data.Contracts.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DependencyCrawler.Data.Json;

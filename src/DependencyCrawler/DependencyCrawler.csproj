@@ -16,4 +16,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DependencyCrawler.Data.Contracts\DependencyCrawler.Data.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Data.Contracts.Entities;
 
-namespace DependencyCrawler.Contracts.Interfaces.Repositories;
+namespace DependencyCrawler.Data.Contracts.Interfaces;
 
 public interface ICacher
 {

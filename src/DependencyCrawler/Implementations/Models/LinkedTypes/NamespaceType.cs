@@ -1,4 +1,5 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
+using DependencyCrawler.Data.Contracts.Entities;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
