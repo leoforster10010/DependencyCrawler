@@ -33,7 +33,6 @@ internal class CachedProjectLoader : ICachedProjectLoader
 
 	private void CacheProject(IReadOnlyProject project)
 	{
-		var cachedProject = _cachedTypeFactory.GetCachedProject(project);
-		_cachedProjectProvider.AddCachedProject(cachedProject);
+		var _ = _cachedTypeFactory.GetCachedProject(project);
 	}
 }

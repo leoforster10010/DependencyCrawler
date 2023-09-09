@@ -4,7 +4,7 @@ namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 public interface IProjectQueriesReadOnly
 {
-	IEnumerable<IReadOnlyProject> GetInternalTopLevelProjects();
-	IEnumerable<IReadOnlyProject> GetSubLevelProjects();
-	IEnumerable<IReadOnlyProject> GetTopLevelProjects();
+    IDictionary<string, IReadOnlyInternalProject> GetInternalTopLevelProjects();
+    IDictionary<string, IReadOnlyProject> GetSubLevelProjects();
+    Dictionary<string, IReadOnlyProject> GetTopLevelProjects();
 }

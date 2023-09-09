@@ -41,15 +41,16 @@ internal class CacheManager : ICacheManager
 			}
 
 			_activeCache = value;
-			_activeCache.State = CacheState.Inactive;
+			_activeCache.State = CacheState.Active;
 
 			_projectLoader.LoadProjectsFromCache(_activeCache);
+			_logger.LogInformation("Cache activated");
 		}
 	}
 
 	public void LoadCaches()
 	{
-		var caches = _cacher.GetAvailableCaches();
+		var caches = _cacher.GetAvailableCaches().ToList();
 		foreach (var cache in caches)
 		{
 			if (_caches.TryAdd(cache.Id, cache) && cache.State is CacheState.Active)
@@ -57,6 +58,8 @@ internal class CacheManager : ICacheManager
 				ActiveCache = cache;
 			}
 		}
+
+		_logger.LogInformation($"{caches.Count} Caches loaded");
 	}
 
 	public void ActivateCache(Guid id)
@@ -86,6 +89,7 @@ internal class CacheManager : ICacheManager
 		}
 
 		_caches.Remove(cache.Id);
+		_logger.LogInformation($"Cache deleted: {cache.Name}");
 	}
 
 	public void SaveAsCurrentCache()
@@ -121,6 +125,7 @@ internal class CacheManager : ICacheManager
 		var cache = new Cache
 		{
 			CachedProjects = _cachedProjectLoader.GetCachedProjects(),
+			State = CacheState.Inactive,
 			Name = name
 		};
 
@@ -131,6 +136,7 @@ internal class CacheManager : ICacheManager
 	public void SaveAllCaches()
 	{
 		_cacher.SaveCaches(_caches.Values);
+		_logger.LogInformation($"{_caches.Count} Caches saved");
 	}
 
 	public void ReloadCaches()

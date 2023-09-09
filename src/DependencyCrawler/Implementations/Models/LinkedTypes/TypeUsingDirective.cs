@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class TypeUsingDirective : ITypeUsingDirective
+internal class TypeUsingDirective : Entity, ITypeUsingDirective
 {
 	public string Name => ReferencedNamespace.Name;
 	public required TypeUsingDirectiveState State { get; set; }

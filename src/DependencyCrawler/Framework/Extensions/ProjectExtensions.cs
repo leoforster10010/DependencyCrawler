@@ -1,29 +1,24 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Model;
+using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Framework.Extensions;
 
 internal static class ProjectExtensions
 {
-	public static bool DependsOn(this IProject project, string projectName)
+	public static IDictionary<Guid, IProject> GetRequiredDependencies(this IProject project,
+		bool includeUnresolved = false)
 	{
-		return ContainsDependency(project.Dependencies.Values.ToList(), projectName);
+		var requiredDependencies = project.UsingDirectives.Values
+			.Select(x => x.ReferencedNamespace.ParentProject)
+			.Where(x => includeUnresolved || x.ProjectTypeReadOnly is not ProjectType.Unresolved)
+			.ToDictionary(x => x.Id, x => x);
+
+		return requiredDependencies;
 	}
 
-	public static bool DependsOn(this IProject project, IProject dependency)
+	public static IDictionary<Guid, IProject> GetAllDependenciesRecursive(this IProject project)
 	{
-		return ContainsDependency(project.Dependencies.Values.ToList(), dependency.Name);
-	}
-
-	private static bool ContainsDependency(IList<IReference> dependencies, string projectName)
-	{
-		return dependencies.Any(x => x.Using.Name == projectName) ||
-		       dependencies.Any(dependency =>
-			       ContainsDependency(dependency.Using.Dependencies.Values.ToList(), projectName));
-	}
-
-	public static IDictionary<string, IProject> GetAllDependenciesRecursive(this IProject project)
-	{
-		var dependencies = new Dictionary<string, IProject>();
+		var dependencies = new Dictionary<Guid, IProject>();
 
 		foreach (var dependency in project.Dependencies)
 		{
@@ -39,11 +34,11 @@ internal static class ProjectExtensions
 		return dependencies;
 	}
 
-	public static IDictionary<string, IProject> GetAllReferencesRecursive(this IProject project)
+	public static IDictionary<Guid, IProject> GetAllReferencesRecursive(this IProject project)
 	{
-		var references = new Dictionary<string, IProject>();
+		var references = new Dictionary<Guid, IProject>();
 
-		foreach (var reference in project.ReferencedBy)
+		foreach (var reference in project.References)
 		{
 			references.TryAdd(reference.Key, reference.Value.UsedBy);
 			var nestedReferences = reference.Value.UsedBy.GetAllReferencesRecursive();
@@ -55,5 +50,49 @@ internal static class ProjectExtensions
 		}
 
 		return references;
+	}
+
+	public static void RemoveReferenceLoops(this IProject project, IList<IProject>? currentPath = null,
+		IDictionary<Guid, IProject>? exploredProjects = null)
+	{
+		currentPath ??= new List<IProject>();
+		exploredProjects ??= new Dictionary<Guid, IProject>();
+
+		if (exploredProjects.ContainsKey(project.Id))
+		{
+			return;
+		}
+
+		if (currentPath.Any(x => x == project))
+		{
+			var reference = currentPath.Last().Dependencies.Values.First(x => x.Using == project);
+			switch (reference.ReferenceType)
+			{
+				case ReferenceType.Project:
+					(reference.UsedBy as IInternalProject)?.ProjectReferences.Remove(reference.Id);
+					project.References.Remove(reference.Id);
+					break;
+				case ReferenceType.Package:
+					reference.UsedBy.PackageReferences.Remove(reference.Id);
+					project.References.Remove(reference.Id);
+					break;
+				case ReferenceType.Unknown:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			return;
+		}
+
+		currentPath.Add(project);
+
+		foreach (var dependency in project.Dependencies.Values)
+		{
+			dependency.Using.RemoveReferenceLoops(currentPath, exploredProjects);
+		}
+
+		currentPath.Remove(project);
+		exploredProjects.TryAdd(project.Id, project);
 	}
 }

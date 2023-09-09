@@ -79,22 +79,23 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 
 	private IList<NamespaceInfo> GetNamespaces(Assembly assembly)
 	{
-		var namespaces = assembly.GetNamespaces().ToList();
+		var types = assembly.GetTypesSafe();
+		var namespaces = assembly.GetNamespaces(types).ToList();
 		foreach (var ns in namespaces)
 		{
-			ns.Types = GetTypeInfos(assembly, ns);
+			ns.Types = GetTypeInfos(types, ns);
 		}
 
 		return namespaces;
 	}
 
-	private IList<TypeInfo> GetTypeInfos(Assembly assembly, NamespaceInfo ns)
+	private IList<TypeInfo> GetTypeInfos(IEnumerable<Type> types, NamespaceInfo ns)
 	{
-		var types = assembly.GetTypesSafe().Where(x => x.Namespace == ns.Name).Select(x => new TypeInfo
+		var typeInfos = types.Where(x => x.GetNamespace() == ns.Name).Select(x => new TypeInfo
 		{
 			Name = x.Name
 		}).ToList();
-		return types;
+		return typeInfos;
 	}
 
 

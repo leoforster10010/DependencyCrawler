@@ -3,7 +3,6 @@ using DependencyCrawler.Implementations.Models.CachedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
-//ToDo Singleton -> only used from CTF
 internal class CachedProjectProvider : ICachedProjectProvider
 {
 	private readonly IDictionary<string, CachedProject> _cachedProjects = new Dictionary<string, CachedProject>();

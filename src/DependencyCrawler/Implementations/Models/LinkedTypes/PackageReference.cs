@@ -3,7 +3,7 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class PackageReference : IPackageReference
+internal class PackageReference : Entity, IPackageReference
 {
 	public string? Version { get; set; }
 	public required IProject Using { get; set; }

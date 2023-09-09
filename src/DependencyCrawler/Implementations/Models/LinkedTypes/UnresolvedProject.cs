@@ -3,33 +3,43 @@ using DependencyCrawler.Implementations.Data.Enum;
 
 namespace DependencyCrawler.Implementations.Models.LinkedTypes;
 
-internal class UnresolvedProject : IProject
+internal class UnresolvedProject : Entity, IProject
 {
-	public string Name { get; init; } = string.Empty;
-	public ProjectType ProjectType => ProjectType.Unresolved;
-	public IDictionary<string, IReference> Dependencies => new Dictionary<string, IReference>();
-	public IDictionary<string, IReference> ReferencedBy { get; set; } = new Dictionary<string, IReference>();
+    public string Name { get; init; } = string.Empty;
+    public ProjectType ProjectType => ProjectType.Unresolved;
+    public int ReferenceLayer => 0;
+    public int DependencyLayer => 0;
+    public int DependencyLayerInternal => 0;
 
-	public IDictionary<string, IProjectNamespace> Namespaces { get; set; } =
-		new Dictionary<string, IProjectNamespace>();
+    public IDictionary<Guid, IPackageReference> PackageReferences { get; set; } =
+        new Dictionary<Guid, IPackageReference>();
 
-	public IDictionary<string, INamespaceType> Types => new Dictionary<string, INamespaceType>();
-	public IDictionary<string, ITypeUsingDirective> UsingDirectives => new Dictionary<string, ITypeUsingDirective>();
-	public string NameReadOnly => Name;
-	public ProjectType ProjectTypeReadOnly => ProjectType;
+    public IDictionary<Guid, IReference> Dependencies => new Dictionary<Guid, IReference>();
+    public IDictionary<Guid, IReference> References { get; set; } = new Dictionary<Guid, IReference>();
 
-	public IReadOnlyDictionary<string, IReadOnlyReference> DependenciesReadOnly =>
-		new Dictionary<string, IReadOnlyReference>();
+    public IDictionary<Guid, IProjectNamespace> Namespaces { get; set; } =
+        new Dictionary<Guid, IProjectNamespace>();
 
-	public IReadOnlyDictionary<string, IReadOnlyReference> ReferencedByReadOnly =>
-		new Dictionary<string, IReadOnlyReference>();
+    public IDictionary<Guid, INamespaceType> Types => new Dictionary<Guid, INamespaceType>();
+    public IDictionary<Guid, ITypeUsingDirective> UsingDirectives => new Dictionary<Guid, ITypeUsingDirective>();
+    public string NameReadOnly => Name;
+    public ProjectType ProjectTypeReadOnly => ProjectType;
+    public int ReferenceLayerReadOnly => ReferenceLayer;
+    public int DependencyLayerReadOnly => DependencyLayer;
+    public int DependencyLayerInternalReadOnly => DependencyLayerInternal;
 
-	public IReadOnlyDictionary<string, IReadOnlyProjectNamespace> NamespacesReadOnly =>
-		new Dictionary<string, IReadOnlyProjectNamespace>();
+    public IReadOnlyDictionary<Guid, IReadOnlyReference> DependenciesReadOnly =>
+        new Dictionary<Guid, IReadOnlyReference>();
 
-	public IReadOnlyDictionary<string, IReadOnlyNamespaceType> TypesReadOnly =>
-		new Dictionary<string, IReadOnlyNamespaceType>();
+    public IReadOnlyDictionary<Guid, IReadOnlyReference> ReferencesReadOnly =>
+        new Dictionary<Guid, IReadOnlyReference>();
 
-	public IReadOnlyDictionary<string, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
-		new Dictionary<string, IReadOnlyTypeUsingDirective>();
+    public IReadOnlyDictionary<Guid, IReadOnlyProjectNamespace> NamespacesReadOnly =>
+        new Dictionary<Guid, IReadOnlyProjectNamespace>();
+
+    public IReadOnlyDictionary<Guid, IReadOnlyNamespaceType> TypesReadOnly =>
+        new Dictionary<Guid, IReadOnlyNamespaceType>();
+
+    public IReadOnlyDictionary<Guid, IReadOnlyTypeUsingDirective> UsingDirectivesReadOnly =>
+        new Dictionary<Guid, IReadOnlyTypeUsingDirective>();
 }

@@ -23,7 +23,6 @@ internal class DllFileProvider : IDllFileProvider
 
 	public string? GetDllFile(string projectName)
 	{
-		//ToDo test
 		return _dllFiles.FirstOrDefault(x => x.GetDllName() == projectName);
 	}
 

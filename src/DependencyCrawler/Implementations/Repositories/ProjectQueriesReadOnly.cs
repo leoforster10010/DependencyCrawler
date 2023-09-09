@@ -6,36 +6,32 @@ namespace DependencyCrawler.Implementations.Repositories;
 
 internal class ProjectQueriesReadOnly : IProjectQueriesReadOnly
 {
-	private readonly IReadOnlyProjectProvider _readOnlyProjectProvider;
+    private readonly IReadOnlyProjectProvider _readOnlyProjectProvider;
 
-	public ProjectQueriesReadOnly(IReadOnlyProjectProvider readOnlyProjectProvider)
-	{
-		_readOnlyProjectProvider = readOnlyProjectProvider;
-	}
+    public ProjectQueriesReadOnly(IReadOnlyProjectProvider readOnlyProjectProvider)
+    {
+        _readOnlyProjectProvider = readOnlyProjectProvider;
+    }
 
-	public IEnumerable<IReadOnlyProject> GetInternalTopLevelProjects()
-	{
-		var toplevelProjects = _readOnlyProjectProvider.InternalProjectsReadOnly.Values
-			.Where(x => !x.DependenciesReadOnly.Any() ||
-			            x.DependenciesReadOnly.Values.All(y =>
-				            y.UsingReadOnly.ProjectTypeReadOnly == ProjectType.External));
+    public IDictionary<string, IReadOnlyInternalProject> GetInternalTopLevelProjects()
+    {
+        return _readOnlyProjectProvider.InternalProjectsReadOnly
+            .Where(x => !x.Value.DependenciesReadOnly.Any(y =>
+                y.Value.UsingReadOnly.ProjectTypeReadOnly is ProjectType.Internal))
+            .ToDictionary(p => p.Key, p => p.Value);
+    }
 
-		return toplevelProjects;
-	}
+    public IDictionary<string, IReadOnlyProject> GetSubLevelProjects()
+    {
+        return _readOnlyProjectProvider.AllProjectsReadOnly.Where(x =>
+                x.Value.ProjectTypeReadOnly is not ProjectType.Unresolved && !x.Value.ReferencesReadOnly.Any())
+            .ToDictionary(p => p.Key, p => p.Value);
+    }
 
-	public IEnumerable<IReadOnlyProject> GetSubLevelProjects()
-	{
-		var projects = _readOnlyProjectProvider.AllProjectsReadOnly;
-		return projects.Where(x =>
-				projects.All(y => y.Value.DependenciesReadOnly.All(z => z.Value.UsingReadOnly != x.Value)))
-			.Select(x => x.Value);
-	}
-
-	public IEnumerable<IReadOnlyProject> GetTopLevelProjects()
-	{
-		var toplevelProjects = _readOnlyProjectProvider.AllProjectsReadOnly.Values
-			.Where(x => !x.DependenciesReadOnly.Any());
-
-		return toplevelProjects;
-	}
+    public Dictionary<string, IReadOnlyProject> GetTopLevelProjects()
+    {
+        return _readOnlyProjectProvider.AllProjectsReadOnly.Where(x =>
+                x.Value.ProjectTypeReadOnly is not ProjectType.Unresolved && !x.Value.DependenciesReadOnly.Any())
+            .ToDictionary(p => p.Key, p => p.Value);
+    }
 }

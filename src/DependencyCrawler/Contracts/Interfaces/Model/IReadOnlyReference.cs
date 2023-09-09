@@ -2,9 +2,9 @@
 
 namespace DependencyCrawler.Contracts.Interfaces.Model;
 
-public interface IReadOnlyReference
+public interface IReadOnlyReference : IEntity
 {
-	public IReadOnlyProject UsingReadOnly { get; }
-	public IReadOnlyProject UsedByReadOnly { get; }
-	public ReferenceType ReferenceTypeReadOnly { get; }
+    public IReadOnlyProject UsingReadOnly { get; }
+    public IReadOnlyProject UsedByReadOnly { get; }
+    public ReferenceType ReferenceTypeReadOnly { get; }
 }

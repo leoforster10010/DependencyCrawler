@@ -27,13 +27,13 @@ public class DependencyCrawler : IDependencyCrawler
 		var directDependencies = _readOnlyProjectProvider.AllProjectsReadOnly["x"].DependenciesReadOnly.Values
 			.Select(x => x.UsingReadOnly);
 		//Projects x depends on directly or indirect
-		var allDependencies = _readOnlyProjectProvider.AllProjectsReadOnly["x"].GetAllDependenciesRecursive();
+		var allDependencies = _readOnlyProjectProvider.AllProjectsReadOnly["x"].GetAllDependenciesReadOnlyRecursive();
 
 		//all projects depending on x directly
-		var referencedBy = _readOnlyProjectProvider.AllProjectsReadOnly["x"].ReferencedByReadOnly.Values
+		var referencedBy = _readOnlyProjectProvider.AllProjectsReadOnly["x"].ReferencesReadOnly.Values
 			.Select(x => x.UsedByReadOnly);
 		//all projects depending on x directly or indirect
-		var dependingProjects = _readOnlyProjectProvider.AllProjectsReadOnly["x"].GetAllReferencesRecursive();
+		var dependingProjects = _readOnlyProjectProvider.AllProjectsReadOnly["x"].GetAllReferencesReadOnlyRecursive();
 
 		//internal projects depending only on external projects
 		var internalTopLevelProjects = _projectQueries.GetInternalTopLevelProjects();
@@ -46,8 +46,7 @@ public class DependencyCrawler : IDependencyCrawler
 		var dependsDirectly = _readOnlyProjectProvider.AllProjectsReadOnly["a"].DependenciesReadOnly
 			.Any(x => x.Value.UsingReadOnly.NameReadOnly is "b");
 		//check if a depends on b
-		var dependsRecursive = _readOnlyProjectProvider.AllProjectsReadOnly["a"].DependsOn("b");
-		var dependsRecursiveOverload = _readOnlyProjectProvider.AllProjectsReadOnly["a"]
+		var dependsRecursive = _readOnlyProjectProvider.AllProjectsReadOnly["a"]
 			.DependsOn(_readOnlyProjectProvider.AllProjectsReadOnly["b"]);
 	}
 }

@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler", "Depend
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.QueryClient", "DependencyCrawler.QueryClient\DependencyCrawler.QueryClient.csproj", "{1907209E-A374-4653-BD19-F426A1679C52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.MongoDB", "DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj", "{AB452712-28C1-47AB-ACF5-70D1B447A3AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.MongoDB", "DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj", "{AB452712-28C1-47AB-ACF5-70D1B447A3AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Json", "DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj", "{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.Json", "DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj", "{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.ConsoleClient", "DependencyCrawler.ConsoleClient\DependencyCrawler.ConsoleClient.csproj", "{44D6FC73-746F-45BD-885D-423264EE09BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D6FC73-746F-45BD-885D-423264EE09BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D6FC73-746F-45BD-885D-423264EE09BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D6FC73-746F-45BD-885D-423264EE09BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D6FC73-746F-45BD-885D-423264EE09BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
