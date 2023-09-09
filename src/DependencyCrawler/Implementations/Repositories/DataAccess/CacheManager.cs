@@ -1,6 +1,7 @@
 using DependencyCrawler.Contracts.Interfaces.Repositories;
-using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Data.Contracts.Entities;
+using DependencyCrawler.Data.Contracts.Enum;
+using DependencyCrawler.Data.Contracts.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.DataAccess;

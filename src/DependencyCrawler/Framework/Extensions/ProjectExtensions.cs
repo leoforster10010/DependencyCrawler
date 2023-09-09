@@ -1,5 +1,5 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Model;
-using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Data.Contracts.Enum;
 
 namespace DependencyCrawler.Framework.Extensions;
 

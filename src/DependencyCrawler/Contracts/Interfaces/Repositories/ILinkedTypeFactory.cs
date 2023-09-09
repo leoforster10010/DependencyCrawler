@@ -1,5 +1,5 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
-using DependencyCrawler.Implementations.Models.CachedTypes;
+using DependencyCrawler.Data.Contracts.Entities.CachedTypes;
 using DependencyCrawler.Implementations.Models.LinkedTypes;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 

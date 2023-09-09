@@ -1,6 +1,4 @@
-using DependencyCrawler.Implementations.Models.LinkedTypes;
-
-namespace DependencyCrawler.Implementations.Models.CachedTypes;
+namespace DependencyCrawler.Data.Contracts.Entities.CachedTypes;
 
 public class CachedNamespaceType : Entity
 {

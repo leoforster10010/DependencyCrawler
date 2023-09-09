@@ -1,6 +1,6 @@
 using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
-using DependencyCrawler.Implementations.Models.CachedTypes;
+using DependencyCrawler.Data.Contracts.Entities.CachedTypes;
 
 namespace DependencyCrawler.Implementations.Repositories.Loader;
 

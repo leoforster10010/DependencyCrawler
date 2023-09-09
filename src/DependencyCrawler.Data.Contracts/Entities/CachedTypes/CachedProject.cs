@@ -1,7 +1,6 @@
-using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models.LinkedTypes;
+using DependencyCrawler.Data.Contracts.Enum;
 
-namespace DependencyCrawler.Implementations.Models.CachedTypes;
+namespace DependencyCrawler.Data.Contracts.Entities.CachedTypes;
 
 public class CachedProject : Entity
 {

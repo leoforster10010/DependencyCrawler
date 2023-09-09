@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenLayout Style="grid-template-columns: 1fr auto; grid-template-areas: 'rz-header rz-sidebar' 'rz-body rz-sidebar'">
+	<RadzenHeader>
+		<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="1rem">
+			<RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
+		</RadzenStack>
+	</RadzenHeader>
+	<RadzenSidebar @bind-Expanded="@_sidebarExpanded">
+		<NavMenu></NavMenu>
+	</RadzenSidebar>
+	<RadzenBody>
+		<div>
+			@Body
+		</div>
+	</RadzenBody>
+</RadzenLayout>
+
+@code {
+	bool _sidebarExpanded = true;
+}

@@ -1,7 +1,7 @@
-using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models.CachedTypes;
+using DependencyCrawler.Data.Contracts.Entities.CachedTypes;
+using DependencyCrawler.Data.Contracts.Enum;
 
-namespace DependencyCrawler.Implementations.Models;
+namespace DependencyCrawler.Data.Contracts.Entities;
 
 public class Cache
 {
