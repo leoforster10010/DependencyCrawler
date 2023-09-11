@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/projects"
 @using DependencyCrawler.Contracts.Interfaces.Repositories
 @using DependencyCrawler.Contracts.Interfaces.Model
 @inject IReadOnlyProjectProvider ReadOnlyProjectProvider;
@@ -15,7 +15,6 @@
 
 @code
 {
-	//ToDo Dashboard
 	protected override async Task OnInitializedAsync()
 	{
 		projects = ReadOnlyProjectProvider.AllProjectsReadOnly.Values;

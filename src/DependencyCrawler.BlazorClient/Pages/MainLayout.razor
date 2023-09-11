@@ -1,8 +1,13 @@
 ﻿@inherits LayoutComponentBase
+@using DependencyCrawler.BlazorClient.Contracts
+@using DependencyCrawler.BlazorClient.Backend
+@implements IDisposable
+@inject IApplicationStateHandler ApplicationStateHandler
 
 <RadzenLayout Style="grid-template-columns: 1fr auto; grid-template-areas: 'rz-header rz-sidebar' 'rz-body rz-sidebar'">
 	<RadzenHeader>
 		<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="1rem">
+			<RadzenButton Click="Reload" Icon="refresh"></RadzenButton>
 			<RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
 		</RadzenStack>
 	</RadzenHeader>
@@ -10,12 +15,43 @@
 		<NavMenu></NavMenu>
 	</RadzenSidebar>
 	<RadzenBody>
-		<div>
-			@Body
-		</div>
+		@switch (ApplicationStateHandler.ApplicationState)
+		{
+			case ApplicationState.Unloaded:
+				<RadzenAlert AlertStyle="AlertStyle.Warning" AllowClose="false">No data loaded</RadzenAlert>
+				break;
+			case ApplicationState.Loaded:
+				<div>
+					@Body
+				</div>
+				break;
+			case ApplicationState.Loading:
+				<RadzenAlert AlertStyle="AlertStyle.Info" AllowClose="false">Loading data...</RadzenAlert>
+				break;
+		}
 	</RadzenBody>
 </RadzenLayout>
 
 @code {
 	bool _sidebarExpanded = true;
+
+	private void Reload()
+	{
+		ApplicationStateHandler.Load();
+	}
+
+	protected override void OnInitialized()
+	{
+		ApplicationStateHandler.OnStateChanged += Refresh;
+	}
+
+	private async void Refresh()
+	{
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public void Dispose()
+	{
+		ApplicationStateHandler.OnStateChanged -= Refresh;
+	}
 }

@@ -1,5 +1,7 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Framework.Extensions;
+using DependencyCrawler.Implementations.Data.Enum;
+using Microsoft.Extensions.Configuration;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
@@ -8,12 +10,10 @@ internal class DllFileProvider : IDllFileProvider
 	private const string Extension = "*.dll";
 	private readonly List<string> _dllFiles;
 
-	private readonly string _nugetPath =
-		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget");
-
-	public DllFileProvider()
+	public DllFileProvider(IConfiguration configuration)
 	{
-		_dllFiles = Directory.GetFiles(_nugetPath, Extension, SearchOption.AllDirectories).ToList();
+		var path = configuration[ConfigurationKeys.DllDirectory.ToString()];
+		_dllFiles = Directory.GetFiles(path!, Extension, SearchOption.AllDirectories).ToList();
 	}
 
 	public IEnumerable<string> GetDllFiles()

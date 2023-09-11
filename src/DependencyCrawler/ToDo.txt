@@ -1,1 +1,32 @@
-﻿- count potential projects of codebase = 2^n - 1
+- count potential projects of codebase = 2^n - 1
+EditAccess to ProjectProvider:
+- ProjectLoader
+- ReadOnlyProjectProvider
+
+Domain?: 
+- ReadOnlyInterfaces
+
+State:
+- State:
+	- Timestamp of creation
+	- ParentState (ReadOnlyDataContext)
+	- MainState (CoreDataContext)
+	- CloneState (ClonedDataContext)
+
+DataContextCloning
+DataContextComparing
+
+
+CC commands:
+- project info:
+	- ud
+- dependency path:
+	- 
+
+Blazor UI:
+- project List/query/group
+- show projectInfo
+- console client in footer
+- CacheManager:
+	- drop in json file
+

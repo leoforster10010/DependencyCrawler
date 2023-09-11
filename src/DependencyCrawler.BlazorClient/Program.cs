@@ -1,4 +1,5 @@
-using DependencyCrawler.BlazorClient;
+using DependencyCrawler.BlazorClient.Backend;
+using DependencyCrawler.BlazorClient.Contracts;
 using DependencyCrawler.Data.Json;
 using DependencyCrawler.Framework.Extensions;
 using Radzen;
@@ -11,7 +12,9 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddDependencyCrawler();
 builder.Services.AddJsonCache();
-builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddSingleton<IApplicationStateHandler, ApplicationStateHandler>();
+
 builder.Services.AddRadzenComponents();
 
 var app = builder.Build();
