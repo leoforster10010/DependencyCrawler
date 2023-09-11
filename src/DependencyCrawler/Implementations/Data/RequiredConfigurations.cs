@@ -4,9 +4,10 @@ namespace DependencyCrawler.Implementations.Data;
 
 public static class RequiredConfigurations
 {
-    public static IReadOnlyDictionary<ConfigurationKeys, ConfigurationTypes> Entries =>
-        new Dictionary<ConfigurationKeys, ConfigurationTypes>
-        {
-            {ConfigurationKeys.RootDirectory, ConfigurationTypes.Path}
-        };
+	public static IReadOnlyDictionary<ConfigurationKeys, ConfigurationTypes> Entries =>
+		new Dictionary<ConfigurationKeys, ConfigurationTypes>
+		{
+			{ ConfigurationKeys.RootDirectory, ConfigurationTypes.Path },
+			{ ConfigurationKeys.DllDirectory, ConfigurationTypes.Path }
+		};
 }

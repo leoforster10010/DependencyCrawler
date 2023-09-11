@@ -23,9 +23,9 @@ CC commands:
 	- 
 
 Blazor UI:
-- show projectInfo
 - project List/query/group
-- console client see WA link
+- show projectInfo
+- console client in footer
 - CacheManager:
 	- drop in json file
 

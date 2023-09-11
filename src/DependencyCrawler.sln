@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.ConsoleCl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.BlazorClient", "DependencyCrawler.BlazorClient\DependencyCrawler.BlazorClient.csproj", "{87E7AB9A-FA75-4966-BD03-2BFA64234CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Contracts", "DependencyCrawler.Data.Contracts\DependencyCrawler.Data.Contracts.csproj", "{A4F4FDF6-1989-4E04-B450-F992A6B3A424}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.Contracts", "DependencyCrawler.Data.Contracts\DependencyCrawler.Data.Contracts.csproj", "{A4F4FDF6-1989-4E04-B450-F992A6B3A424}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
