@@ -1,5 +1,4 @@
-﻿using DependencyCrawler.Contracts.Interfaces;
-using DependencyCrawler.Framework.Extensions;
+﻿using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.QueryClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

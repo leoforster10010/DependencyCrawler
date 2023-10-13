@@ -249,7 +249,7 @@ internal class ProjectLoader : IProjectLoader
 		{
 			var referencedProject = GetProjectOrLoad(packageReferenceInfo.Using);
 			var packageReference =
-				_linkedTypeFactory.GetPackageReference(packageReferenceInfo, internalProject, referencedProject);
+				_linkedTypeFactory.CreatePackageReference(packageReferenceInfo, internalProject, referencedProject);
 			internalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 
@@ -257,7 +257,7 @@ internal class ProjectLoader : IProjectLoader
 		{
 			var referencedProject = GetProjectOrLoad(projectReferenceInfo.Using);
 			var projectReference =
-				_linkedTypeFactory.GetProjectReference(internalProject, referencedProject);
+				_linkedTypeFactory.CreateProjectReference(internalProject, referencedProject);
 			internalProject.ProjectReferences.TryAdd(projectReference.Id, projectReference);
 		}
 	}
@@ -279,7 +279,7 @@ internal class ProjectLoader : IProjectLoader
 		{
 			var referencedProject = GetProjectOrLoad(packageReferenceInfo.Using);
 			var packageReference =
-				_linkedTypeFactory.GetPackageReference(packageReferenceInfo, externalProject, referencedProject);
+				_linkedTypeFactory.CreatePackageReference(packageReferenceInfo, externalProject, referencedProject);
 			externalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 	}
@@ -300,7 +300,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject =
 				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
 			var packageReference =
-				_linkedTypeFactory.GetPackageReference(cachedPackageReference, internalProject, referencedProject);
+				_linkedTypeFactory.CreatePackageReference(cachedPackageReference, internalProject, referencedProject);
 			internalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 
@@ -309,7 +309,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject =
 				GetProjectOrLoadFromCache(cachedProjectReference.UsedProjectName, cachedProjectReference.Using);
 			var projectReference =
-				_linkedTypeFactory.GetProjectReference(cachedProjectReference, internalProject, referencedProject);
+				_linkedTypeFactory.CreateProjectReference(cachedProjectReference, internalProject, referencedProject);
 			internalProject.ProjectReferences.TryAdd(projectReference.Id, projectReference);
 		}
 	}
@@ -330,7 +330,7 @@ internal class ProjectLoader : IProjectLoader
 			var referencedProject =
 				GetProjectOrLoadFromCache(cachedPackageReference.UsedProjectName, cachedPackageReference.Using);
 			var packageReference =
-				_linkedTypeFactory.GetPackageReference(cachedPackageReference, externalProject, referencedProject);
+				_linkedTypeFactory.CreatePackageReference(cachedPackageReference, externalProject, referencedProject);
 			externalProject.PackageReferences.TryAdd(packageReference.Id, packageReference);
 		}
 	}

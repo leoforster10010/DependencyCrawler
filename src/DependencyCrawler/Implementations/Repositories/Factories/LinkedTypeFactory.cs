@@ -123,7 +123,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		};
 	}
 
-	public PackageReference GetPackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
+	public PackageReference CreatePackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
 		IProject referencedProject)
 	{
 		var packageReference = new PackageReference
@@ -137,7 +137,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		return packageReference;
 	}
 
-	public PackageReference GetPackageReference(CachedPackageReference cachedPackageReference, IProject parentProject,
+	public PackageReference CreatePackageReference(CachedPackageReference cachedPackageReference,
+		IProject parentProject,
 		IProject referencedProject)
 	{
 		var packageReference = new PackageReference
@@ -152,7 +153,7 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		return packageReference;
 	}
 
-	public ProjectReference GetProjectReference(IProject parentProject,
+	public ProjectReference CreateProjectReference(IProject parentProject,
 		IProject referencedProject)
 	{
 		var projectReference = new ProjectReference
@@ -165,7 +166,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		return projectReference;
 	}
 
-	public ProjectReference GetProjectReference(CachedProjectReference cachedProjectReference, IProject parentProject,
+	public ProjectReference CreateProjectReference(CachedProjectReference cachedProjectReference,
+		IProject parentProject,
 		IProject referencedProject)
 	{
 		var projectReference = new ProjectReference
@@ -219,7 +221,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		var namespaceType = new NamespaceType
 		{
 			Name = typeInfo.Name,
-			ParentNamespace = parentNamespace
+			ParentNamespace = parentNamespace,
+			FileType = typeInfo.FileType
 		};
 
 		foreach (var usingDirectiveInfo in typeInfo.UsingDirectives)
@@ -237,7 +240,8 @@ internal class LinkedTypeFactory : ILinkedTypeFactory
 		{
 			Name = cachedNamespaceType.Name,
 			ParentNamespace = parentNamespace,
-			Id = cachedNamespaceType.Id
+			Id = cachedNamespaceType.Id,
+			FileType = cachedNamespaceType.FileType
 		};
 
 		foreach (var usingDirectiveInfo in cachedNamespaceType.UsingDirectives)
