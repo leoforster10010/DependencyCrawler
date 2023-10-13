@@ -1,54 +1,63 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
-using DependencyCrawler.Implementations.Data;
-using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Data.Contracts.Enum;
+using DependencyCrawler.Data.Contracts.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace DependencyCrawler.Implementations.Repositories.Framework;
 
 internal class ConfigurationValidator : IConfigurationValidator
 {
-    private readonly IConfiguration _configuration;
+	private readonly IConfiguration _configuration;
 
-    public ConfigurationValidator(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+	private readonly IDictionary<ConfigurationKeys, ConfigurationTypes> _requiredConfigurations =
+		new Dictionary<ConfigurationKeys, ConfigurationTypes>();
 
-    public bool IsConfigurationValid()
-    {
-        return RequiredConfigurations.Entries.All(IsConfigurationEntryValid);
-    }
+	public ConfigurationValidator(IConfiguration configuration,
+		IEnumerable<IRequiredConfigurations> requiredConfigurations)
+	{
+		_configuration = configuration;
 
-    public IReadOnlyList<ConfigurationKeys> GetInvalidConfigurations()
-    {
-        var invalidEntries = new List<ConfigurationKeys>();
+		foreach (var configurationEntry in requiredConfigurations.SelectMany(x => x.Entries))
+		{
+			_requiredConfigurations.TryAdd(configurationEntry.Key, configurationEntry.Value);
+		}
+	}
 
-        foreach (var requiredConfiguration in RequiredConfigurations.Entries)
-        {
-            if (!IsConfigurationEntryValid(requiredConfiguration))
-            {
-                invalidEntries.Add(requiredConfiguration.Key);
-            }
-        }
+	public bool IsConfigurationValid()
+	{
+		return _requiredConfigurations.All(IsConfigurationEntryValid);
+	}
 
-        return invalidEntries;
-    }
+	public IReadOnlyList<ConfigurationKeys> GetInvalidConfigurations()
+	{
+		var invalidEntries = new List<ConfigurationKeys>();
 
-    private bool IsConfigurationEntryValid(KeyValuePair<ConfigurationKeys, ConfigurationTypes> configurationEntry)
-    {
-        switch (configurationEntry.Value)
-        {
-            case ConfigurationTypes.Path:
-                return IsPathValid(configurationEntry.Key);
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
+		foreach (var requiredConfiguration in _requiredConfigurations)
+		{
+			if (!IsConfigurationEntryValid(requiredConfiguration))
+			{
+				invalidEntries.Add(requiredConfiguration.Key);
+			}
+		}
 
-    private bool IsPathValid(ConfigurationKeys pathEntryKey)
-    {
-        var path = _configuration[pathEntryKey.ToString()];
+		return invalidEntries;
+	}
 
-        return Directory.Exists(path);
-    }
+	private bool IsConfigurationEntryValid(KeyValuePair<ConfigurationKeys, ConfigurationTypes> configurationEntry)
+	{
+		switch (configurationEntry.Value)
+		{
+			case ConfigurationTypes.Path:
+				return IsPathValid(configurationEntry.Key);
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	private bool IsPathValid(ConfigurationKeys pathEntryKey)
+	{
+		var path = _configuration[pathEntryKey.ToString()];
+
+		return Directory.Exists(path);
+	}
 }

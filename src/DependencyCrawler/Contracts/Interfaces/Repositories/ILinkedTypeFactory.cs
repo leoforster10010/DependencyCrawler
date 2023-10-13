@@ -7,13 +7,13 @@ namespace DependencyCrawler.Contracts.Interfaces.Repositories;
 
 internal interface ILinkedTypeFactory
 {
-	PackageReference GetPackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
+	PackageReference CreatePackageReference(PackageReferenceInfo packageReferenceInfo, IProject parentProject,
 		IProject referencedProject);
 
-	ProjectReference GetProjectReference(IProject parentProject,
+	ProjectReference CreateProjectReference(IProject parentProject,
 		IProject referencedProject);
 
-	PackageReference GetPackageReference(CachedPackageReference cachedPackageReference, IProject parentProject,
+	PackageReference CreatePackageReference(CachedPackageReference cachedPackageReference, IProject parentProject,
 		IProject referencedProject);
 
 	InternalProject CreateInternalProject(CachedProject cachedProject);
@@ -23,6 +23,6 @@ internal interface ILinkedTypeFactory
 	ExternalProject CreateExternalProject(ExternalProjectInfo externalProjectInfo);
 	UnresolvedProject CreateUnresolvedProject(string name);
 
-	ProjectReference GetProjectReference(CachedProjectReference cachedProjectReference, IProject parentProject,
+	ProjectReference CreateProjectReference(CachedProjectReference cachedProjectReference, IProject parentProject,
 		IProject referencedProject);
 }

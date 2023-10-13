@@ -1,4 +1,6 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Data.Contracts.Interfaces;
+using DependencyCrawler.Implementations.Data;
 using DependencyCrawler.Implementations.Repositories;
 using DependencyCrawler.Implementations.Repositories.DataAccess;
 using DependencyCrawler.Implementations.Repositories.Factories;
@@ -31,6 +33,7 @@ public static class ServiceCollectionExtensions
 		services.AddSingleton<IDllFileProvider, DllFileProvider>();
 		services.AddSingleton<ICachedProjectProvider, CachedProjectProvider>();
 
+		services.AddSingleton<IRequiredConfigurations, RequiredConfigurations>();
 		services.AddTransient<IConfigurationValidator, ConfigurationValidator>();
 
 		return services;

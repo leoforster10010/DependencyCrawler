@@ -2,7 +2,6 @@ using DependencyCrawler.Contracts.Interfaces.Model;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Data.Contracts.Enum;
 using DependencyCrawler.Framework.Extensions;
-using DependencyCrawler.Implementations.Data.Enum;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

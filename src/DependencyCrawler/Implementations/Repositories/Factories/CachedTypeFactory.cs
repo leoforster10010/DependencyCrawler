@@ -64,7 +64,8 @@ internal class CachedTypeFactory : ICachedTypeFactory
 			{
 				Name = namespaceType.NameReadOnly,
 				UsingDirectives = GetCachedUsingDirectives(namespaceType),
-				Id = namespaceType.Id
+				Id = namespaceType.Id,
+				FileType = namespaceType.FileTypeReadOnly
 			});
 		}
 
