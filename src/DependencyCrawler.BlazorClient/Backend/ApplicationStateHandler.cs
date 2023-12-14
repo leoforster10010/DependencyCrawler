@@ -75,10 +75,3 @@ internal class ApplicationStateHandler : IApplicationStateHandler
 		OnStateChanged?.Invoke();
 	}
 }
-
-internal enum ApplicationState
-{
-	Loading,
-	Loaded,
-	Unloaded
-}
