@@ -37,7 +37,11 @@ research Syntaxtree-evaluation:
 - https://blog.wiseowls.co.nz/index.php/2020/05/12/walking-code-with-roslyn/
 
 syntax tree evaluation:
+	- trees into one graph
+
 	- if no crosssection in different method usages of class -> split class
 	- if same usage / dependency footprint put methods in one class
 
 	- Build Global Syntaxtree
+
+Project Idea: Code-"Scrambler" https://www.youtube.com/watch?v=V4zqk4-LL1M 23:00
