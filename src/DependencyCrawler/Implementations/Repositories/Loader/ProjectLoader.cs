@@ -142,7 +142,7 @@ internal class ProjectLoader : IProjectLoader
 		var unlinkedUsingDirectives = internalProjects.SelectMany(x =>
 				x.Value.Namespaces.Values.SelectMany(y =>
 					y.NamespaceTypes.Values.SelectMany(z => z.UsingDirectives.Values)))
-			.Where(x => x.State == TypeUsingDirectiveState.Unlinked).ToList();
+			.Where(x => x is { State: TypeUsingDirectiveState.Unlinked }).ToList();
 
 		var namespaces = _projectProvider.AllProjects.SelectMany(x => x.Value.Namespaces.Values).ToList();
 
