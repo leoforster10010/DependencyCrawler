@@ -242,7 +242,7 @@ public class ConsoleClient : IConsoleClient
         Load();
 
         //Idle for input
-        while (!cancellationToken.IsCancellationRequested)
+        while (cancellationToken is not { IsCancellationRequested: true })
         {
             ProcessInput();
         }
@@ -351,7 +351,7 @@ public class ConsoleClient : IConsoleClient
                 x.Value.NamespacesReadOnly.Values.SelectMany(y =>
                     y.NamespaceTypesReadOnly.Values.SelectMany(z =>
                         z.UsingDirectivesReadOnly.Values)))
-            .Where(x => x.StateReadOnly == TypeUsingDirectiveState.Unresolved)
+            .Where(x => x is { StateReadOnly: TypeUsingDirectiveState.Unresolved })
             .DistinctBy(x => x.NameReadOnly)
             .OrderBy(x => x.NameReadOnly)
             .ToList();

@@ -36,7 +36,7 @@ internal class CacheManager : ICacheManager
 				return;
 			}
 
-			foreach (var cache in _caches.Values.Where(x => x.State == CacheState.Active))
+			foreach (var cache in _caches.Values.Where(x => x is { State: CacheState.Active }))
 			{
 				cache.State = CacheState.Inactive;
 			}
@@ -73,7 +73,6 @@ internal class CacheManager : ICacheManager
 
 		ActiveCache = cache;
 	}
-
 
 	public void DeleteCache(Guid id)
 	{
