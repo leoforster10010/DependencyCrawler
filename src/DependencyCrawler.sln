@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.Mong
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.Json", "DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj", "{2179DA91-CB07-4A40-9CA4-30CEE5B5211A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.ConsoleClient", "DependencyCrawler.ConsoleClient\DependencyCrawler.ConsoleClient.csproj", "{44D6FC73-746F-45BD-885D-423264EE09BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.ConsoleClient", "DependencyCrawler.ConsoleClient\DependencyCrawler.ConsoleClient.csproj", "{44D6FC73-746F-45BD-885D-423264EE09BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataCore", "DependencyCrawler.DataCore\DependencyCrawler.DataCore.csproj", "{8B8C8468-E55B-4DE2-B66E-B5D325CB80A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{44D6FC73-746F-45BD-885D-423264EE09BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44D6FC73-746F-45BD-885D-423264EE09BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44D6FC73-746F-45BD-885D-423264EE09BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B8C8468-E55B-4DE2-B66E-B5D325CB80A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B8C8468-E55B-4DE2-B66E-B5D325CB80A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B8C8468-E55B-4DE2-B66E-B5D325CB80A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B8C8468-E55B-4DE2-B66E-B5D325CB80A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
