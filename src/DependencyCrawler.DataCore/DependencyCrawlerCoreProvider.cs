@@ -1,4 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using DependencyCrawler.DataCore.DataAccess;
+using DependencyCrawler.DataCore.ReadOnlyAccess;
+using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
@@ -62,12 +65,12 @@ internal class DependencyCrawlerCoreProvider : IDependencyCrawlerCoreProvider, I
 
 			foreach (var dependencyOfValue in valueModule.Value.DependencyOfValue)
 			{
-				module.AddDependencyOf(dependencyOfValue.Key);
+				module.AddDependencyOf(dependencyOfValue);
 			}
 
 			foreach (var dependingOnValue in valueModule.Value.DependingOnValue)
 			{
-				module.AddDependingOn(dependingOnValue.Key);
+				module.AddDependingOn(dependingOnValue);
 			}
 		}
 
