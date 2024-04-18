@@ -1,6 +1,6 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿namespace DependencyCrawler.DataCore.ReadOnlyAccess;
 
-internal interface IReadOnlyModule
+public interface IReadOnlyModule
 {
 	string NameReadOnly { get; }
 	IReadOnlyDictionary<string, IReadOnlyModule> DependingOnReadOnly { get; }

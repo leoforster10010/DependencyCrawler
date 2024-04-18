@@ -1,8 +1,10 @@
 ﻿using System.Collections.Concurrent;
+using DependencyCrawler.DataCore.ReadOnlyAccess;
+using DependencyCrawler.DataCore.ValueAccess;
 
-namespace DependencyCrawler.DataCore;
+namespace DependencyCrawler.DataCore.DataAccess;
 
-internal class Module : IReadOnlyModule, IValueModule
+public class Module : IReadOnlyModule, IValueModule
 {
 	public required string Name { get; init; }
 	public required IDependencyCrawlerCore DependencyCrawlerCore { get; init; }
@@ -17,8 +19,8 @@ internal class Module : IReadOnlyModule, IValueModule
 
 
 	public string NameValue => Name;
-	public Dictionary<string, string> DependingOnValue => DependingOn.ToDictionary(key => key.Key, value => value.Value.Name);
-	public Dictionary<string, string> DependencyOfValue => DependencyOf.ToDictionary(key => key.Key, value => value.Value.Name);
+	public HashSet<string> DependingOnValue => DependingOn.Keys.ToHashSet();
+	public HashSet<string> DependencyOfValue => DependencyOf.Keys.ToHashSet();
 
 	public void Delete()
 	{

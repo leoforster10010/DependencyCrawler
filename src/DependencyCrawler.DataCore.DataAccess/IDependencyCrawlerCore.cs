@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 
-namespace DependencyCrawler.DataCore;
+namespace DependencyCrawler.DataCore.DataAccess;
 
-internal interface IDependencyCrawlerCore
+public interface IDependencyCrawlerCore
 {
 	ConcurrentDictionary<string, Module> Modules { get; }
 	Guid Id { get; }

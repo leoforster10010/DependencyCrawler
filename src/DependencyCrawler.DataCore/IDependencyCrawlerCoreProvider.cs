@@ -1,4 +1,6 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.ValueAccess;
+
+namespace DependencyCrawler.DataCore;
 
 internal interface IDependencyCrawlerCoreProvider
 {
