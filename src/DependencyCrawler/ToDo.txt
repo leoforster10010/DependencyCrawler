@@ -31,3 +31,7 @@ Blazor UI:
 	- drop in json file
 
 - count potential projects of codebase = 2^n - 1
+
+- RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
+
+- solve core-deletion
