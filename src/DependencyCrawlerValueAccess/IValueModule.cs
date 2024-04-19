@@ -3,6 +3,6 @@
 public interface IValueModule
 {
 	string NameValue { get; }
-	HashSet<string> DependingOnValue { get; }
-	HashSet<string> DependencyOfValue { get; }
+	HashSet<string> DependenciesValue { get; }
+	HashSet<string> ReferencesValue { get; }
 }

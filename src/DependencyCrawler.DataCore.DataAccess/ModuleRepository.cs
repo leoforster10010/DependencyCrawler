@@ -13,45 +13,45 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 		}
 
 
-		foreach (var dependencyOfValue in valueModule.DependencyOfValue.Where(dependencyOfValue => !module.DependencyOf.ContainsKey(dependencyOfValue)))
+		foreach (var referenceValue in valueModule.ReferencesValue.Where(referenceValue => !module.References.ContainsKey(referenceValue)))
 		{
-			module.AddDependencyOf(dependencyOfValue);
+			module.AddReference(referenceValue);
 		}
 
-		foreach (var dependencyOfValue in module.DependencyOf)
+		foreach (var referenceValue in module.References)
 		{
-			if (valueModule.DependencyOfValue.Contains(dependencyOfValue.Key))
+			if (valueModule.ReferencesValue.Contains(referenceValue.Key))
 			{
 				continue;
 			}
 
-			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(dependencyOfValue.Key, out var dependencyOf))
+			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(referenceValue.Key, out var reference))
 			{
-				dependencyOf.DependingOn.TryRemove(dependencyOfValue);
+				reference.Dependencies.TryRemove(referenceValue);
 			}
 
-			module.DependencyOf.TryRemove(dependencyOfValue);
+			module.References.TryRemove(referenceValue);
 		}
 
 
-		foreach (var dependingOnValue in valueModule.DependingOnValue.Where(dependingOnValue => !module.DependingOn.ContainsKey(dependingOnValue)))
+		foreach (var dependencyValue in valueModule.DependenciesValue.Where(dependencyValue => !module.Dependencies.ContainsKey(dependencyValue)))
 		{
-			module.AddDependingOn(dependingOnValue);
+			module.AddDependency(dependencyValue);
 		}
 
-		foreach (var dependingOnValue in module.DependingOn)
+		foreach (var dependencyValue in module.Dependencies)
 		{
-			if (valueModule.DependencyOfValue.Contains(dependingOnValue.Key))
+			if (valueModule.ReferencesValue.Contains(dependencyValue.Key))
 			{
 				continue;
 			}
 
-			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(dependingOnValue.Key, out var dependingOn))
+			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(dependencyValue.Key, out var dependency))
 			{
-				dependingOn.DependencyOf.TryRemove(dependingOnValue);
+				dependency.References.TryRemove(dependencyValue);
 			}
 
-			module.DependingOn.TryRemove(dependingOnValue);
+			module.Dependencies.TryRemove(dependencyValue);
 		}
 	}
 
@@ -68,14 +68,14 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 			DependencyCrawlerCore = dependencyCrawlerDataAccess.Core
 		};
 
-		foreach (var dependencyOfValue in valueModule.DependencyOfValue)
+		foreach (var referenceValue in valueModule.ReferencesValue)
 		{
-			module.AddDependencyOf(dependencyOfValue);
+			module.AddReference(referenceValue);
 		}
 
-		foreach (var dependingOnValue in valueModule.DependingOnValue)
+		foreach (var dependencyValue in valueModule.DependenciesValue)
 		{
-			module.AddDependingOn(dependingOnValue);
+			module.AddDependency(dependencyValue);
 		}
 
 		dependencyCrawlerDataAccess.Core.Modules.TryAdd(module.Name, module);

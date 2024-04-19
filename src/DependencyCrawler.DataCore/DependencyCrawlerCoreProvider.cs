@@ -63,14 +63,14 @@ internal class DependencyCrawlerCoreProvider : IDependencyCrawlerCoreProvider, I
 				continue;
 			}
 
-			foreach (var dependencyOfValue in valueModule.Value.DependencyOfValue)
+			foreach (var referenceValue in valueModule.Value.ReferencesValue)
 			{
-				module.AddDependencyOf(dependencyOfValue);
+				module.AddReference(referenceValue);
 			}
 
-			foreach (var dependingOnValue in valueModule.Value.DependingOnValue)
+			foreach (var dependencyValue in valueModule.Value.DependenciesValue)
 			{
-				module.AddDependingOn(dependingOnValue);
+				module.AddDependency(dependencyValue);
 			}
 		}
 
@@ -84,12 +84,7 @@ internal class DependencyCrawlerCoreProvider : IDependencyCrawlerCoreProvider, I
 
 	public void RemoveCore(Guid id)
 	{
-		if (!_dependencyCrawlerCores.TryGetValue(id, out var core))
-		{
-			return;
-		}
-
-		if (core.IsActive)
+		if (!_dependencyCrawlerCores.TryGetValue(id, out var core) || core.IsActive)
 		{
 			return;
 		}

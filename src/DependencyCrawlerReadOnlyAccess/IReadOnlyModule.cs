@@ -3,6 +3,6 @@
 public interface IReadOnlyModule
 {
 	string NameReadOnly { get; }
-	IReadOnlyDictionary<string, IReadOnlyModule> DependingOnReadOnly { get; }
-	IReadOnlyDictionary<string, IReadOnlyModule> DependencyOfReadOnly { get; }
+	IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly { get; }
+	IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly { get; }
 }

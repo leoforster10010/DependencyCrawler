@@ -9,53 +9,53 @@ public class Module : IReadOnlyModule, IValueModule
 	public required string Name { get; init; }
 	public required IDependencyCrawlerCore DependencyCrawlerCore { get; init; }
 
-	public ConcurrentDictionary<string, Module> DependingOn { get; } = new();
-	public ConcurrentDictionary<string, Module> DependencyOf { get; } = new();
+	public ConcurrentDictionary<string, Module> Dependencies { get; } = new();
+	public ConcurrentDictionary<string, Module> References { get; } = new();
+	public IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly => References.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
 
 
 	public string NameReadOnly => Name;
-	public IReadOnlyDictionary<string, IReadOnlyModule> DependingOnReadOnly => DependingOn.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
-	public IReadOnlyDictionary<string, IReadOnlyModule> DependencyOfReadOnly => DependencyOf.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
+	public IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly => Dependencies.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
+	public HashSet<string> ReferencesValue => References.Keys.ToHashSet();
 
 
 	public string NameValue => Name;
-	public HashSet<string> DependingOnValue => DependingOn.Keys.ToHashSet();
-	public HashSet<string> DependencyOfValue => DependencyOf.Keys.ToHashSet();
+	public HashSet<string> DependenciesValue => Dependencies.Keys.ToHashSet();
 
 	public void Delete()
 	{
-		foreach (var dependencyOf in DependencyOf)
+		foreach (var reference in References)
 		{
-			dependencyOf.Value.DependingOn.TryRemove(Name, out _);
+			reference.Value.Dependencies.TryRemove(Name, out _);
 		}
 
-		foreach (var dependingOn in DependingOn)
+		foreach (var dependency in Dependencies)
 		{
-			dependingOn.Value.DependencyOf.TryRemove(Name, out _);
+			dependency.Value.References.TryRemove(Name, out _);
 		}
 
 		DependencyCrawlerCore.Modules.TryRemove(Name, out _);
 	}
 
-	public void AddDependencyOf(string key)
+	public void AddReference(string key)
 	{
-		if (!DependencyCrawlerCore.Modules.TryGetValue(key, out var dependencyOf))
+		if (!DependencyCrawlerCore.Modules.TryGetValue(key, out var reference))
 		{
 			return;
 		}
 
-		dependencyOf.DependingOn.TryAdd(Name, this);
-		DependencyOf.TryAdd(dependencyOf.Name, dependencyOf);
+		reference.Dependencies.TryAdd(Name, this);
+		References.TryAdd(reference.Name, reference);
 	}
 
-	public void AddDependingOn(string key)
+	public void AddDependency(string key)
 	{
-		if (!DependencyCrawlerCore.Modules.TryGetValue(key, out var dependingOn))
+		if (!DependencyCrawlerCore.Modules.TryGetValue(key, out var dependency))
 		{
 			return;
 		}
 
-		dependingOn.DependencyOf.TryAdd(Name, this);
-		DependingOn.TryAdd(dependingOn.Name, dependingOn);
+		dependency.References.TryAdd(Name, this);
+		Dependencies.TryAdd(dependency.Name, dependency);
 	}
 }
