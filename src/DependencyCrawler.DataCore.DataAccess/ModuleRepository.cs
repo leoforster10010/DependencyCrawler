@@ -2,16 +2,15 @@
 
 namespace DependencyCrawler.DataCore.DataAccess;
 
-internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDataAccess) : IModuleRepository
+internal class ModuleRepository(IDataAccess dataAccess) : IModuleRepository
 {
 	public void Update(IValueModule valueModule)
 	{
-		if (!dependencyCrawlerDataAccess.Core.Modules.TryGetValue(valueModule.NameValue, out var module))
+		if (!dataAccess.Core.Modules.TryGetValue(valueModule.Name, out var module))
 		{
 			Add(valueModule);
 			return;
 		}
-
 
 		foreach (var referenceValue in valueModule.ReferencesValue.Where(referenceValue => !module.References.ContainsKey(referenceValue)))
 		{
@@ -25,7 +24,7 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 				continue;
 			}
 
-			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(referenceValue.Key, out var reference))
+			if (dataAccess.Core.Modules.TryGetValue(referenceValue.Key, out var reference))
 			{
 				reference.Dependencies.TryRemove(referenceValue);
 			}
@@ -46,7 +45,7 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 				continue;
 			}
 
-			if (dependencyCrawlerDataAccess.Core.Modules.TryGetValue(dependencyValue.Key, out var dependency))
+			if (dataAccess.Core.Modules.TryGetValue(dependencyValue.Key, out var dependency))
 			{
 				dependency.References.TryRemove(dependencyValue);
 			}
@@ -57,15 +56,16 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 
 	public void Add(IValueModule valueModule)
 	{
-		if (dependencyCrawlerDataAccess.Core.Modules.ContainsKey(valueModule.NameValue))
+		if (dataAccess.Core.Modules.ContainsKey(valueModule.Name))
 		{
 			return;
 		}
 
 		var module = new Module
 		{
-			Name = valueModule.NameValue,
-			DependencyCrawlerCore = dependencyCrawlerDataAccess.Core
+			Name = valueModule.Name,
+			DataCore = dataAccess.Core,
+			Type = valueModule.Type
 		};
 
 		foreach (var referenceValue in valueModule.ReferencesValue)
@@ -78,6 +78,6 @@ internal class ModuleRepository(IDependencyCrawlerDataAccess dependencyCrawlerDa
 			module.AddDependency(dependencyValue);
 		}
 
-		dependencyCrawlerDataAccess.Core.Modules.TryAdd(module.Name, module);
+		dataAccess.Core.Modules.TryAdd(module.Name, module);
 	}
 }

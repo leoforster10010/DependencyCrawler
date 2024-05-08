@@ -2,7 +2,7 @@
 
 namespace DependencyCrawler.DataCore.DataAccess;
 
-public interface IDependencyCrawlerCore
+public interface IDataCore
 {
 	ConcurrentDictionary<string, Module> Modules { get; }
 	Guid Id { get; }

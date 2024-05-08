@@ -5,11 +5,11 @@ using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
-internal class DependencyCrawlerCore : IDependencyCrawlerCore, IDependencyCrawlerReadonlyCore, IDependencyCrawlerValueCore
+internal class DataCore : IDataCore, IReadonlyDataCore, IValueDataCore
 {
-	public bool IsActive => DependencyCrawlerDataAccess.Core.Id == Id;
+	public bool IsActive => DataAccess.Core.Id == Id;
+	public required IDataAccess DataAccess { get; init; }
 	public Guid Id { get; } = Guid.NewGuid();
-	public required IDependencyCrawlerDataAccess DependencyCrawlerDataAccess { get; init; }
 	public ConcurrentDictionary<string, Module> Modules { get; } = new();
 	public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => Modules.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
 	public IReadOnlyDictionary<string, IValueModule> ModulesValue => Modules.ToDictionary(key => key.Key, value => value.Value as IValueModule);
