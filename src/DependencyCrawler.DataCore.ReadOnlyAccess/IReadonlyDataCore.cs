@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.DataCore.ReadOnlyAccess;
 
-public interface IDependencyCrawlerReadonlyCore
+public interface IReadonlyDataCore
 {
 	IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly { get; }
 	Guid Id { get; }

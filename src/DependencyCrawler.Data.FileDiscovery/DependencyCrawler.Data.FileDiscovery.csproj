@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DependencyCrawler.DataCore.ValueAccess\DependencyCrawler.DataCore.ValueAccess.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.DataCore.ValueAccess;
 
-public interface IDependencyCrawlerValueCore
+public interface IValueDataCore
 {
 	IReadOnlyDictionary<string, IValueModule> ModulesValue { get; }
 	Guid Id { get; }
