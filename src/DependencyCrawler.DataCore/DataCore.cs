@@ -1,19 +1,45 @@
-using System.Collections.Concurrent;
-using DependencyCrawler.DataCore.DataAccess;
-using DependencyCrawler.DataCore.ReadOnlyAccess;
-using DependencyCrawler.DataCore.ValueAccess;
+﻿namespace DependencyCrawler.DataCore;
 
-namespace DependencyCrawler.DataCore;
-
-internal class DataCore : IDataCore, IReadonlyDataCore, IValueDataCore
+internal partial class DataCoreProvider
 {
-	//Nested Class of DataCoreProvider
+	private partial class DataCore : IDataCore
+	{
+		private readonly DataCoreProvider _dataCoreProvider;
+		private readonly IDictionary<string, IModule> _modules = new Dictionary<string, IModule>();
 
-	public bool IsActive => DataAccess.Core.Id == Id;
-	public required IDataAccess DataAccess { get; init; }
-	public DateTime Timestamp { set; get; } = DateTime.Now;
-	public Guid Id { get; } = Guid.NewGuid();
-	public ConcurrentDictionary<string, Module> Modules { get; } = new();
-	public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => Modules.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
-	public IReadOnlyDictionary<string, IValueModule> ModulesValue => Modules.ToDictionary(key => key.Key, value => value.Value as IValueModule);
+		public DataCore(DataCoreProvider dataCoreProvider)
+		{
+			_dataCoreProvider = dataCoreProvider;
+			_dataCoreProvider._dataCores.Add(Id, this);
+		}
+
+		public Guid Id { get; } = Guid.NewGuid();
+		public bool IsActive => _dataCoreProvider._activeCore?.Id == Id;
+		public IReadOnlyDictionary<string, IModule> Modules => _modules.AsReadOnly();
+		public IReadOnlyList<IEntity> Entities => _modules.Values.ToList();
+
+		//public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => Modules.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
+		//public IReadOnlyDictionary<string, IValueModule> ModulesValue => Modules.ToDictionary(key => key.Key, value => value.Value as IValueModule);
+		//public DateTime Timestamp { set; get; } = DateTime.Now;
+
+		public void Activate()
+		{
+			_dataCoreProvider._activeCore = this;
+		}
+
+		public void Delete()
+		{
+			if (IsActive)
+			{
+				return;
+			}
+
+			_dataCoreProvider._dataCores.Remove(Id);
+		}
+
+		public IModule CreateModule(string name)
+		{
+			return new Module(this, name);
+		}
+	}
 }
