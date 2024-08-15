@@ -5,12 +5,10 @@ using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
-internal class DataCoreProvider : IDataCoreProvider, IDataAccess, IReadonlyDataAccess, IValueDataAccess
+internal class DataCoreProvider(IDataSourceProvider dataSourceProvider) : IDataCoreProvider, IDataAccess, IReadonlyDataAccess, IValueDataAccess
 {
 	private readonly ConcurrentDictionary<Guid, DataCore> _dataCores = new();
 	private DataCore? _activeCore;
-
-	public IDataCore Core => ActiveCore;
 
 	public DataCore ActiveCore
 	{
@@ -40,6 +38,10 @@ internal class DataCoreProvider : IDataCoreProvider, IDataAccess, IReadonlyDataA
 		}
 	}
 
+	public IDataCore Core => ActiveCore;
+
+
+	//Todo extract VC -> LC pipeline
 	public void AddCore(IValueDataCore valueCore, bool activate = false)
 	{
 		if (_dataCores.ContainsKey(valueCore.Id))
@@ -90,16 +92,34 @@ internal class DataCoreProvider : IDataCoreProvider, IDataAccess, IReadonlyDataA
 		}
 	}
 
-	public void RemoveCore(Guid id)
+	//todo should be method on the dataSource
+	public void SaveTo(Guid dataSourceId)
 	{
-		if (!_dataCores.TryGetValue(id, out var core) || core.IsActive)
+		if (!dataSourceProvider.DataSources.TryGetValue(dataSourceId, out var dataSource))
 		{
 			return;
 		}
 
-		_dataCores.TryRemove(core.Id, out _);
+		dataSource.SaveCores([.._dataCores.Values]);
 	}
+
+	public IReadOnlySet<IValueDataCore> ValueDataCores => new HashSet<IValueDataCore>(_dataCores.Values);
 
 	public IReadonlyDataCore ReadonlyCore => ActiveCore;
 	public IValueDataCore ValueCore => ActiveCore;
+
+	//ToDo own class DataSourceProvider
+	public void Initialize()
+	{
+		foreach (var valueDataCore in dataSourceProvider.DataSources.Values.Select(dataSource => dataSource.LoadCores()).SelectMany(cores => cores))
+		{
+			AddCore(valueDataCore);
+		}
+
+		var mostRecentCore = _dataCores.Values.MaxBy(x => x.Timestamp);
+		if (mostRecentCore is not null)
+		{
+			ActiveCore = mostRecentCore;
+		}
+	}
 }
