@@ -1,19 +1,18 @@
 ﻿namespace DependencyCrawler.DataCore;
 
-internal class DataSourceProvider(IEnumerable<IDataSource> dataSources, IDataCoreProvider dependencyCrawlerCoreProvider)
+public interface IDataSourceProvider
 {
-	public IReadOnlyDictionary<Guid, IDataSource> DataSources => dataSources.ToDictionary(x => x.Id, y => y);
+	IReadOnlyDictionary<Guid, IDataSource> DataSources { get; }
+}
 
-	public void LoadAll()
+public class DataSourceProvider : IDataSourceProvider
+{
+	private readonly IDictionary<Guid, IDataSource> _dataSources;
+
+	public DataSourceProvider(IEnumerable<IDataSource> dataSources)
 	{
-		foreach (var dataSource in dataSources)
-		{
-			var loadedCores = dataSource.LoadCores();
-
-			foreach (var dependencyCrawlerValueCore in loadedCores)
-			{
-				dependencyCrawlerCoreProvider.AddCore(dependencyCrawlerValueCore.Value);
-			}
-		}
+		_dataSources = dataSources.ToDictionary(k => k.Id, v => v);
 	}
+
+	public IReadOnlyDictionary<Guid, IDataSource> DataSources => _dataSources.AsReadOnly();
 }

@@ -37,5 +37,3 @@ Blazor UI:
 - solve core-deletion
 
 - add graph abstr classes: module : Node
-
-- rename: remove DC from type names

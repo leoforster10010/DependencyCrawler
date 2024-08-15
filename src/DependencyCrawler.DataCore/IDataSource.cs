@@ -5,6 +5,6 @@ namespace DependencyCrawler.DataCore;
 public interface IDataSource
 {
 	Guid Id { get; }
-	public IDictionary<Guid, IValueDataCore> LoadCores();
-	public void SaveCore(IValueDataCore valueCore);
+	public HashSet<IValueDataCore> LoadCores();
+	public void SaveCores(HashSet<IValueDataCore> dataCores);
 }
