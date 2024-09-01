@@ -1,9 +1,9 @@
 ﻿namespace DependencyCrawler.DataCore;
 
-internal interface IEntity
+public interface IEntity
 {
 	IDataCore DataCore { get; }
-	DataCoreProvider DataCoreProvider { get; }
+	IDataCoreProvider DataCoreProvider { get; }
 	IReadOnlyList<IEntity> IngoingReferences { get; }
 	IReadOnlyList<IEntity> OutgoingReferences { get; }
 	void Delete();

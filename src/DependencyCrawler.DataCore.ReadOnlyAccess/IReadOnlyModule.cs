@@ -1,15 +1,13 @@
-﻿using DependencyCrawler.Data.Contracts;
+﻿using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore.ReadOnlyAccess;
 
-public interface IReadOnlyModule
+public interface IReadOnlyModule : IValueModule
 {
-	string Name { get; }
 	IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly { get; }
 	IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly { get; }
 	int DependencyLayer { get; }
 	int ReferenceLayer { get; }
 	bool IsTopLevel { get; }
 	bool IsSubLevel { get; }
-	ModuleType Type { get; }
 }

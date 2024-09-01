@@ -1,9 +1,10 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
 
-public interface IDataCore
+namespace DependencyCrawler.DataCore;
+
+public interface IDataCore : IReadOnlyDataCore
 {
-	Guid Id { get; }
-	bool IsActive { get; }
+	IDataCoreProvider DataCoreProvider { get; }
 	IReadOnlyDictionary<string, IModule> Modules { get; }
 	IReadOnlyList<IEntity> Entities { get; }
 	void Activate();

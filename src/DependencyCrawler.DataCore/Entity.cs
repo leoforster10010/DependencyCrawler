@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.DataCore;
 
-internal partial class DataCoreProvider
+public partial class DataCoreProvider
 {
 	private partial class DataCore
 	{
@@ -8,7 +8,7 @@ internal partial class DataCoreProvider
 		{
 			protected readonly DataCore _dataCore = dataCore;
 			public IDataCore DataCore => _dataCore;
-			public DataCoreProvider DataCoreProvider => _dataCore._dataCoreProvider;
+			public IDataCoreProvider DataCoreProvider => _dataCore._dataCoreProvider;
 
 			public abstract IReadOnlyList<IEntity> IngoingReferences { get; }
 			public abstract IReadOnlyList<IEntity> OutgoingReferences { get; }

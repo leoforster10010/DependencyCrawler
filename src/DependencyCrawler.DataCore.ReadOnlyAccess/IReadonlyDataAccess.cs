@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.DataCore.ReadOnlyAccess;
 
-public interface IReadonlyDataAccess
+public interface IReadOnlyDataAccess
 {
-	IReadonlyDataCore ReadonlyCore { get; }
+	IReadOnlyDataCore DataReadOnly { get; }
 }

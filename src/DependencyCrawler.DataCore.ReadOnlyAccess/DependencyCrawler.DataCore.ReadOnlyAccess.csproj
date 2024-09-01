@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DependencyCrawler.Data.Contracts\DependencyCrawler.Data.Contracts.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.DataCore.ValueAccess\DependencyCrawler.DataCore.ValueAccess.csproj" />
   </ItemGroup>
 
 </Project>
