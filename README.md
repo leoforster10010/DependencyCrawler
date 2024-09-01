@@ -1,3 +1,11 @@
 # DependencyCrawler
 
-A dev-friendly, LINQ-based tool to load, query & analyze the code-dependencies of a c#-codebase.
+A graph based tool, to display, analyse & evaluate the module-structure of a c#-codebase.
+
+Components:
+- CLI client
+- Blazor frontend
+- Backend:
+  - MongoDB
+  - File based Data synchronisation
+  - ...
