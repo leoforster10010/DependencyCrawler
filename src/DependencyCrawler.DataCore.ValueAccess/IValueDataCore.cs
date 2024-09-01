@@ -2,6 +2,6 @@
 
 public interface IValueDataCore
 {
-	IReadOnlyDictionary<string, IValueModule> ModulesValue { get; }
 	Guid Id { get; }
+	IReadOnlyList<string> ModuleValues { get; }
 }

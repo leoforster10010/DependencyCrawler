@@ -1,6 +1,8 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
 
-internal partial class DataCoreProvider
+namespace DependencyCrawler.DataCore;
+
+public partial class DataCoreProvider
 {
 	private partial class DataCore : IDataCore
 	{
@@ -14,13 +16,12 @@ internal partial class DataCoreProvider
 		}
 
 		public Guid Id { get; } = Guid.NewGuid();
-		public bool IsActive => _dataCoreProvider._activeCore?.Id == Id;
+		public IDataCoreProvider DataCoreProvider => _dataCoreProvider;
+		public bool IsActive => _dataCoreProvider._activeCore == this;
 		public IReadOnlyDictionary<string, IModule> Modules => _modules.AsReadOnly();
+		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => _modules.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
+		public IReadOnlyList<string> ModuleValues => _modules.Keys.ToList();
 		public IReadOnlyList<IEntity> Entities => _modules.Values.ToList();
-
-		//public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => Modules.ToDictionary(key => key.Key, value => value.Value as IReadOnlyModule);
-		//public IReadOnlyDictionary<string, IValueModule> ModulesValue => Modules.ToDictionary(key => key.Key, value => value.Value as IValueModule);
-		//public DateTime Timestamp { set; get; } = DateTime.Now;
 
 		public void Activate()
 		{

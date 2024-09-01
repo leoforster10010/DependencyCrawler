@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using DependencyCrawler.DataCore.ReadOnlyAccess;
 
 namespace DependencyCrawler.DataCore;
 
-internal partial class DataCoreProvider
+public partial class DataCoreProvider
 {
 	private partial class DataCore
 	{
@@ -22,6 +23,10 @@ internal partial class DataCoreProvider
 			public string Name { get; }
 			public IReadOnlyDictionary<string, IModule> Dependencies => _dependencies.AsReadOnly();
 			public IReadOnlyDictionary<string, IModule> References => _references.AsReadOnly();
+			public IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly => _dependencies.ToDictionary(x => x.Key, y => y.Value as IReadOnlyModule);
+			public IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly => _references.ToDictionary(x => x.Key, y => y.Value as IReadOnlyModule);
+			public IReadOnlyList<string> DependencyValues => _dependencies.Keys.ToList();
+			public IReadOnlyList<string> ReferenceValues => _references.Keys.ToList();
 			public int DependencyLayer => !Dependencies.Any() ? 0 : 1 + Dependencies.Max(x => x.Value.DependencyLayer);
 			public int ReferenceLayer => !References.Any() ? 0 : 1 + References.Max(x => x.Value.ReferenceLayer);
 			public bool IsTopLevel => !Dependencies.Any();
@@ -104,20 +109,6 @@ internal partial class DataCoreProvider
 				}
 
 				_dataCore._modules.Remove(Name);
-			}
-		}
-
-		public class ModuleTest
-		{
-			public void TestAddDependency()
-			{
-				var dcp = new DataCoreProvider();
-				var dc = new DataCore(dcp);
-				var m1 = new Module(dc, "");
-
-				var m2 = new Module(dc, "");
-
-				//ToDo
 			}
 		}
 	}

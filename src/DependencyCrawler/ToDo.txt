@@ -34,6 +34,12 @@ Blazor UI:
 
 - RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
 
-- solve core-deletion
 
-- add graph abstr classes: module : Node
+DataSourceProvider:
+- 1:n DataSources
+- active DataSource?
+
+DataSource:
+- 1:n ValueDataCores (on request?)
+- load DataCore
+- save DataCore

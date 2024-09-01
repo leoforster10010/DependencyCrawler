@@ -1,6 +1,9 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
+using DependencyCrawler.DataCore.ValueAccess;
 
-internal interface IDataCoreProvider
+namespace DependencyCrawler.DataCore;
+
+public interface IDataCoreProvider : IReadOnlyDataAccess, IValueDataAccess
 {
 	IReadOnlyDictionary<Guid, IDataCore> DataCores { get; }
 	IDataCore ActiveCore { get; }
