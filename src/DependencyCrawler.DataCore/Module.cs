@@ -75,12 +75,12 @@ public partial class DataCoreProvider
 					return;
 				}
 
-				if (!_references.ContainsKey(module.Name))
+				if (!_dependencies.ContainsKey(module.Name))
 				{
 					return;
 				}
 
-				_references.Remove(module.Name);
+				_dependencies.Remove(module.Name);
 				module.RemoveReference(this);
 			}
 
