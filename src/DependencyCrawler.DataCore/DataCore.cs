@@ -40,7 +40,7 @@ public partial class DataCoreProvider
 
 		public IModule CreateModule(string name)
 		{
-			return new Module(this, name);
+			return Modules.ContainsKey(name) ? Modules[name] : new Module(this, name);
 		}
 	}
 }

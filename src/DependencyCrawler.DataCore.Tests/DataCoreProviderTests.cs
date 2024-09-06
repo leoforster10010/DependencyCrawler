@@ -6,7 +6,7 @@ internal class DataCoreProviderTests
 	public void TestState()
 	{
 		var dataCoreProvider = new DataCoreProvider();
-		Assert.IsTrue(dataCoreProvider.DataCores.Count == 1);
+		Assert.IsTrue(dataCoreProvider.DataCores is { Count: 1 });
 		Assert.IsTrue(dataCoreProvider.ActiveCore is not null);
 	}
 
@@ -16,7 +16,7 @@ internal class DataCoreProviderTests
 		var dataCoreProvider = new DataCoreProvider();
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
-		Assert.IsTrue(dataCoreProvider.DataCores.Count == 2);
+		Assert.IsTrue(dataCoreProvider.DataCores is { Count: 2 });
 		Assert.IsFalse(newDataCore.IsActive);
 		Assert.AreSame(newDataCore.DataCoreProvider, dataCoreProvider);
 	}
@@ -42,9 +42,9 @@ internal class DataCoreProviderTests
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
 		newDataCore.Delete();
-		Assert.IsTrue(dataCoreProvider.DataCores.Count == 1);
+		Assert.IsTrue(dataCoreProvider.DataCores is { Count: 1 });
 
 		dataCoreProvider.ActiveCore.Delete();
-		Assert.IsTrue(dataCoreProvider.DataCores.Count == 1);
+		Assert.IsTrue(dataCoreProvider.DataCores is { Count: 1 });
 	}
 }
