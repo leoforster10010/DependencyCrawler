@@ -2,6 +2,7 @@
 
 public interface IValueDataCore
 {
-	Guid Id { get; }
-	IReadOnlyList<string> ModuleValues { get; }
+    Guid Id { get; }
+    IReadOnlyList<IValueModule> ModuleValues { get; }
+    string Serialize();
 }

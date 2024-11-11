@@ -2,180 +2,196 @@ namespace DependencyCrawler.DataCore.Tests;
 
 internal class ModuleTests
 {
-	[Test]
-	public void TestState()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.CreateModule("test");
+    [Test]
+    public void TestState()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var newModule = dataCore.GetOrCreateModule("test");
 
-		Assert.IsTrue(newModule.Name is "test");
-		Assert.IsTrue(newModule.References is { Count: 0 });
-		Assert.IsTrue(newModule.Dependencies is { Count: 0 });
-		Assert.IsTrue(newModule.DependencyLayer is 0);
-		Assert.IsTrue(newModule.ReferenceLayer is 0);
-		Assert.IsTrue(newModule.IsSubLevel);
-		Assert.IsTrue(newModule.IsTopLevel);
-	}
+        Assert.Multiple(() =>
+        {
+            Assert.That(newModule.Name is "test");
+            Assert.That(newModule.References is { Count: 0 });
+            Assert.That(newModule.Dependencies is { Count: 0 });
+            Assert.That(newModule.DependencyLayer is 0);
+            Assert.That(newModule.ReferenceLayer is 0);
+            Assert.That(newModule.IsSubLevel);
+            Assert.That(newModule.IsTopLevel);
+        });
+    }
 
-	[Test]
-	public void TestCreation()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.CreateModule("test");
-		var duplikaModule = dataCore.CreateModule("test");
+    [Test]
+    public void TestCreation()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var newModule = dataCore.GetOrCreateModule("test");
+        var duplicateModule = dataCore.GetOrCreateModule("test");
 
-		Assert.AreSame(newModule, duplikaModule);
-	}
+        Assert.That(duplicateModule, Is.SameAs(newModule));
+    }
 
-	[Test]
-	public void TestAddDependency1()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var dependency = dataCore.CreateModule("dependency");
+    [Test]
+    public void TestAddDependency1()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
+        var dependency = dataCore.GetOrCreateModule("dependency");
 
-		module.AddDependency(dependency);
+        module.AddDependency(dependency);
 
-		Assert.IsTrue(module.Dependencies is { Count: 1 });
-		Assert.IsTrue(module.References is { Count: 0 });
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.Dependencies is { Count: 1 });
+            Assert.That(module.References is { Count: 0 });
 
-		Assert.IsTrue(module.OutgoingReferences is { Count: 1 });
-		Assert.IsTrue(module.IngoingReferences is { Count: 0 });
+            Assert.That(module.OutgoingReferences is { Count: 1 });
+            Assert.That(module.IngoingReferences is { Count: 0 });
 
-		Assert.IsTrue(dependency.References is { Count: 1 });
-		Assert.IsTrue(dependency.Dependencies is { Count: 0 });
+            Assert.That(dependency.References is { Count: 1 });
+            Assert.That(dependency.Dependencies is { Count: 0 });
 
-		Assert.IsTrue(dependency.IngoingReferences is { Count: 1 });
-		Assert.IsTrue(dependency.OutgoingReferences is { Count: 0 });
+            Assert.That(dependency.IngoingReferences is { Count: 1 });
+            Assert.That(dependency.OutgoingReferences is { Count: 0 });
 
-		Assert.IsTrue(module.IsSubLevel);
-		Assert.IsTrue(module.DependencyLayer is 1);
-		Assert.IsTrue(module.ReferenceLayer is 0);
+            Assert.That(module.IsSubLevel);
+            Assert.That(module.DependencyLayer is 1);
+            Assert.That(module.ReferenceLayer is 0);
 
-		Assert.IsTrue(dependency.IsTopLevel);
-		Assert.IsTrue(dependency.DependencyLayer is 0);
-		Assert.IsTrue(dependency.ReferenceLayer is 1);
-	}
+            Assert.That(dependency.IsTopLevel);
+            Assert.That(dependency.DependencyLayer is 0);
+            Assert.That(dependency.ReferenceLayer is 1);
+        });
+    }
 
-	[Test]
-	public void TestAddDependency2()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
+    [Test]
+    public void TestAddDependency2()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
 
-		var dataCore2 = dataCoreProvider.CreateDataCore();
-		var wrongDependency = dataCore2.CreateModule("dependency");
+        var dataCore2 = dataCoreProvider.CreateDataCore();
+        var wrongDependency = dataCore2.GetOrCreateModule("dependency");
 
-		module.AddDependency(wrongDependency);
+        module.AddDependency(wrongDependency);
 
-		Assert.IsTrue(module.Dependencies is { Count: 0 });
-	}
+        Assert.That(module.Dependencies is { Count: 0 });
+    }
 
-	[Test]
-	public void TestAddDependency3()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var dependency = dataCore.CreateModule("dependency");
+    [Test]
+    public void TestAddDependency3()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
+        var dependency = dataCore.GetOrCreateModule("dependency");
 
-		module.AddDependency(dependency);
+        module.AddDependency(dependency);
 
-		var foundDependency = module.Dependencies["dependency"];
-		Assert.AreSame(dependency, foundDependency);
-	}
+        var foundDependency = module.Dependencies["dependency"];
+        Assert.That(foundDependency, Is.SameAs(dependency));
+    }
 
-	[Test]
-	public void TestAddReference1()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var reference = dataCore.CreateModule("dependency");
+    [Test]
+    public void TestAddReference1()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
+        var reference = dataCore.GetOrCreateModule("dependency");
 
-		module.AddReference(reference);
+        module.AddReference(reference);
 
-		Assert.IsTrue(module.Dependencies is { Count: 0 });
-		Assert.IsTrue(module.References is { Count: 1 });
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.Dependencies is { Count: 0 });
+            Assert.That(module.References is { Count: 1 });
 
-		Assert.IsTrue(module.OutgoingReferences is { Count: 0 });
-		Assert.IsTrue(module.IngoingReferences is { Count: 1 });
+            Assert.That(module.OutgoingReferences is { Count: 0 });
+            Assert.That(module.IngoingReferences is { Count: 1 });
 
-		Assert.IsTrue(reference.References is { Count: 0 });
-		Assert.IsTrue(reference.Dependencies is { Count: 1 });
+            Assert.That(reference.References is { Count: 0 });
+            Assert.That(reference.Dependencies is { Count: 1 });
 
-		Assert.IsTrue(reference.IngoingReferences is { Count: 0 });
-		Assert.IsTrue(reference.OutgoingReferences is { Count: 1 });
+            Assert.That(reference.IngoingReferences is { Count: 0 });
+            Assert.That(reference.OutgoingReferences is { Count: 1 });
 
-		Assert.IsTrue(module.IsTopLevel);
-		Assert.IsTrue(module.DependencyLayer is 0);
-		Assert.IsTrue(module.ReferenceLayer is 1);
+            Assert.That(module.IsTopLevel);
+            Assert.That(module.DependencyLayer is 0);
+            Assert.That(module.ReferenceLayer is 1);
 
-		Assert.IsTrue(reference.IsSubLevel);
-		Assert.IsTrue(reference.DependencyLayer is 1);
-		Assert.IsTrue(reference.ReferenceLayer is 0);
-	}
+            Assert.That(reference.IsSubLevel);
+            Assert.That(reference.DependencyLayer is 1);
+            Assert.That(reference.ReferenceLayer is 0);
+        });
+    }
 
-	[Test]
-	public void TestAddReference2()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
+    [Test]
+    public void TestAddReference2()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
 
-		var dataCore2 = dataCoreProvider.CreateDataCore();
-		var wrongReference = dataCore2.CreateModule("reference");
+        var dataCore2 = dataCoreProvider.CreateDataCore();
+        var wrongReference = dataCore2.GetOrCreateModule("reference");
 
-		module.AddReference(wrongReference);
+        module.AddReference(wrongReference);
 
-		Assert.IsTrue(module.References is { Count: 0 });
-	}
+        Assert.That(module.References is { Count: 0 });
+    }
 
-	[Test]
-	public void TestAddReference3()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var reference = dataCore.CreateModule("reference");
+    [Test]
+    public void TestAddReference3()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
+        var reference = dataCore.GetOrCreateModule("reference");
 
-		module.AddReference(reference);
+        module.AddReference(reference);
 
-		var foundReference = module.References["reference"];
-		Assert.AreSame(reference, foundReference);
-	}
+        var foundReference = module.References["reference"];
+        Assert.That(foundReference, Is.SameAs(reference));
+    }
 
-	[Test]
-	public void TestRemoveDependency()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var dependency = dataCore.CreateModule("dependency");
+    [Test]
+    public void TestRemoveDependency()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
 
-		module.AddDependency(dependency);
-		module.RemoveDependency(dependency);
+        var module = dataCore.GetOrCreateModule("test");
+        var dependency = dataCore.GetOrCreateModule("dependency");
 
-		Assert.IsTrue(module.Dependencies is { Count: 0 });
-		Assert.IsTrue(dependency.References is { Count: 0 });
-	}
+        module.AddDependency(dependency);
+        module.RemoveDependency(dependency);
 
-	[Test]
-	public void TestRemoveReference()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.CreateModule("test");
-		var reference = dataCore.CreateModule("reference");
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.Dependencies is { Count: 0 });
+            Assert.That(dependency.References is { Count: 0 });
+        });
+    }
 
-		module.AddReference(reference);
-		module.RemoveReference(reference);
+    [Test]
+    public void TestRemoveReference()
+    {
+        var dataCoreProvider = new DataCoreProvider();
+        var dataCore = dataCoreProvider.ActiveCore;
+        var module = dataCore.GetOrCreateModule("test");
+        var reference = dataCore.GetOrCreateModule("reference");
 
-		Assert.IsTrue(module.References is { Count: 0 });
-		Assert.IsTrue(reference.Dependencies is { Count: 0 });
-	}
+        module.AddReference(reference);
+        module.RemoveReference(reference);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.References is { Count: 0 });
+            Assert.That(reference.Dependencies is { Count: 0 });
+        });
+    }
 }

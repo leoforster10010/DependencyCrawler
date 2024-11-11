@@ -2,5 +2,5 @@
 
 public interface IValueDataAccess
 {
-	IValueDataCore DataValues { get; }
+    IValueDataCore ActiveCoreValue { get; }
 }

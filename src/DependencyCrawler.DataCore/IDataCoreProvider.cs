@@ -5,7 +5,9 @@ namespace DependencyCrawler.DataCore;
 
 public interface IDataCoreProvider : IReadOnlyDataAccess, IValueDataAccess
 {
-	IReadOnlyDictionary<Guid, IDataCore> DataCores { get; }
-	IDataCore ActiveCore { get; }
-	IDataCore CreateDataCore();
+    IReadOnlyDictionary<Guid, IDataCore> DataCores { get; }
+    IDataCore ActiveCore { get; }
+    IDataCore CreateDataCore();
+    IDataCore GetOrCreateDataCore(ValueDataCore valueDataCore);
+    IDataCore GetOrCreateDataCore(Guid id);
 }

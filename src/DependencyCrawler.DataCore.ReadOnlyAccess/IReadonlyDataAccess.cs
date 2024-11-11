@@ -2,5 +2,5 @@
 
 public interface IReadOnlyDataAccess
 {
-	IReadOnlyDataCore DataReadOnly { get; }
+    IReadOnlyDataCore ActiveCoreReadOnly { get; }
 }
