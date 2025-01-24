@@ -2,7 +2,7 @@
 
 public interface IValueDataCore
 {
-    Guid Id { get; }
-    IReadOnlyList<IValueModule> ModuleValues { get; }
-    string Serialize();
+	Guid Id { get; }
+	IReadOnlyList<IValueModule> ModuleValues { get; }
+	DataCoreDTO ToDTO();
 }
