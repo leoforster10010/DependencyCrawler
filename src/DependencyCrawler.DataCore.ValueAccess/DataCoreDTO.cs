@@ -1,16 +1,26 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DependencyCrawler.DataCore.ValueAccess;
 
-public class DataCoreDTO(IReadOnlyList<ModuleDTO> moduleValues, Guid id)
+public class DataCoreDTO
 {
-	public DataCoreDTO(IValueDataCore valueDataCore) : this(valueDataCore.ModuleValues.Select(x => new ModuleDTO(x.ReferenceValues, x.DependencyValues, x.Name)).ToList(), valueDataCore.Id)
+	[JsonConstructor]
+	public DataCoreDTO(IReadOnlyList<ModuleDTO> moduleValues, Guid id)
 	{
+		Id = id;
+		ModuleValues = moduleValues;
 	}
 
-	public Guid Id { get; } = id;
+	public DataCoreDTO(IValueDataCore valueDataCore)
+	{
+		Id = valueDataCore.Id;
+		ModuleValues = valueDataCore.ModuleValues.Select(x => new ModuleDTO(x.ReferenceValues, x.DependencyValues, x.Name)).ToList();
+	}
 
-	public IReadOnlyList<ModuleDTO> ModuleValues { get; } = moduleValues;
+	public Guid Id { get; }
+
+	public IReadOnlyList<ModuleDTO> ModuleValues { get; }
 
 	public string Serialize()
 	{
