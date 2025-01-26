@@ -26,7 +26,7 @@ public partial class DataCoreProvider
 
 		public Guid Id { get; }
 		public IDataCoreProvider DataCoreProvider => _dataCoreProvider;
-		public bool IsActive => _dataCoreProvider._activeCore == this;
+		public bool IsActive => _dataCoreProvider.ActiveCore == this;
 		public IReadOnlyDictionary<string, IModule> Modules => _modules.AsReadOnly();
 		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => _modules.ToDictionary(key => key.Key, IReadOnlyModule (value) => value.Value);
 		public IReadOnlyList<IValueModule> ModuleValues => _modules.Values.ToList();
@@ -34,7 +34,7 @@ public partial class DataCoreProvider
 
 		public void Activate()
 		{
-			_dataCoreProvider._activeCore = this;
+			_dataCoreProvider.ActiveCore = this;
 		}
 
 		public void Delete()

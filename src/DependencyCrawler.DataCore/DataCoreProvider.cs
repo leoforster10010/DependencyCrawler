@@ -7,16 +7,20 @@ namespace DependencyCrawler.DataCore;
 public partial class DataCoreProvider : IDataCoreProvider
 {
 	private readonly IDictionary<Guid, IDataCore> _dataCores = new ConcurrentDictionary<Guid, IDataCore>();
-	private DataCore _activeCore;
 
 	public DataCoreProvider()
 	{
-		_activeCore = new DataCore(this);
+		ActiveCore = new DataCore(this);
 	}
 
-	public IDataCore ActiveCore => _activeCore;
-	public IReadOnlyDataCore ActiveCoreReadOnly => _activeCore;
-	public IValueDataCore ActiveCoreValue => _activeCore;
+	public DataCoreProvider(DataCoreDTO dataCoreDTO)
+	{
+		ActiveCore = GetOrCreateDataCore(dataCoreDTO);
+	}
+
+	public IDataCore ActiveCore { get; private set; }
+	public IReadOnlyDataCore ActiveCoreReadOnly => ActiveCore;
+	public IValueDataCore ActiveCoreValue => ActiveCore;
 	public IReadOnlyDictionary<Guid, IDataCore> DataCores => _dataCores.AsReadOnly();
 
 	public IDataCore CreateDataCore()
