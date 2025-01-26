@@ -35,11 +35,6 @@ Blazor UI:
 - RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
 
 
-DataSourceProvider:
-- 1:n DataSources
-- active DataSource?
-
-DataSource:
-- 1:n ValueDataCores (on request?)
-- load DataCore
-- save DataCore
+LoadProcess:
+- recognize versions
+- module types: internal, external, not found
