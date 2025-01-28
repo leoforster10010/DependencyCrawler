@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyCrawler.Data.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataCore.Tests", "DependencyCrawler.DataCore.Tests\DependencyCrawler.DataCore.Tests.csproj", "{D2F29EEA-C7EE-4C73-B381-B6125FAB84C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.CSharpCodeAnalysis", "DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj", "{39C726E6-175F-4A15-8D2D-3D607A5D6D9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{D2F29EEA-C7EE-4C73-B381-B6125FAB84C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2F29EEA-C7EE-4C73-B381-B6125FAB84C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2F29EEA-C7EE-4C73-B381-B6125FAB84C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39C726E6-175F-4A15-8D2D-3D607A5D6D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C726E6-175F-4A15-8D2D-3D607A5D6D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39C726E6-175F-4A15-8D2D-3D607A5D6D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39C726E6-175F-4A15-8D2D-3D607A5D6D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
