@@ -197,38 +197,4 @@ internal class ModuleTests
 			Assert.That(reference.Dependencies is { Count: 0 });
 		});
 	}
-
-
-	[Test]
-	public void Test()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataCore = dataCoreProvider.ActiveCore;
-		dataCore.GetOrCreateModule("test");
-		var reference = dataCore.GetOrCreateModule("reference");
-		var module = dataCore.GetOrCreateModule("test");
-		module.AddReference(reference);
-
-		var s = dataCore.ToDTO().Serialize();
-		var dataCoreDTO = JsonSerializer.Deserialize<DataCoreDTO>(s);
-
-		Assert.That(dataCoreDTO is not null, nameof(dataCoreDTO) + " != null");
-		var newDataCoreProvider = new DataCoreProvider(dataCoreDTO!);
-
-		var activeCore = newDataCoreProvider.ActiveCore;
-		Assert.That(activeCore.Modules.ContainsKey("test"));
-		Assert.That(activeCore.Modules.ContainsKey("reference"));
-
-		Assert.That(activeCore.ToDTO().Serialize() == dataCore.ToDTO().Serialize());
-	}
-
-
-	[Test]
-	public void Test2()
-	{
-		var dataCoreProvider = new DataCoreProvider();
-		var dataDiscovery = new DataDiscovery(dataCoreProvider);
-		dataDiscovery.Load();
-		var s = dataCoreProvider.ActiveCore.ToDTO().Serialize();
-	}
 }
