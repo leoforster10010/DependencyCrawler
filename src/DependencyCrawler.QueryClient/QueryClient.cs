@@ -3,7 +3,7 @@ using DependencyCrawler.DataCore.ReadOnlyAccess;
 
 namespace DependencyCrawler.QueryClient;
 
-public class QueryClient(
+internal class QueryClient(
 	IReadOnlyDataAccess readOnlyDataAccess,
 	ICodeAnalysisProvider codeAnalysisProvider) : IDependencyCrawler
 {

@@ -5,7 +5,7 @@ using Microsoft.Build.Construction;
 
 namespace DependencyCrawler.CSharpCodeAnalysis;
 
-public class CSharpCodeAnalysis(IDataCoreProvider dataCoreProvider) : ICodeAnalysis
+internal class CSharpCodeAnalysis(IDataCoreProvider dataCoreProvider) : ICodeAnalysis
 {
 	private const string Path = @"C:\Users\_\source";
 
