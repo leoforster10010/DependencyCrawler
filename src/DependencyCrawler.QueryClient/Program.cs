@@ -1,5 +1,5 @@
-﻿using DependencyCrawler.Contracts.Interfaces;
-using DependencyCrawler.Framework.Extensions;
+﻿using DependencyCrawler.CSharpCodeAnalysis;
+using DependencyCrawler.DataCore;
 using DependencyCrawler.QueryClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,9 +8,10 @@ using Microsoft.Extensions.Hosting;
 Host.CreateDefaultBuilder(args)
 	.ConfigureServices(services =>
 	{
-		services.AddTransient<IDependencyCrawler, DependencyCrawler.QueryClient.DependencyCrawler>();
+		services.AddTransient<IDependencyCrawler, QueryClient>();
 
-		services.AddDependencyCrawler();
+		services.AddDataCore();
+		services.AddCSharpCodeAnalysis();
 
 		services.AddHostedService<Worker>();
 	})

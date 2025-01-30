@@ -41,6 +41,11 @@ public class CSharpCodeAnalysis(IDataCoreProvider dataCoreProvider) : ICodeAnaly
 		{
 			try
 			{
+				if (!IsManagedAssembly(dll))
+				{
+					continue;
+				}
+
 				var assembly = Assembly.LoadFile(dll);
 				var name = assembly.GetName().Name!;
 				var dependencies = assembly.GetReferencedAssemblies().Where(x => x.Name is not null).Select(x => x.Name!).ToList();
@@ -57,5 +62,23 @@ public class CSharpCodeAnalysis(IDataCoreProvider dataCoreProvider) : ICodeAnaly
 
 		//add DataCoreDTO to DCP
 		dataCoreProvider.GetOrCreateDataCore(new DataCoreDTO(modules.Values.ToList(), Guid.NewGuid())).Activate();
+	}
+
+	private static bool IsManagedAssembly(string fileName)
+	{
+		try
+		{
+			AssemblyName.GetAssemblyName(fileName);
+			return true;
+		}
+		catch (BadImageFormatException)
+		{
+			// Keine gültige .NET-Assembly
+			return false;
+		}
+		catch (FileNotFoundException)
+		{
+			return false;
+		}
 	}
 }
