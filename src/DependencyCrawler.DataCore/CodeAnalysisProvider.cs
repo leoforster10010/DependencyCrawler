@@ -1,6 +1,6 @@
 ﻿namespace DependencyCrawler.DataCore;
 
-public class CodeAnalysisProvider(IEnumerable<ICodeAnalysis> codeAnalyses)
+internal class CodeAnalysisProvider(IEnumerable<ICodeAnalysis> codeAnalyses) : ICodeAnalysisProvider
 {
 	public IReadOnlyList<ICodeAnalysis> CodeAnalyses => codeAnalyses.ToList();
 }

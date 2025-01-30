@@ -5,7 +5,7 @@ namespace DependencyCrawler.CSharpCodeAnalysis;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddJsonDataSource(this IServiceCollection services)
+	public static IServiceCollection AddCSharpCodeAnalysis(this IServiceCollection services)
 	{
 		services.AddTransient<ICodeAnalysis, CSharpCodeAnalysis>();
 

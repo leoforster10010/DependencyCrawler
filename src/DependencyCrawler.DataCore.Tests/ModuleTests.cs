@@ -1,6 +1,3 @@
-using System.Text.Json;
-using DependencyCrawler.DataCore.ValueAccess;
-
 namespace DependencyCrawler.DataCore.Tests;
 
 internal class ModuleTests
@@ -195,6 +192,62 @@ internal class ModuleTests
 		{
 			Assert.That(module.References is { Count: 0 });
 			Assert.That(reference.Dependencies is { Count: 0 });
+		});
+	}
+
+	[Test]
+	public void TestGetAllDependencies()
+	{
+		var dataCoreProvider = new DataCoreProvider();
+		var dataCore = dataCoreProvider.ActiveCore;
+		var module = dataCore.GetOrCreateModule("test");
+		var dependency1 = dataCore.GetOrCreateModule("dependency1");
+		var dependency2 = dataCore.GetOrCreateModule("dependency2");
+		var dependency3 = dataCore.GetOrCreateModule("dependency3");
+
+		module.AddDependency(dependency1);
+		dependency1.AddDependency(dependency2);
+		dependency2.AddDependency(dependency3);
+
+		var allDependencies = module.GetAllDependencies();
+
+		Assert.Multiple(() =>
+		{
+			Assert.That(allDependencies.Count, Is.EqualTo(3));
+			Assert.That(allDependencies.ContainsKey("dependency1"));
+			Assert.That(allDependencies.ContainsKey("dependency2"));
+			Assert.That(allDependencies.ContainsKey("dependency3"));
+			Assert.That(allDependencies["dependency1"], Is.SameAs(dependency1));
+			Assert.That(allDependencies["dependency2"], Is.SameAs(dependency2));
+			Assert.That(allDependencies["dependency3"], Is.SameAs(dependency3));
+		});
+	}
+
+	[Test]
+	public void TestGetAllReferences()
+	{
+		var dataCoreProvider = new DataCoreProvider();
+		var dataCore = dataCoreProvider.ActiveCore;
+		var module = dataCore.GetOrCreateModule("test");
+		var reference1 = dataCore.GetOrCreateModule("reference1");
+		var reference2 = dataCore.GetOrCreateModule("reference2");
+		var reference3 = dataCore.GetOrCreateModule("reference3");
+
+		module.AddReference(reference1);
+		reference1.AddReference(reference2);
+		reference2.AddReference(reference3);
+
+		var allReferences = module.GetAllReferences();
+
+		Assert.Multiple(() =>
+		{
+			Assert.That(allReferences.Count, Is.EqualTo(3));
+			Assert.That(allReferences.ContainsKey("reference1"));
+			Assert.That(allReferences.ContainsKey("reference2"));
+			Assert.That(allReferences.ContainsKey("reference3"));
+			Assert.That(allReferences["reference1"], Is.SameAs(reference1));
+			Assert.That(allReferences["reference2"], Is.SameAs(reference2));
+			Assert.That(allReferences["reference3"], Is.SameAs(reference3));
 		});
 	}
 }
