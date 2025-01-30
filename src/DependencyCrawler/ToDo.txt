@@ -1,1 +1,8 @@
 ﻿- count potential projects of codebase = 2^n - 1
+
+- RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
+
+
+LoadProcess:
+- recognize versions
+- module types: internal, external, not found
