@@ -11,7 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddDependencyCrawler();
-builder.Services.AddJsonCache();
+builder.Services.AddJsonDataSource();
 
 builder.Services.AddSingleton<IApplicationStateHandler, ApplicationStateHandler>();
 
