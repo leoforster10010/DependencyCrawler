@@ -4,7 +4,7 @@ using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
-public partial class DataCoreProvider : IDataCoreProvider
+internal partial class DataCoreProvider : IDataCoreProvider
 {
 	private readonly IDictionary<Guid, IDataCore> _dataCores = new ConcurrentDictionary<Guid, IDataCore>();
 

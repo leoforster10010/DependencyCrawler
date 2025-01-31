@@ -2,6 +2,8 @@
 
 - RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
 
+- put interfaces of DataCore in own project
+- DCP internal, only access to tests
 
 LoadProcess:
 - recognize versions

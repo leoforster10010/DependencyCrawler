@@ -3,7 +3,7 @@ using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
-public partial class DataCoreProvider
+internal partial class DataCoreProvider
 {
 	private partial class DataCore : IDataCore
 	{
