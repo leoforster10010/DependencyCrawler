@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DependencyCrawler.DataCore\DependencyCrawler.DataCore.csproj" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.1" />
     </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DependencyCrawler.Data.Contracts\DependencyCrawler.Data.Contracts.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj" />
+    </ItemGroup>
 
 </Project>

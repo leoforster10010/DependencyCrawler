@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DependencyCrawler.DataCore.ReadOnlyAccess\DependencyCrawler.DataCore.ReadOnlyAccess.csproj" />
-    <ProjectReference Include="..\DependencyCrawler.DataCore.ValueAccess\DependencyCrawler.DataCore.ValueAccess.csproj" />
   </ItemGroup>
 
 </Project>

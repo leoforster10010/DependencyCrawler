@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataCore.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.MongoDB", "DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj", "{B0CDFA46-81F3-4BDC-8E92-52EA78FD422D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataCore.DataAccess", "DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj", "{8D540787-8490-4289-8B9E-9397165C4BC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "old", "old", "{DB0B504A-FB39-4293-87DA-596047C189D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,9 +84,19 @@ Global
 		{B0CDFA46-81F3-4BDC-8E92-52EA78FD422D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0CDFA46-81F3-4BDC-8E92-52EA78FD422D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0CDFA46-81F3-4BDC-8E92-52EA78FD422D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D540787-8490-4289-8B9E-9397165C4BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D540787-8490-4289-8B9E-9397165C4BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D540787-8490-4289-8B9E-9397165C4BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D540787-8490-4289-8B9E-9397165C4BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A284030-A9D3-4061-BD52-554C90B3B2D5} = {DB0B504A-FB39-4293-87DA-596047C189D5}
+		{44D6FC73-746F-45BD-885D-423264EE09BF} = {DB0B504A-FB39-4293-87DA-596047C189D5}
+		{87E7AB9A-FA75-4966-BD03-2BFA64234CE3} = {DB0B504A-FB39-4293-87DA-596047C189D5}
+		{A4F4FDF6-1989-4E04-B450-F992A6B3A424} = {DB0B504A-FB39-4293-87DA-596047C189D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8668B437-E0A0-4D21-AC71-439A006F3563}

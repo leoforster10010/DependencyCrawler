@@ -1,9 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
 
-namespace DependencyCrawler.DataCore.DataAccess;
+namespace DependencyCrawler.DataCore;
 
-public interface IDataCore
+public interface IDataCore : IReadOnlyDataCore
 {
-	ConcurrentDictionary<string, Module> Modules { get; }
-	Guid Id { get; }
+    IDataCoreProvider DataCoreProvider { get; }
+    IReadOnlyDictionary<string, IModule> Modules { get; }
+    IReadOnlyList<IEntity> Entities { get; }
+    void Activate();
+    void Delete();
+    IModule GetOrCreateModule(string name);
 }
