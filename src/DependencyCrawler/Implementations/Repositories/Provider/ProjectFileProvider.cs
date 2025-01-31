@@ -1,4 +1,4 @@
-﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
 using DependencyCrawler.Data.Contracts.Enum;
 using DependencyCrawler.Framework.Extensions;
 using Microsoft.Extensions.Configuration;
