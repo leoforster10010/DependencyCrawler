@@ -1,4 +1,6 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.DataAccess;
+
+namespace DependencyCrawler.DataCore;
 
 internal partial class DataCoreProvider
 {

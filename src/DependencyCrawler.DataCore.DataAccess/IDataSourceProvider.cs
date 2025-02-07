@@ -1,6 +1,6 @@
-namespace DependencyCrawler.DataCore;
+namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface IDataSourceProvider
 {
-    IReadOnlyDictionary<Guid, IDataSource> DataSources { get; }
+	IReadOnlyDictionary<Guid, IDataSource> DataSources { get; }
 }

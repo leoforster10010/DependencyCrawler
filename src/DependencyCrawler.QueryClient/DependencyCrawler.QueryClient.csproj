@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj" />
+        <ProjectReference Include="..\DependencyCrawler.CSharpCodeAnalysis.REST\DependencyCrawler.CSharpCodeAnalysis.REST.csproj" />
         <ProjectReference Include="..\DependencyCrawler.DataCore\DependencyCrawler.DataCore.csproj" />
     </ItemGroup>
 

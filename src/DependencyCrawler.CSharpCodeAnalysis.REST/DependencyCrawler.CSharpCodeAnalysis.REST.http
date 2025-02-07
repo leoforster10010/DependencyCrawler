@@ -1,0 +1,10 @@
+@DependencyCrawler.CSharpCodeAnalysis.REST_HostAddress = https://localhost:7157
+
+GET {{DependencyCrawler.CSharpCodeAnalysis.REST_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{DependencyCrawler.CSharpCodeAnalysis.REST_HostAddress}}/csharpcodeanalysis
+
+###

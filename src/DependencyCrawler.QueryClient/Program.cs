@@ -1,4 +1,4 @@
-using DependencyCrawler.CSharpCodeAnalysis;
+using DependencyCrawler.CSharpCodeAnalysis.REST;
 using DependencyCrawler.DataCore;
 using DependencyCrawler.QueryClient;
 using Microsoft.Extensions.Configuration;

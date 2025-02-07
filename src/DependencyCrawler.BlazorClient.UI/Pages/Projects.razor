@@ -1,0 +1,78 @@
+﻿@page "/projects"
+@inject IValueDataAccess ValueDataAccess
+@inject ICSharpCodeAnalysisClient CSharpCodeAnalysisClient
+
+@using DependencyCrawler.CSharpCodeAnalysis.Client
+@using DependencyCrawler.DataCore.ValueAccess
+@implements IDisposable
+
+<div style="height:80vh;">
+    <GraphEditor @ref="_graphEditor"
+                 TNode="Node"
+                 TEdge="Edge"
+                 NodeIdMapper="n => n.id"
+                 NodeRadiusMapper="n => n.size"
+                 NodeColorMapper="n => n.color"
+                 EdgeFromMapper="e => e.from"
+                 EdgeToMapper="e => e.to"
+                 EdgeWidthMapper="e => e.weight*5"
+                 EdgeSpringConstantMapper="e => e.weight"
+                 EdgeSpringLengthMapper="e => e.length"/>
+</div>
+@code {
+    private GraphEditor<Node, Edge> _graphEditor = default!;
+    private bool _running = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        while (!_graphEditor.IsReadyToLoad)
+        {
+            await Task.Delay(50);
+        }
+
+        await CSharpCodeAnalysisClient.GetDataCoreDTOAsync();
+
+
+        var edges = new List<Edge>();
+
+        var nodes = ValueDataAccess.ActiveCoreValue.ModuleValues.Where(x => x.Name.StartsWith("DependencyCrawler")).ToDictionary(module => module.Name, module => new Node(module.Name));
+
+        foreach (var module in ValueDataAccess.ActiveCoreValue.ModuleValues)
+        {
+	        foreach (var dependency in module.DependencyValues)
+	        {
+                if (!dependency.StartsWith("DependencyCrawler"))
+		        {
+			        continue;
+		        }
+
+				edges.Add(new Edge(nodes[module.Name], nodes[dependency]));
+	        }
+        }
+
+        await _graphEditor.LoadGraph(nodes.Values.ToList(), edges);
+
+        var startTime = DateTimeOffset.UtcNow;
+        while (_running)
+        {
+            await _graphEditor.ForceDirectedLayout();
+            // First 5 seconds also fit the viewport to all the nodes and edges in the graph.
+            if (startTime - DateTimeOffset.UtcNow < TimeSpan.FromSeconds(5))
+                _graphEditor.SVGEditor.FitViewportToAllShapes(delta: 0.8);
+            await Task.Delay(1);
+        }
+    }
+
+    public record Node(string id, string color = "#66BB6A", float size = 50);
+    public record Edge(Node from, Node to, float weight = 1, float length = 200);
+
+    public void Dispose()
+    {
+        _running = false;
+    }
+}

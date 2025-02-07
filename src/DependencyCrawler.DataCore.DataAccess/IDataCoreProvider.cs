@@ -1,7 +1,7 @@
 ﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
 using DependencyCrawler.DataCore.ValueAccess;
 
-namespace DependencyCrawler.DataCore;
+namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface IDataCoreProvider : IReadOnlyDataAccess, IValueDataAccess
 {

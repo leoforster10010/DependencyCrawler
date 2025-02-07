@@ -1,4 +1,4 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface ICodeAnalysisProvider
 {

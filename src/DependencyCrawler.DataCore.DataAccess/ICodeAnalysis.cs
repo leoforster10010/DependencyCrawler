@@ -1,6 +1,6 @@
-﻿namespace DependencyCrawler.DataCore;
+﻿namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface ICodeAnalysis
 {
-	void Load();
+	public void Load();
 }

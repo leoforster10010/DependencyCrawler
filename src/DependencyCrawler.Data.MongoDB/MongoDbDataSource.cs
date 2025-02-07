@@ -1,4 +1,4 @@
-﻿using DependencyCrawler.DataCore;
+﻿using DependencyCrawler.DataCore.DataAccess;
 
 namespace DependencyCrawler.Data.MongoDB;
 

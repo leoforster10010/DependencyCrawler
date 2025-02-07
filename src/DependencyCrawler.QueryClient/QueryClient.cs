@@ -1,4 +1,4 @@
-using DependencyCrawler.DataCore;
+using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
 
 namespace DependencyCrawler.QueryClient;

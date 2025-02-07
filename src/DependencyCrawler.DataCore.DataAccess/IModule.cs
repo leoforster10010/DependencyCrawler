@@ -1,6 +1,6 @@
 ﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
 
-namespace DependencyCrawler.DataCore;
+namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface IModule : IReadOnlyModule, IEntity
 {

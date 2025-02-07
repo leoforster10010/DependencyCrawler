@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
 
 namespace DependencyCrawler.DataCore;

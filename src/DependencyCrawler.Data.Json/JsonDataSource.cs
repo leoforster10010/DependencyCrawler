@@ -1,5 +1,5 @@
 using System.Text.Json;
-using DependencyCrawler.DataCore;
+using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.Data.Json;
