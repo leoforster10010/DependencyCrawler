@@ -2,5 +2,5 @@
 
 public interface ICodeAnalysis
 {
-	public void Load();
+	public Task Load();
 }

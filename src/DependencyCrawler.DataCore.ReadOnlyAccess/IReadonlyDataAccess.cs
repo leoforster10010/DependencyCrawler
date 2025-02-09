@@ -2,5 +2,6 @@
 
 public interface IReadOnlyDataAccess
 {
-    IReadOnlyDataCore ActiveCoreReadOnly { get; }
+	IReadOnlyDataCore ActiveCoreReadOnly { get; }
+	event Action? DataCoreActivated;
 }

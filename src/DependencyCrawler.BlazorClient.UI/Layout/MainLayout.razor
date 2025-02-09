@@ -1,16 +1,72 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+﻿@using DependencyCrawler.DataCore.DataAccess
+@inherits LayoutComponentBase
+@inject IDataCoreProvider DataCoreProvider
+@inject IDataSourceProvider DataSourceProvider
+@inject ICodeAnalysisProvider CodeAnalysisProvider
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<MudLayout>
+	<MudAppBar Dense="true">
+		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.End" OnClick="@(_ => DrawerToggle())"/>
+		<MudMenu Label="DataCores">
+			@foreach (var dataCore in DataCoreProvider.DataCores)
+			{
+				<MudMenuItem>
+					@if (dataCore.Value.IsActive)
+					{
+						<MudAlert NoIcon="true" Variant="Variant.Outlined" Severity="Severity.Success">@dataCore.Key.ToString()</MudAlert>
+					}
+					else
+					{
+						<MudAlert NoIcon="true" Severity="Severity.Normal">@dataCore.Key.ToString()</MudAlert>
+					}
+					<MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="dataCore.Value.Activate">Activate</MudButton>
+					<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="dataCore.Value.Delete">Delete</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+		
+		<MudMenu Label="CodeAnalyses">
+			@foreach (var codeAnalysis in CodeAnalysisProvider.CodeAnalyses)
+			{
+				<MudMenuItem>
+					@codeAnalysis.GetType().Name
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="codeAnalysis.Load">Load</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+
+		<MudMenu Label="DataSources">
+			@foreach (var dataSource in DataSourceProvider.DataSources)
+			{
+				<MudMenuItem>
+					@dataSource.Key.ToString()
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="dataSource.Value.Load">Load</MudButton>
+					<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Tertiary" OnClick="dataSource.Value.Save">Save</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+	</MudAppBar>
+	<MudDrawer @bind-Open="@_drawerOpen">
+		<NavMenu/>
+	</MudDrawer>
+	<MudMainContent>
+		@Body
+	</MudMainContent>
+</MudLayout>
+@code {
+	bool _drawerOpen = true;
+
+	protected override void OnInitialized()
+	{
+	}
+
+	void DrawerToggle()
+	{
+		_drawerOpen = !_drawerOpen;
+	}
+}

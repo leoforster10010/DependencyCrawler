@@ -4,7 +4,7 @@ namespace DependencyCrawler.CSharpCodeAnalysis.REST;
 
 internal class CSharpCodeAnalysis(IDataCoreProvider dataCoreProvider, IDataCoreDTOFactory dataCoreDTOFactory) : ICodeAnalysis
 {
-	public void Load()
+	public async Task Load()
 	{
 		dataCoreProvider.GetOrCreateDataCore(dataCoreDTOFactory.CreateDataCoreDTO());
 	}

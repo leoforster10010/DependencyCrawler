@@ -57,4 +57,6 @@ internal partial class DataCoreProvider : IDataCoreProvider
 	{
 		return _dataCores.ContainsKey(id) ? DataCores[id] : new DataCore(this, id);
 	}
+
+	public event Action? DataCoreActivated;
 }

@@ -36,6 +36,7 @@ internal partial class DataCoreProvider
 		public void Activate()
 		{
 			_dataCoreProvider.ActiveCore = this;
+			_dataCoreProvider.DataCoreActivated?.Invoke();
 		}
 
 		public void Delete()

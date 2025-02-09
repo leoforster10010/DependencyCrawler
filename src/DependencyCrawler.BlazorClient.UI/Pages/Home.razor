@@ -1,14 +1,95 @@
 ﻿@page "/"
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Core.PathGenerators
+@using Blazor.Diagrams.Core.Routers
+@using Blazor.Diagrams.Options
+@using DependencyCrawler.DataCore.ReadOnlyAccess
+@using Blazor.Diagrams.Components
+@inject IReadOnlyDataAccess ReadOnlyDataAccess
 @implements IDisposable
 
-Hello, world!
+<div class="diagram-container">
+	<CascadingValue Value="Diagram" IsFixed="true">
+		<DiagramCanvas></DiagramCanvas>
+	</CascadingValue>
+</div>
+
 @code {
+
+	private BlazorDiagram Diagram { get; set; } = new(new BlazorDiagramOptions
+	{
+		AllowMultiSelection = true,
+		Zoom =
+		{
+			Enabled = true,
+		},
+		Links =
+		{
+			DefaultRouter = new NormalRouter(),
+			DefaultPathGenerator = new SmoothPathGenerator()
+		},
+	});
 
     protected override async Task OnInitializedAsync()
     {
+	    ReadOnlyDataAccess.DataCoreActivated += OnDataCoreActivated;
+	    LoadDiagram();
+    }
+
+    private void LoadDiagram()
+    {
+	    var modules = ReadOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly.Where(x => x.Key.StartsWith("DependencyCrawler")).ToList();
+	    var modulesGrouped = modules.GroupBy(x => x.Value.ReferenceLayer).ToList();
+	    var nodes = new Dictionary<string, NodeModel>();
+
+	    foreach (var moduleGroup in modulesGrouped)
+	    {
+		    var x = moduleGroup.Key * 300 + 100;
+		    var y = 100;
+
+		    foreach (var module in moduleGroup)
+		    {
+			    var node = new NodeModel(position: new Point(x, y))
+			    {
+				    Title = module.Value.Name
+			    };
+
+			    Diagram.Nodes.Add(node);
+			    nodes.Add(node.Title, node);
+			    y += 100;
+		    }
+	    }
+
+	    foreach (var module in modules)
+	    {
+		    foreach (var dependency in module.Value.DependenciesReadOnly)
+		    {
+			    if (!dependency.Key.StartsWith("DependencyCrawler"))
+			    {
+				    continue;
+			    }
+
+			    var sourceNode = nodes[module.Value.Name];
+			    var target = nodes[dependency.Value.Name];
+
+			    Diagram.Links.Add(new LinkModel(sourceNode, target)
+			    {
+				    TargetMarker = LinkMarker.Arrow
+			    });
+		    }
+	    }
+    }
+
+    private void OnDataCoreActivated()
+    {
+		Diagram.Nodes.Clear();
+	    LoadDiagram();
+	    StateHasChanged();
     }
 
     public void Dispose()
     {
+	    ReadOnlyDataAccess.DataCoreActivated -= OnDataCoreActivated;
     }
 }

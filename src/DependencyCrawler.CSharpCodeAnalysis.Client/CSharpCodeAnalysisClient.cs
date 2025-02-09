@@ -4,9 +4,9 @@ using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.CSharpCodeAnalysis.Client;
 
-internal class CSharpCodeAnalysisClient(IDataCoreProvider dataCoreProvider, HttpClient httpClient) : ICSharpCodeAnalysisClient
+internal class CSharpCodeAnalysisClient(IDataCoreProvider dataCoreProvider, HttpClient httpClient) : ICodeAnalysis
 {
-	public async Task GetDataCoreDTOAsync()
+	public async Task Load()
 	{
 		var response = await httpClient.GetAsync("api/CSharpCodeAnalysis");
 
