@@ -1,4 +1,4 @@
-using DependencyCrawler.BlazorClient.UI;
+using DependencyCrawler.BlazorClient.WASM;
 using DependencyCrawler.CSharpCodeAnalysis.Client;
 using DependencyCrawler.DataCore;
 using Microsoft.AspNetCore.Components.Web;
