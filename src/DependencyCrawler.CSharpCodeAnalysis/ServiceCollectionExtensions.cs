@@ -1,6 +1,7 @@
 using DependencyCrawler.DataCore.DataAccess;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DependencyCrawler.CSharpCodeAnalysis.REST;
+namespace DependencyCrawler.CSharpCodeAnalysis;
 
 public static class ServiceCollectionExtensions
 {
@@ -8,7 +9,9 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddTransient<ICodeAnalysis, CSharpCodeAnalysis>();
 		services.AddTransient<IDataCoreDTOFactory, DataCoreDTOFactory>();
-
+		services.AddOptionsWithValidateOnStart<CSharpCodeAnalysisSettings>()
+			.BindConfiguration(nameof(CSharpCodeAnalysisSettings))
+			.ValidateDataAnnotations();
 		return services;
 	}
 }

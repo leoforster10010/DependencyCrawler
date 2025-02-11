@@ -1,6 +1,6 @@
 using DependencyCrawler.DataCore.ValueAccess;
 
-namespace DependencyCrawler.CSharpCodeAnalysis.REST;
+namespace DependencyCrawler.CSharpCodeAnalysis;
 
 public interface IDataCoreDTOFactory
 {

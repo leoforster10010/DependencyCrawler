@@ -2,8 +2,23 @@
 
 - RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
 
-- put interfaces of DataCore in own project
-
 LoadProcess:
 - recognize versions
 - module types: internal, external, not found
+- only load used dlls
+- 
+
+DataCore:
+- name datacore
+
+Diagram:
+- show node information control: https://blazor-diagrams.zhaytam.com/documentation/controls-customization
+- show connected on hover
+- performance?
+
+Blazor.UI:
+- module list?
+- datacore list?
+
+Infrastructure:
+- configuration for each component

@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Build" Version="17.12.6" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj" />
   </ItemGroup>
 
 </Project>

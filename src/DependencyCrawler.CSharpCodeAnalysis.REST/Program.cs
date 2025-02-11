@@ -1,4 +1,4 @@
-using DependencyCrawler.CSharpCodeAnalysis.REST;
+using DependencyCrawler.CSharpCodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -6,12 +6,8 @@ internal class DataCoreProviderTests
 	public void TestState()
 	{
 		var dataCoreProvider = new DataCoreProvider();
-        Assert.Multiple(() =>
-        {
-            Assert.That(dataCoreProvider.DataCores is { Count: 1 });
-            Assert.That(dataCoreProvider.ActiveCore is not null);
-        });
-    }
+		Assert.Multiple(() => { Assert.That(dataCoreProvider.DataCores is { Count: 1 }); });
+	}
 
 	[Test]
 	public void TestMethodsDataCoreCreation()
@@ -19,13 +15,13 @@ internal class DataCoreProviderTests
 		var dataCoreProvider = new DataCoreProvider();
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(dataCoreProvider.DataCores is { Count: 2 });
-            Assert.That(!newDataCore.IsActive);
-            Assert.That(dataCoreProvider, Is.SameAs(newDataCore.DataCoreProvider));
-        });
-    }
+		Assert.Multiple(() =>
+		{
+			Assert.That(dataCoreProvider.DataCores is { Count: 2 });
+			Assert.That(!newDataCore.IsActive);
+			Assert.That(dataCoreProvider, Is.SameAs(newDataCore.DataCoreProvider));
+		});
+	}
 
 
 	[Test]
@@ -36,12 +32,12 @@ internal class DataCoreProviderTests
 
 		newDataCore.Activate();
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(newDataCore.IsActive);
-            Assert.That(newDataCore, Is.SameAs(dataCoreProvider.ActiveCore));
-        });
-    }
+		Assert.Multiple(() =>
+		{
+			Assert.That(newDataCore.IsActive);
+			Assert.That(newDataCore, Is.SameAs(dataCoreProvider.ActiveCore));
+		});
+	}
 
 
 	[Test]

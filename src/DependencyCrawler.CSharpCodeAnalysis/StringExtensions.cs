@@ -1,4 +1,4 @@
-﻿namespace DependencyCrawler.CSharpCodeAnalysis.REST;
+﻿namespace DependencyCrawler.CSharpCodeAnalysis;
 
 internal static class StringExtensions
 {
