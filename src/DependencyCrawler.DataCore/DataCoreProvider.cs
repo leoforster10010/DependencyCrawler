@@ -14,11 +14,6 @@ internal partial class DataCoreProvider : IDataCoreProvider
 		ActiveCore = new DataCore(this);
 	}
 
-	public DataCoreProvider(DataCoreDTO dataCoreDTO)
-	{
-		ActiveCore = GetOrCreateDataCore(dataCoreDTO);
-	}
-
 	public IDataCore ActiveCore { get; private set; }
 	public IReadOnlyDataCore ActiveCoreReadOnly => ActiveCore;
 	public IValueDataCore ActiveCoreValue => ActiveCore;
@@ -50,13 +45,22 @@ internal partial class DataCoreProvider : IDataCoreProvider
 			}
 		}
 
+		if (!ActiveCore.IsEmpty)
+		{
+			return dataCore;
+		}
+
+		var emptyDataCore = ActiveCore;
+		dataCore.Activate();
+		emptyDataCore.Delete();
+
 		return dataCore;
 	}
 
-	public IDataCore GetOrCreateDataCore(Guid id)
+	public event Action? DataCoreActivated;
+
+	private IDataCore GetOrCreateDataCore(Guid id)
 	{
 		return _dataCores.ContainsKey(id) ? DataCores[id] : new DataCore(this, id);
 	}
-
-	public event Action? DataCoreActivated;
 }

@@ -5,7 +5,6 @@
 LoadProcess:
 - recognize versions
 - module types: internal, external, not found
-- only load used dlls
 - 
 
 DataCore:

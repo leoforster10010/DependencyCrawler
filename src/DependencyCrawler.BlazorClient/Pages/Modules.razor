@@ -24,6 +24,7 @@
 		Zoom =
 		{
 			Enabled = true,
+			Inverse = true
 		},
 		Links =
 		{
@@ -40,7 +41,7 @@
 
     private void LoadDiagram()
     {
-	    var modules = ReadOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly.Where(x => x.Key.StartsWith("DependencyCrawler")).ToList();
+	    var modules = ReadOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly.ToList();
 	    var modulesGrouped = modules.GroupBy(x => x.Value.ReferenceLayer).ToList();
 	    var nodes = new Dictionary<string, NodeModel>();
 
@@ -66,11 +67,6 @@
 	    {
 		    foreach (var dependency in module.Value.DependenciesReadOnly)
 		    {
-			    if (!dependency.Key.StartsWith("DependencyCrawler"))
-			    {
-				    continue;
-			    }
-
 			    var sourceNode = nodes[module.Value.Name];
 			    var target = nodes[dependency.Value.Name];
 

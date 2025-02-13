@@ -9,5 +9,4 @@ public interface IDataCoreProvider : IReadOnlyDataAccess, IValueDataAccess
 	IDataCore ActiveCore { get; }
 	IDataCore CreateDataCore();
 	IDataCore GetOrCreateDataCore(DataCoreDTO dataCoreDto);
-	IDataCore GetOrCreateDataCore(Guid id);
 }
