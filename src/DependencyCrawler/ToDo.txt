@@ -14,10 +14,25 @@ Diagram:
 - show node information control: https://blazor-diagrams.zhaytam.com/documentation/controls-customization
 - show connected on hover
 - performance?
+- custom node model https://blazor-diagrams.zhaytam.com/documentation/nodes-customization
 
 Blazor.UI:
 - module list?
 - datacore list?
 
 Infrastructure:
-- configuration for each component
+- configuration:
+	- for each component
+	- change via UI
+- events for errors:
+	- logging via subscription
+
+DataSources:
+- json
+- mongoDB
+- SQLite
+
+CodeAnalysis:
+- load with path
+
+

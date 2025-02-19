@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 using DependencyCrawler.DataCore.ValueAccess;
 using Microsoft.Build.Construction;
@@ -9,50 +10,78 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 {
 	public DataCoreDTO CreateDataCoreDTO()
 	{
-		//find all project files
-		var path = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!.RootDirectory;
-		var csProjSearchPattern = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!.CsProjSearchPattern;
-		var dllSearchPattern = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!.DllSearchPattern;
-		var packageReferenceIdentifier = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!.PackageReferenceIdentifier;
-		var projectReferenceIdentifier = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!.ProjectReferenceIdentifier;
+		var settings = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!;
+		var path = settings.RootDirectory;
+		var csProjSearchPattern = settings.CsProjSearchPattern;
+		var dllSearchPattern = settings.DllSearchPattern;
+		var packageReferenceIdentifier = settings.PackageReferenceIdentifier;
+		var projectReferenceIdentifier = settings.ProjectReferenceIdentifier;
 
+		//find all project files
 		var projectFiles = Directory.GetFiles(path, csProjSearchPattern, SearchOption.AllDirectories);
 
-		var modules = new Dictionary<string, ModuleDTO>();
+		var modules = new ConcurrentDictionary<string, ModuleDTO>();
+		var requiredDependencies = new ConcurrentDictionary<string, bool>();
 
 		//extract info to ModuleDTO
-		foreach (var projectFile in projectFiles)
+		Parallel.ForEach(projectFiles, projectFile =>
 		{
 			var projectRootElement = ProjectRootElement.Open(projectFile);
 
 			if (projectRootElement is null)
 			{
-				continue;
+				return;
 			}
 
 			var name = projectRootElement.FullPath.GetProjectName();
-			var dependencies = projectRootElement.Items.Where(x => x.ItemType == packageReferenceIdentifier || x.ItemType == projectReferenceIdentifier).Select(x => x.Include.GetProjectName()).ToList();
-			//ToDo: version
+			var dependencies = projectRootElement.Items
+				.Where(x => x.ItemType == packageReferenceIdentifier || x.ItemType == projectReferenceIdentifier)
+				.Select(x => x.Include.GetProjectName())
+				.ToList();
 
 			modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
-		}
+			Parallel.ForEach(dependencies, dependency => { requiredDependencies.TryAdd(dependency, true); });
+		});
 
 		//check for required external projects
-		var dlls = Directory.GetFiles(path, dllSearchPattern, SearchOption.AllDirectories).Where(dll => !modules.ContainsKey(dll.GetDllName())).ToList();
+		var dlls = Directory.GetFiles(path, dllSearchPattern, SearchOption.AllDirectories)
+			.Where(dll => !modules.ContainsKey(dll.GetDllName()))
+			.GroupBy(x => x.GetDllName())
+			.ToDictionary(x => x.Key.GetDllName(), x => x.First());
 
-		foreach (var dll in dlls.Where(dll => !modules.ContainsKey(dll.GetDllName())))
+		while (!requiredDependencies.IsEmpty)
 		{
+			var dependency = requiredDependencies.Keys.First();
+			requiredDependencies.TryRemove(dependency, out _);
+
+			if (modules.ContainsKey(dependency))
+			{
+				continue;
+			}
+
+			if (!dlls.TryGetValue(dependency, out dependency))
+			{
+				continue;
+			}
+
 			try
 			{
-				if (!IsManagedAssembly(dll))
+				if (!IsManagedAssembly(dependency))
 				{
 					continue;
 				}
 
-				var assembly = Assembly.LoadFile(dll);
+				var assembly = Assembly.LoadFile(dependency);
 				var name = assembly.GetName().Name!;
-				var dependencies = assembly.GetReferencedAssemblies().Where(x => x.Name is not null).Select(x => x.Name!).ToList();
-				//ToDo: version
+				var dependencies = assembly.GetReferencedAssemblies()
+					.Where(x => x.Name is not null)
+					.Select(x => x.Name!)
+					.ToList();
+
+				foreach (var dep in dependencies)
+				{
+					requiredDependencies.TryAdd(dep, true);
+				}
 
 				modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
 			}
@@ -74,7 +103,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 		}
 		catch (BadImageFormatException)
 		{
-			// Keine gültige .NET-Assembly
+			// no valid .NET-Assembly
 			return false;
 		}
 		catch (FileNotFoundException)
