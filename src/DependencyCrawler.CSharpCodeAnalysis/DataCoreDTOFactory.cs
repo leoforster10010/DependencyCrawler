@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Reflection;
 using DependencyCrawler.DataCore.ValueAccess;
 using Microsoft.Build.Construction;
@@ -20,17 +19,17 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 		//find all project files
 		var projectFiles = Directory.GetFiles(path, csProjSearchPattern, SearchOption.AllDirectories);
 
-		var modules = new ConcurrentDictionary<string, ModuleDTO>();
-		var requiredDependencies = new ConcurrentDictionary<string, bool>();
+		var modules = new Dictionary<string, ModuleDTO>();
+		var requiredDependencies = new HashSet<string>();
 
 		//extract info to ModuleDTO
-		Parallel.ForEach(projectFiles, projectFile =>
+		foreach (var projectFile in projectFiles)
 		{
 			var projectRootElement = ProjectRootElement.Open(projectFile);
 
 			if (projectRootElement is null)
 			{
-				return;
+				continue;
 			}
 
 			var name = projectRootElement.FullPath.GetProjectName();
@@ -40,8 +39,9 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 				.ToList();
 
 			modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
-			Parallel.ForEach(dependencies, dependency => { requiredDependencies.TryAdd(dependency, true); });
-		});
+
+			requiredDependencies.UnionWith(dependencies);
+		}
 
 		//check for required external projects
 		var dlls = Directory.GetFiles(path, dllSearchPattern, SearchOption.AllDirectories)
@@ -49,10 +49,10 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 			.GroupBy(x => x.GetDllName())
 			.ToDictionary(x => x.Key.GetDllName(), x => x.First());
 
-		while (!requiredDependencies.IsEmpty)
+		while (requiredDependencies.Count is not 0)
 		{
-			var dependency = requiredDependencies.Keys.First();
-			requiredDependencies.TryRemove(dependency, out _);
+			var dependency = requiredDependencies.First();
+			requiredDependencies.Remove(dependency);
 
 			if (modules.ContainsKey(dependency))
 			{
@@ -78,10 +78,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 					.Select(x => x.Name!)
 					.ToList();
 
-				foreach (var dep in dependencies)
-				{
-					requiredDependencies.TryAdd(dep, true);
-				}
+				requiredDependencies.UnionWith(dependencies);
 
 				modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
 			}

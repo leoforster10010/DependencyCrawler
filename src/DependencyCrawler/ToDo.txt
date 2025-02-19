@@ -34,5 +34,4 @@ DataSources:
 
 Performance:
 - benchmark CreateDataCoreDTO 
-- parallel.foreach required?
 

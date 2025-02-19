@@ -11,7 +11,8 @@
 </MudDialog>
 
 @code {
-	[Parameter] public ICodeAnalysis? CodeAnalysis { get; set; }
+	[Parameter] 
+    public ICodeAnalysis? CodeAnalysis { get; set; }
 
 	[CascadingParameter]
 	private IMudDialogInstance? MudDialog { get; set; }
