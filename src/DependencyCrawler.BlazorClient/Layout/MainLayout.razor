@@ -1,9 +1,11 @@
-﻿@using DependencyCrawler.DataCore.DataAccess
+﻿@using DependencyCrawler.BlazorClient.Dialogs
+@using DependencyCrawler.DataCore.DataAccess
 @using MudBlazor
 @inherits LayoutComponentBase
 @inject IDataCoreProvider DataCoreProvider
 @inject IDataSourceProvider DataSourceProvider
 @inject ICodeAnalysisProvider CodeAnalysisProvider
+@inject IDialogService DialogService
 
 <MudThemeProvider IsDarkMode="true" Theme="_theme"/>
 <MudPopoverProvider />
@@ -36,7 +38,8 @@
 			{
 				<MudMenuItem>
 					@codeAnalysis.GetType().Name
-					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="codeAnalysis.Load">Load</MudButton>
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => codeAnalysis.Load()">Load</MudButton>
+					<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => ShowFilePathDialog(codeAnalysis)">Load with File Path</MudButton>
 				</MudMenuItem>
 			}
 		</MudMenu>
@@ -60,13 +63,13 @@
 	</MudMainContent>
 </MudLayout>
 @code {
-	bool _drawerOpen = true;
+	private bool _drawerOpen = true;
 
 	protected override void OnInitialized()
 	{
 	}
 
-	readonly MudTheme _theme = new()
+	private readonly MudTheme _theme = new ()
 	{
 		PaletteLight = new PaletteLight()
 		{
@@ -85,8 +88,14 @@
 		}
 	};
 
-	void DrawerToggle()
+	private void DrawerToggle()
 	{
 		_drawerOpen = !_drawerOpen;
+	}
+
+	private Task ShowFilePathDialog(ICodeAnalysis codeAnalysis)
+	{
+		var parameters = new DialogParameters<FilePathDialog> { { x => x.CodeAnalysis, codeAnalysis } };
+		return DialogService.ShowAsync<FilePathDialog>("Load from filepath", parameters);
 	}
 }

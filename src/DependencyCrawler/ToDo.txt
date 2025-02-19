@@ -32,7 +32,7 @@ DataSources:
 - mongoDB
 - SQLite
 
-CodeAnalysis:
-- load with path
-
+Performance:
+- benchmark CreateDataCoreDTO 
+- parallel.foreach required?
 

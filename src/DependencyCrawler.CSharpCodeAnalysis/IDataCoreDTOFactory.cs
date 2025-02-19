@@ -4,5 +4,5 @@ namespace DependencyCrawler.CSharpCodeAnalysis;
 
 public interface IDataCoreDTOFactory
 {
-	DataCoreDTO CreateDataCoreDTO();
+	DataCoreDTO CreateDataCoreDTO(string? filePath = null);
 }

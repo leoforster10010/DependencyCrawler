@@ -2,5 +2,5 @@
 
 public interface ICodeAnalysis
 {
-	public Task Load();
+	public Task Load(string? filePath = null);
 }

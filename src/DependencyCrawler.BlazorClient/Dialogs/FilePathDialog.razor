@@ -1,0 +1,31 @@
+﻿@using DependencyCrawler.DataCore.DataAccess
+@using MudBlazor
+<MudDialog>
+	<DialogContent>
+		<MudTextField @bind-Value="FilePath" Label="File Path" Variant="Variant.Filled" />
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="Submit" Color="Color.Primary">OK</MudButton>
+		<MudButton OnClick="Cancel" Color="Color.Secondary">Cancel</MudButton>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[Parameter] public ICodeAnalysis? CodeAnalysis { get; set; }
+
+	[CascadingParameter]
+	private IMudDialogInstance? MudDialog { get; set; }
+
+	public string? FilePath { get; set; }
+
+	void Submit()
+	{
+		CodeAnalysis?.Load(FilePath);
+		MudDialog?.Close(DialogResult.Ok(FilePath));
+	}
+
+	void Cancel()
+	{
+		MudDialog?.Cancel();
+	}
+}

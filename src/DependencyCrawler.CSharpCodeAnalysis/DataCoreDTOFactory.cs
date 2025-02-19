@@ -8,10 +8,10 @@ namespace DependencyCrawler.CSharpCodeAnalysis;
 
 public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFactory
 {
-	public DataCoreDTO CreateDataCoreDTO()
+	public DataCoreDTO CreateDataCoreDTO(string? filePath = null)
 	{
 		var settings = configuration.GetSection(nameof(CSharpCodeAnalysisSettings)).Get<CSharpCodeAnalysisSettings>()!;
-		var path = settings.RootDirectory;
+		var path = filePath ?? settings.RootDirectory;
 		var csProjSearchPattern = settings.CsProjSearchPattern;
 		var dllSearchPattern = settings.DllSearchPattern;
 		var packageReferenceIdentifier = settings.PackageReferenceIdentifier;
