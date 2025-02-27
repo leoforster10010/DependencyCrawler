@@ -11,10 +11,7 @@ internal class DataSourceProvider : IDataSourceProvider
 	{
 		foreach (var dataSource in dataSources)
 		{
-			if (_dataSources.TryAdd(dataSource.Id, dataSource))
-			{
-				dataSource.Load();
-			}
+			_dataSources.TryAdd(dataSource.Id, dataSource);
 		}
 	}
 

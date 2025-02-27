@@ -10,6 +10,10 @@ LoadProcess:
 DataCore:
 - name datacore
 
+DataSource:
+- name datasource
+- show cores? get meta info?
+
 Diagram:
 - show node information control: https://blazor-diagrams.zhaytam.com/documentation/controls-customization
 - show connected on hover
@@ -24,12 +28,11 @@ Infrastructure:
 - configuration:
 	- for each component
 	- change via UI
-- events for errors:
-	- logging via subscription
 
 DataSources:
 - json
-- mongoDB
+- mongoDb:
+	- ID as unique?
 - SQLite
 
 Performance:

@@ -1,18 +1,25 @@
 ﻿using DependencyCrawler.DataCore.DataAccess;
+using DependencyCrawler.DataCore.ValueAccess;
+using MongoDB.Driver;
 
 namespace DependencyCrawler.Data.MongoDB;
 
-public class MongoDbDataSource : IDataSource
+internal class MongoDbDataSource(IDataCoreProvider dataCoreProvider, IMongoDbClientProvider mongoDbClientProvider) : IDataSource
 {
 	public Guid Id { get; } = Guid.NewGuid();
 
-	public void Save()
+	public async Task Save()
 	{
-		throw new NotImplementedException();
+		var activeCoreDto = dataCoreProvider.ActiveCore.ToDTO();
+		await mongoDbClientProvider.DataCoreDtocCollection.ReplaceOneAsync(Builders<DataCoreDTO>.Filter.Eq(dto => dto.Id, activeCoreDto.Id), activeCoreDto, new ReplaceOptions { IsUpsert = true });
 	}
 
-	public void Load()
+	public async Task Load()
 	{
-		throw new NotImplementedException();
+		var dataCoreDtos = (await mongoDbClientProvider.DataCoreDtocCollection.FindAsync(_ => true)).ToList();
+		foreach (var dataCoreDto in dataCoreDtos)
+		{
+			dataCoreProvider.GetOrCreateDataCore(dataCoreDto);
+		}
 	}
 }

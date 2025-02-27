@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace DependencyCrawler.DataCore.Tests;
 
 internal class ModuleTests
@@ -5,7 +7,7 @@ internal class ModuleTests
 	[Test]
 	public void TestState()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var newModule = dataCore.GetOrCreateModule("test");
 
@@ -24,7 +26,7 @@ internal class ModuleTests
 	[Test]
 	public void TestCreation()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var newModule = dataCore.GetOrCreateModule("test");
 		var duplicateModule = dataCore.GetOrCreateModule("test");
@@ -35,7 +37,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddDependency1()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var dependency = dataCore.GetOrCreateModule("dependency");
@@ -69,7 +71,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddDependency2()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 
@@ -84,7 +86,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddDependency3()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var dependency = dataCore.GetOrCreateModule("dependency");
@@ -98,7 +100,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddReference1()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var reference = dataCore.GetOrCreateModule("dependency");
@@ -132,7 +134,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddReference2()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 
@@ -147,7 +149,7 @@ internal class ModuleTests
 	[Test]
 	public void TestAddReference3()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var reference = dataCore.GetOrCreateModule("reference");
@@ -161,7 +163,7 @@ internal class ModuleTests
 	[Test]
 	public void TestRemoveDependency()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 
 		var module = dataCore.GetOrCreateModule("test");
@@ -180,7 +182,7 @@ internal class ModuleTests
 	[Test]
 	public void TestRemoveReference()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var reference = dataCore.GetOrCreateModule("reference");
@@ -198,7 +200,7 @@ internal class ModuleTests
 	[Test]
 	public void TestGetAllDependencies()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var dependency1 = dataCore.GetOrCreateModule("dependency1");
@@ -226,7 +228,7 @@ internal class ModuleTests
 	[Test]
 	public void TestGetAllReferences()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 		var module = dataCore.GetOrCreateModule("test");
 		var reference1 = dataCore.GetOrCreateModule("reference1");

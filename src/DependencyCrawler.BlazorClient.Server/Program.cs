@@ -1,5 +1,7 @@
 using DependencyCrawler.CSharpCodeAnalysis;
+using DependencyCrawler.Data.MongoDB;
 using DependencyCrawler.DataCore;
+using DependencyCrawler.Framework;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,9 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddDataCore();
 builder.Services.AddMudServices();
+
+builder.Services.AddDataCore();
 builder.Services.AddCSharpCodeAnalysis();
+builder.Services.AddMongoDbDataSource();
+builder.Logging.AddEventLogger(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,11 +1,15 @@
 ﻿@using DependencyCrawler.BlazorClient.Dialogs
 @using DependencyCrawler.DataCore.DataAccess
+@using DependencyCrawler.Framework
+@using Microsoft.Extensions.Logging
 @using MudBlazor
 @inherits LayoutComponentBase
 @inject IDataCoreProvider DataCoreProvider
 @inject IDataSourceProvider DataSourceProvider
 @inject ICodeAnalysisProvider CodeAnalysisProvider
 @inject IDialogService DialogService
+@inject IEventLogProvider EventLogProvider
+@inject ISnackbar SnackBar
 
 <MudThemeProvider IsDarkMode="true" Theme="_theme"/>
 <MudPopoverProvider />
@@ -32,7 +36,7 @@
 				</MudMenuItem>
 			}
 		</MudMenu>
-		
+
 		<MudMenu Label="CodeAnalyses">
 			@foreach (var codeAnalysis in CodeAnalysisProvider.CodeAnalyses)
 			{
@@ -65,8 +69,29 @@
 @code {
 	private bool _drawerOpen = true;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		EventLogProvider.OnLogEvent += (_, @event) =>
+		{
+			switch (@event.LogLevel)
+			{
+				case LogLevel.Information:
+					SnackBar.Add(@event.Message, Severity.Info);
+					break;
+				case LogLevel.Warning:
+					SnackBar.Add(@event.Message, Severity.Warning);
+					break;
+				case LogLevel.Error:
+				case LogLevel.Critical:
+					SnackBar.Add(@event.Message, Severity.Error);
+					break;
+				case LogLevel.Trace:
+				case LogLevel.Debug:
+				case LogLevel.None:
+				default:
+					break;
+			}
+		};
 	}
 
 	private readonly MudTheme _theme = new ()

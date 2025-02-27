@@ -9,13 +9,13 @@ public class JsonDataSource(IDataCoreProvider dataCoreProvider) : IDataSource
 	private readonly string _path = Directory.GetCurrentDirectory();
 	public Guid Id { get; } = Guid.NewGuid();
 
-	public void Save()
+	public async Task Save()
 	{
 		//ToDo File-Handling
 		File.WriteAllText(dataCoreProvider.ActiveCore.Id + "_" + ".json", dataCoreProvider.ActiveCore.ToDTO().Serialize());
 	}
 
-	public void Load()
+	public async Task Load()
 	{
 		//ToDo File-Handling
 		var files = Directory.GetFiles(_path, "*.json");

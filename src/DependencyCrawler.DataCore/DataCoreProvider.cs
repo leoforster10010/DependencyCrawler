@@ -2,15 +2,18 @@
 using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
 using DependencyCrawler.DataCore.ValueAccess;
+using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.DataCore;
 
 internal partial class DataCoreProvider : IDataCoreProvider
 {
 	private readonly IDictionary<Guid, IDataCore> _dataCores = new ConcurrentDictionary<Guid, IDataCore>();
+	private readonly ILogger<DataCoreProvider> _logger;
 
-	public DataCoreProvider()
+	public DataCoreProvider(ILogger<DataCoreProvider> logger)
 	{
+		_logger = logger;
 		ActiveCore = new DataCore(this);
 	}
 
@@ -53,6 +56,7 @@ internal partial class DataCoreProvider : IDataCoreProvider
 		var emptyDataCore = ActiveCore;
 		dataCore.Activate();
 		emptyDataCore.Delete();
+		_logger.LogInformation("Deleted empty DataCore");
 
 		return dataCore;
 	}

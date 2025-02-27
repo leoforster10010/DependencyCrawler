@@ -8,8 +8,8 @@ namespace DependencyCrawler.CSharpCodeAnalysis.REST.Controllers;
 public class CSharpCodeAnalysisController(IDataCoreDTOFactory dataCoreDTOFactory) : ControllerBase
 {
 	[HttpGet(Name = "GetDataCoreDTO")]
-	public DataCoreDTO GetDataCoreDTO()
+	public DataCoreDTO GetDataCoreDTO([FromQuery] string? filePath)
 	{
-		return dataCoreDTOFactory.CreateDataCoreDTO();
+		return dataCoreDTOFactory.CreateDataCoreDTO(filePath);
 	}
 }

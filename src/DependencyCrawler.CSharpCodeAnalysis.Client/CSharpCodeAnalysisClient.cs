@@ -6,9 +6,15 @@ namespace DependencyCrawler.CSharpCodeAnalysis.Client;
 
 internal class CSharpCodeAnalysisClient(IDataCoreProvider dataCoreProvider, HttpClient httpClient) : ICodeAnalysis
 {
-	public async Task Load()
+	public async Task Load(string? filePath = null)
 	{
-		var response = await httpClient.GetAsync("api/CSharpCodeAnalysis");
+		var url = "api/CSharpCodeAnalysis";
+		if (!string.IsNullOrEmpty(filePath))
+		{
+			url += $"?filePath={Uri.EscapeDataString(filePath)}";
+		}
+
+		var response = await httpClient.GetAsync(url);
 
 		if (!response.IsSuccessStatusCode)
 		{

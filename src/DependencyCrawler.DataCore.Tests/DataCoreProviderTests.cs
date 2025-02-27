@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace DependencyCrawler.DataCore.Tests;
 
 internal class DataCoreProviderTests
@@ -5,14 +7,14 @@ internal class DataCoreProviderTests
 	[Test]
 	public void TestState()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		Assert.Multiple(() => { Assert.That(dataCoreProvider.DataCores is { Count: 1 }); });
 	}
 
 	[Test]
 	public void TestMethodsDataCoreCreation()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
 		Assert.Multiple(() =>
@@ -27,7 +29,7 @@ internal class DataCoreProviderTests
 	[Test]
 	public void TestMethodsDataCoreActivation()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
 		newDataCore.Activate();
@@ -43,7 +45,7 @@ internal class DataCoreProviderTests
 	[Test]
 	public void TestMethodsDataCoreDeletion()
 	{
-		var dataCoreProvider = new DataCoreProvider();
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var newDataCore = dataCoreProvider.CreateDataCore();
 
 		newDataCore.Delete();

@@ -1,6 +1,7 @@
 ﻿using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
 using DependencyCrawler.DataCore.ValueAccess;
+using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.DataCore;
 
@@ -25,28 +26,32 @@ internal partial class DataCoreProvider
 			_dataCoreProvider._dataCores.Add(Id, this);
 		}
 
+		public IReadOnlyList<IValueModule> ModuleValues => _modules.Values.ToList();
+		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => _modules.ToDictionary(key => key.Key, IReadOnlyModule (value) => value.Value);
+
 		public Guid Id { get; }
 		public IDataCoreProvider DataCoreProvider => _dataCoreProvider;
 		public bool IsActive => _dataCoreProvider.ActiveCore == this;
 		public IReadOnlyDictionary<string, IModule> Modules => _modules.AsReadOnly();
-		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => _modules.ToDictionary(key => key.Key, IReadOnlyModule (value) => value.Value);
-		public IReadOnlyList<IValueModule> ModuleValues => _modules.Values.ToList();
 		public IReadOnlyList<IEntity> Entities => _modules.Values.ToList();
 
 		public void Activate()
 		{
 			_dataCoreProvider.ActiveCore = this;
 			_dataCoreProvider.DataCoreActivated?.Invoke();
+			_dataCoreProvider._logger.LogInformation($"DataCore {Id.ToString()} activated.");
 		}
 
 		public void Delete()
 		{
 			if (IsActive)
 			{
+				_dataCoreProvider._logger.LogWarning("Core is active.");
 				return;
 			}
 
 			_dataCoreProvider._dataCores.Remove(Id);
+			_dataCoreProvider._logger.LogInformation($"DataCore {Id.ToString()} deleted.");
 		}
 
 		public IModule GetOrCreateModule(string name)
