@@ -33,8 +33,12 @@ DataSources:
 - json
 - mongoDb:
 	- ID as unique?
-- SQLite
+- SQLite:
+	- disable logging
+	- dotnet ef migrations add InitialCreate --verbose --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
+	- dotnet ef database update --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
 
 Performance:
 - benchmark CreateDataCoreDTO 
 
+   

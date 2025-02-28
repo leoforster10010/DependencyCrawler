@@ -1,5 +1,5 @@
 using DependencyCrawler.CSharpCodeAnalysis;
-using DependencyCrawler.Data.MongoDB;
+using DependencyCrawler.Data.Sqlite;
 using DependencyCrawler.DataCore;
 using DependencyCrawler.Framework;
 using MudBlazor.Services;
@@ -14,6 +14,7 @@ builder.Services.AddMudServices();
 builder.Services.AddDataCore();
 builder.Services.AddCSharpCodeAnalysis();
 builder.Services.AddMongoDbDataSource();
+builder.Services.AddSqliteDataSource(builder.Configuration);
 builder.Logging.AddEventLogger(builder.Configuration);
 
 var app = builder.Build();
