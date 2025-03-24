@@ -1,40 +1,46 @@
 using System.Text.Json;
 using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ValueAccess;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Data.Json;
 
-public class JsonDataSource(IDataCoreProvider dataCoreProvider) : IDataSource
+public class JsonDataSource(IDataCoreProvider dataCoreProvider, ILogger<JsonDataSource> logger, IConfiguration configuration) : IDataSource
 {
-	private readonly string _path = Directory.GetCurrentDirectory();
+	private readonly string _directoryPath = configuration.GetSection(nameof(DataJsonSettings)).Get<DataJsonSettings>()!.FilePath;
+
 	public Guid Id { get; } = Guid.NewGuid();
 
 	public async Task Save()
 	{
-		//ToDo File-Handling
-		File.WriteAllText(dataCoreProvider.ActiveCore.Id + "_" + ".json", dataCoreProvider.ActiveCore.ToDTO().Serialize());
+		var filePath = Path.Combine(_directoryPath, $"{dataCoreProvider.ActiveCore.Id}.json");
+		await File.WriteAllTextAsync(filePath, dataCoreProvider.ActiveCore.Serialize());
 	}
 
 	public async Task Load()
 	{
-		//ToDo File-Handling
-		var files = Directory.GetFiles(_path, "*.json");
+		if (!Directory.Exists(_directoryPath))
+		{
+			logger.LogError($"The directory '{_directoryPath}' does not exist.");
+			return;
+		}
 
-		foreach (var file in files)
+		var jsonFiles = Directory.GetFiles(_directoryPath, "*.json");
+		foreach (var file in jsonFiles)
 		{
 			try
 			{
-				var jsonPayload = File.ReadAllText(file);
-				//ToDo doesn't work
-				var valueDataCore = JsonSerializer.Deserialize<DataCoreDTO>(jsonPayload);
-				if (valueDataCore is not null)
+				var json = await File.ReadAllTextAsync(file);
+				var dataCoreDto = DataCoreDTO.Deserialize(json);
+				if (dataCoreDto != null)
 				{
-					dataCoreProvider.GetOrCreateDataCore(valueDataCore);
+					dataCoreProvider.GetOrCreateDataCore(dataCoreDto);
 				}
 			}
-			catch (Exception)
+			catch (JsonException)
 			{
-				// ignored
+				logger.LogWarning($"Failed to deserialize JSON file '{file}'");
 			}
 		}
 	}

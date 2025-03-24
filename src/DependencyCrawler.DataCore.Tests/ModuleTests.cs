@@ -215,7 +215,7 @@ internal class ModuleTests
 
 		Assert.Multiple(() =>
 		{
-			Assert.That(allDependencies.Count, Is.EqualTo(3));
+			Assert.That(allDependencies, Has.Count.EqualTo(3));
 			Assert.That(allDependencies.ContainsKey("dependency1"));
 			Assert.That(allDependencies.ContainsKey("dependency2"));
 			Assert.That(allDependencies.ContainsKey("dependency3"));
@@ -243,7 +243,7 @@ internal class ModuleTests
 
 		Assert.Multiple(() =>
 		{
-			Assert.That(allReferences.Count, Is.EqualTo(3));
+			Assert.That(allReferences, Has.Count.EqualTo(3));
 			Assert.That(allReferences.ContainsKey("reference1"));
 			Assert.That(allReferences.ContainsKey("reference2"));
 			Assert.That(allReferences.ContainsKey("reference3"));

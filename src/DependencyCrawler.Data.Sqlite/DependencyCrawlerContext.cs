@@ -18,9 +18,3 @@ internal class DependencyCrawlerContext(DbContextOptions options) : DbContext(op
 			.IsRequired();
 	}
 }
-
-internal class SerializedDataCore
-{
-	public required Guid Id { get; init; }
-	public required string Payload { get; init; }
-}

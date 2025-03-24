@@ -1,8 +1,8 @@
 namespace DependencyCrawler.DataCore.ValueAccess;
 
-public class ModuleDTO(IReadOnlyList<string> referenceValues, IReadOnlyList<string> dependencyValues, string name)
+public class ModuleDTO : IValueModule
 {
-	public string Name { get; } = name;
-	public IReadOnlyList<string> DependencyValues { get; } = dependencyValues;
-	public IReadOnlyList<string> ReferenceValues { get; } = referenceValues;
+	public required string Name { get; init; }
+	public required IReadOnlyList<string> DependencyValues { get; init; }
+	public required IReadOnlyList<string> ReferenceValues { get; init; }
 }

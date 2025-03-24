@@ -10,16 +10,27 @@ internal class MongoDbDataSource(IDataCoreProvider dataCoreProvider, IMongoDbCli
 
 	public async Task Save()
 	{
-		var activeCoreDto = dataCoreProvider.ActiveCore.ToDTO();
-		await mongoDbClientProvider.DataCoreDtocCollection.ReplaceOneAsync(Builders<DataCoreDTO>.Filter.Eq(dto => dto.Id, activeCoreDto.Id), activeCoreDto, new ReplaceOptions { IsUpsert = true });
+		var serializedDataCore = new SerializedDataCore
+		{
+			Id = dataCoreProvider.ActiveCore.Id,
+			Payload = dataCoreProvider.ActiveCore.Serialize()
+		};
+		await mongoDbClientProvider.SerializedDataCoreCollection.ReplaceOneAsync(Builders<SerializedDataCore>.Filter.Eq(dto => dto.Id, serializedDataCore.Id), serializedDataCore, new ReplaceOptions { IsUpsert = true });
 	}
 
 	public async Task Load()
 	{
-		var dataCoreDtos = (await mongoDbClientProvider.DataCoreDtocCollection.FindAsync(_ => true)).ToList();
+		var dataCoreDtos = (await mongoDbClientProvider.SerializedDataCoreCollection.FindAsync(_ => true)).ToList();
 		foreach (var dataCoreDto in dataCoreDtos)
 		{
-			dataCoreProvider.GetOrCreateDataCore(dataCoreDto);
+			var dataCoreDTO = DataCoreDTO.Deserialize(dataCoreDto.Payload);
+
+			if (dataCoreDTO is null)
+			{
+				continue;
+			}
+
+			dataCoreProvider.GetOrCreateDataCore(dataCoreDTO);
 		}
 	}
 }

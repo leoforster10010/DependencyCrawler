@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using DependencyCrawler.DataCore.DataAccess;
+﻿using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.Data.Sqlite;
@@ -15,7 +14,7 @@ internal class SqliteDataSource(DependencyCrawlerContext dependencyCrawlerContex
 			dependencyCrawlerContext.SerializedDataCores.Update(new SerializedDataCore
 			{
 				Id = dataCoreProvider.ActiveCore.Id,
-				Payload = dataCoreProvider.ActiveCore.ToDTO().Serialize()
+				Payload = dataCoreProvider.ActiveCore.Serialize()
 			});
 		}
 		else
@@ -23,7 +22,7 @@ internal class SqliteDataSource(DependencyCrawlerContext dependencyCrawlerContex
 			dependencyCrawlerContext.SerializedDataCores.Add(new SerializedDataCore
 			{
 				Id = dataCoreProvider.ActiveCore.Id,
-				Payload = dataCoreProvider.ActiveCore.ToDTO().Serialize()
+				Payload = dataCoreProvider.ActiveCore.Serialize()
 			});
 		}
 
@@ -34,7 +33,7 @@ internal class SqliteDataSource(DependencyCrawlerContext dependencyCrawlerContex
 	{
 		foreach (var serializedDataCore in dependencyCrawlerContext.SerializedDataCores)
 		{
-			var dataCoreDTO = JsonSerializer.Deserialize<DataCoreDTO>(serializedDataCore.Payload);
+			var dataCoreDTO = DataCoreDTO.Deserialize(serializedDataCore.Payload);
 			if (dataCoreDTO is not null)
 			{
 				dataCoreProvider.GetOrCreateDataCore(dataCoreDTO);

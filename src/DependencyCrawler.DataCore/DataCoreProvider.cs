@@ -8,7 +8,7 @@ namespace DependencyCrawler.DataCore;
 
 internal partial class DataCoreProvider : IDataCoreProvider
 {
-	private readonly IDictionary<Guid, IDataCore> _dataCores = new ConcurrentDictionary<Guid, IDataCore>();
+	private readonly ConcurrentDictionary<Guid, IDataCore> _dataCores = new();
 	private readonly ILogger<DataCoreProvider> _logger;
 
 	public DataCoreProvider(ILogger<DataCoreProvider> logger)

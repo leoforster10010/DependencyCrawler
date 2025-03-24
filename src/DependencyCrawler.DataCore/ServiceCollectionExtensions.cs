@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddDataCore(this IServiceCollection services)
 	{
 		services.AddSingleton<IDataCoreProvider, DataCoreProvider>();
-		services.AddSingleton<IDataSourceProvider, DataSourceProvider>();
+		services.AddScoped<IDataSourceProvider, DataSourceProvider>();
 		services.AddSingleton<ICodeAnalysisProvider, CodeAnalysisProvider>();
 
 		services.AddSingleton<IReadOnlyDataAccess>(sp => sp.GetService<IDataCoreProvider>()!);

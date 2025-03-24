@@ -16,14 +16,14 @@ internal partial class DataCoreProvider
 		{
 			_dataCoreProvider = dataCoreProvider;
 			Id = Guid.NewGuid();
-			_dataCoreProvider._dataCores.Add(Id, this);
+			_dataCoreProvider._dataCores.TryAdd(Id, this);
 		}
 
 		public DataCore(DataCoreProvider dataCoreProvider, Guid id)
 		{
 			_dataCoreProvider = dataCoreProvider;
 			Id = id;
-			_dataCoreProvider._dataCores.Add(Id, this);
+			_dataCoreProvider._dataCores.TryAdd(Id, this);
 		}
 
 		public IReadOnlyList<IValueModule> ModuleValues => _modules.Values.ToList();
@@ -50,18 +50,13 @@ internal partial class DataCoreProvider
 				return;
 			}
 
-			_dataCoreProvider._dataCores.Remove(Id);
+			_dataCoreProvider._dataCores.Remove(Id, out _);
 			_dataCoreProvider._logger.LogInformation($"DataCore {Id.ToString()} deleted.");
 		}
 
 		public IModule GetOrCreateModule(string name)
 		{
 			return Modules.ContainsKey(name) ? Modules[name] : new Module(this, name);
-		}
-
-		public DataCoreDTO ToDTO()
-		{
-			return new DataCoreDTO(this);
 		}
 	}
 }

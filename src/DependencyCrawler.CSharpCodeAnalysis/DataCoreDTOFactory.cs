@@ -38,7 +38,12 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 				.Select(x => x.Include.GetProjectName())
 				.ToList();
 
-			modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
+			modules.TryAdd(name, new ModuleDTO
+			{
+				Name = name,
+				DependencyValues = dependencies,
+				ReferenceValues = new List<string>()
+			});
 
 			requiredDependencies.UnionWith(dependencies);
 		}
@@ -80,7 +85,12 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 
 				requiredDependencies.UnionWith(dependencies);
 
-				modules.TryAdd(name, new ModuleDTO(new List<string>(), dependencies, name));
+				modules.TryAdd(name, new ModuleDTO
+				{
+					Name = name,
+					DependencyValues = dependencies,
+					ReferenceValues = new List<string>()
+				});
 			}
 			catch
 			{
@@ -88,7 +98,11 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 			}
 		}
 
-		return new DataCoreDTO(modules.Values.ToList(), Guid.NewGuid());
+		return new DataCoreDTO
+		{
+			Id = Guid.NewGuid(),
+			ModuleValues = modules.Values.ToList()
+		};
 	}
 
 	private static bool IsManagedAssembly(string fileName)
