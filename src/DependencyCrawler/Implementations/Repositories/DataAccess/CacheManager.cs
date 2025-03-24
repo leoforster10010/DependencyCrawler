@@ -1,6 +1,7 @@
 using DependencyCrawler.Contracts.Interfaces.Repositories;
-using DependencyCrawler.Implementations.Data.Enum;
-using DependencyCrawler.Implementations.Models;
+using DependencyCrawler.Data.Contracts.Entities;
+using DependencyCrawler.Data.Contracts.Enum;
+using DependencyCrawler.Data.Contracts.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.Implementations.Repositories.DataAccess;
@@ -35,7 +36,7 @@ internal class CacheManager : ICacheManager
 				return;
 			}
 
-			foreach (var cache in _caches.Values.Where(x => x.State == CacheState.Active))
+			foreach (var cache in _caches.Values.Where(x => x is { State: CacheState.Active }))
 			{
 				cache.State = CacheState.Inactive;
 			}
@@ -72,7 +73,6 @@ internal class CacheManager : ICacheManager
 
 		ActiveCache = cache;
 	}
-
 
 	public void DeleteCache(Guid id)
 	{

@@ -1,0 +1,126 @@
+﻿@using DependencyCrawler.BlazorClient.Dialogs
+@using DependencyCrawler.DataCore.DataAccess
+@using DependencyCrawler.Framework
+@using Microsoft.Extensions.Logging
+@using MudBlazor
+@inherits LayoutComponentBase
+@inject IDataCoreProvider DataCoreProvider
+@inject IDataSourceProvider DataSourceProvider
+@inject ICodeAnalysisProvider CodeAnalysisProvider
+@inject IDialogService DialogService
+@inject IEventLogProvider EventLogProvider
+@inject ISnackbar SnackBar
+
+<MudThemeProvider IsDarkMode="true" Theme="_theme"/>
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+	<MudAppBar Dense="true">
+		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.End" OnClick="DrawerToggle"/>
+		<MudMenu Label="DataCores">
+			@foreach (var dataCore in DataCoreProvider.DataCores)
+			{
+				<MudMenuItem>
+					@if (dataCore.Value.IsActive)
+					{
+						<MudAlert NoIcon="true" Variant="Variant.Outlined" Severity="Severity.Success">@dataCore.Key.ToString()</MudAlert>
+					}
+					else
+					{
+						<MudAlert NoIcon="true" Severity="Severity.Normal">@dataCore.Key.ToString()</MudAlert>
+					}
+					<MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="dataCore.Value.Activate">Activate</MudButton>
+					<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="dataCore.Value.Delete">Delete</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+
+		<MudMenu Label="CodeAnalyses">
+			@foreach (var codeAnalysis in CodeAnalysisProvider.CodeAnalyses)
+			{
+				<MudMenuItem>
+					@codeAnalysis.GetType().Name
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => codeAnalysis.Load()">Load</MudButton>
+					<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => ShowFilePathDialog(codeAnalysis)">Load with File Path</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+
+		<MudMenu Label="DataSources">
+			@foreach (var dataSource in DataSourceProvider.DataSources)
+			{
+				<MudMenuItem>
+					@dataSource.Key.ToString()
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="dataSource.Value.Load">Load</MudButton>
+					<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Tertiary" OnClick="dataSource.Value.Save">Save</MudButton>
+				</MudMenuItem>
+			}
+		</MudMenu>
+	</MudAppBar>
+	<MudDrawer @bind-Open="@_drawerOpen">
+		<NavMenu/>
+	</MudDrawer>
+	<MudMainContent>
+		@Body
+	</MudMainContent>
+</MudLayout>
+@code {
+	private bool _drawerOpen = true;
+
+	protected override async Task OnInitializedAsync()
+	{
+		EventLogProvider.OnLogEvent += (_, @event) =>
+		{
+			switch (@event.LogLevel)
+			{
+				case LogLevel.Information:
+					SnackBar.Add(@event.Message, Severity.Info);
+					break;
+				case LogLevel.Warning:
+					SnackBar.Add(@event.Message, Severity.Warning);
+					break;
+				case LogLevel.Error:
+				case LogLevel.Critical:
+					SnackBar.Add(@event.Message, Severity.Error);
+					break;
+				case LogLevel.Trace:
+				case LogLevel.Debug:
+				case LogLevel.None:
+				default:
+					break;
+			}
+		};
+	}
+
+	private readonly MudTheme _theme = new ()
+	{
+		PaletteLight = new PaletteLight()
+		{
+			Primary = Colors.LightGreen.Darken3,
+			AppbarBackground = Colors.LightGreen.Darken1
+		},
+		PaletteDark = new PaletteDark()
+		{
+			Primary = Colors.LightGreen.Darken4,
+			AppbarBackground = Colors.LightGreen.Darken3,
+			PrimaryDarken = Colors.LightGreen.Darken4,
+			PrimaryLighten = Colors.LightGreen.Lighten1,
+			Success = Colors.LightGreen.Accent4,
+			TextPrimary = Colors.Gray.Darken4,
+			Tertiary = Colors.LightGreen.Darken1,
+		}
+	};
+
+	private void DrawerToggle()
+	{
+		_drawerOpen = !_drawerOpen;
+	}
+
+	private Task ShowFilePathDialog(ICodeAnalysis codeAnalysis)
+	{
+		var parameters = new DialogParameters<FilePathDialog> { { x => x.CodeAnalysis, codeAnalysis } };
+		return DialogService.ShowAsync<FilePathDialog>("Load from filepath", parameters);
+	}
+}

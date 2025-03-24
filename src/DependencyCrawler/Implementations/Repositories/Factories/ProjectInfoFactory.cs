@@ -1,5 +1,6 @@
 using System.Reflection;
 using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Data.Contracts.Enum;
 using DependencyCrawler.Framework.Extensions;
 using DependencyCrawler.Implementations.Models.UnlinkedTypes;
 using Microsoft.Build.Construction;
@@ -79,7 +80,7 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 
 	private IList<NamespaceInfo> GetNamespaces(Assembly assembly)
 	{
-		var types = assembly.GetTypesSafe();
+		var types = assembly.GetTypesSafe().ToList();
 		var namespaces = assembly.GetNamespaces(types).ToList();
 		foreach (var ns in namespaces)
 		{
@@ -93,7 +94,8 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 	{
 		var typeInfos = types.Where(x => x.GetNamespace() == ns.Name).Select(x => new TypeInfo
 		{
-			Name = x.Name
+			Name = x.Name,
+			FileType = FileType.CSharp
 		}).ToList();
 		return typeInfos;
 	}
@@ -101,12 +103,12 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 
 	private IEnumerable<NamespaceInfo> GetNamespaces(string projectName)
 	{
-		var typeFiles = GetProjectTypes(projectName);
+		var typeInfos = GetTypeInfos(projectName);
 		var namespaces = new List<NamespaceInfo>();
 
-		foreach (var typeFile in typeFiles)
+		foreach (var typeInfo in typeInfos)
 		{
-			var ns = GetNamespace(typeFile, projectName);
+			var ns = GetNamespace(typeInfo.FileName, projectName);
 
 			if (namespaces.All(x => x.Name != ns.Name))
 			{
@@ -114,33 +116,47 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 			}
 
 			var namespaceInfo = namespaces.First(x => x.Name == ns.Name);
-			namespaceInfo.Types.Add(GetTypeInfo(typeFile));
+			namespaceInfo.Types.Add(typeInfo);
 		}
 
 		return namespaces;
 	}
 
-	private TypeInfo GetTypeInfo(string typeFile)
+	private IList<UsingDirectiveInfo> GetUsingDirectivesForType(string typeFile, FileType fileType)
 	{
-		var typeInfo = new TypeInfo
+		var fileContent = File.ReadAllLines(typeFile);
+
+		switch (fileType)
 		{
-			Name = typeFile.GetClassName(),
-			UsingDirectives = GetUsingDirectivesForType(typeFile)
-		};
-
-		return typeInfo;
-	}
-
-	private IList<UsingDirectiveInfo> GetUsingDirectivesForType(string typeFile)
-	{
-		var usingDirectives = File.ReadAllLines(typeFile)
-			.Where(x => x.StartsWith("using"))
-			.Select(x => new UsingDirectiveInfo
-			{
-				Namespace = x.GetUsingDirective()
-			});
-
-		return usingDirectives.ToList();
+			case FileType.CSharp:
+				return fileContent.Where(x => x.StartsWith("using"))
+					.Select(x => new UsingDirectiveInfo
+					{
+						Namespace = x.GetUsingDirective()
+					}).ToList();
+			case FileType.Xaml:
+				return new List<UsingDirectiveInfo>();
+			//ToDo
+			//return fileContent.Where(x => x.StartsWith("using"))
+			//	.Select(x => new UsingDirectiveInfo
+			//	{
+			//		Namespace = x.GetUsingDirective()
+			//	}).ToList();
+			case FileType.Blazor:
+				return fileContent.Where(x => x.StartsWith("@using"))
+					.Select(x => new UsingDirectiveInfo
+					{
+						Namespace = x.GetUsingDirective()
+					}).ToList();
+			case FileType.CsHtml:
+				return fileContent.Where(x => x.StartsWith("@using"))
+					.Select(x => new UsingDirectiveInfo
+					{
+						Namespace = x.GetUsingDirective()
+					}).ToList();
+			default:
+				throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+		}
 	}
 
 	private NamespaceInfo GetNamespace(string typeFile, string projectName)
@@ -155,13 +171,57 @@ internal class ProjectInfoFactory : IProjectInfoFactory
 		};
 	}
 
-	private IEnumerable<string> GetProjectTypes(string projectName)
+	private IList<TypeInfo> GetTypeInfos(string projectName)
 	{
-		const string extension = "*.cs";
 		var directory = _projectFileProvider.GetProjectDirectory(projectName);
 
-		return directory != null
-			? Directory.GetFiles(directory, extension, SearchOption.AllDirectories)
-			: Enumerable.Empty<string>();
+		if (directory is null)
+		{
+			return new List<TypeInfo>();
+		}
+
+		var typeFiles = new List<TypeInfo>();
+		var extensions = new List<string>
+		{
+			"*.cs",
+			"*.cshtml",
+			"*.xaml",
+			"*.razor"
+		};
+
+		foreach (var extension in extensions)
+		{
+			var files = Directory.GetFiles(directory, extension, SearchOption.AllDirectories);
+			typeFiles.AddRange(files.Select(x =>
+			{
+				var fileType = ParseFileType(extension);
+				return new TypeInfo
+				{
+					Name = x.GetClassName(),
+					FileName = x,
+					FileType = fileType,
+					UsingDirectives = GetUsingDirectivesForType(x, fileType)
+				};
+			}));
+		}
+
+		return typeFiles;
+	}
+
+	private FileType ParseFileType(string fileExtension)
+	{
+		switch (fileExtension)
+		{
+			case "*.cs":
+				return FileType.CSharp;
+			case "*.cshtml":
+				return FileType.CsHtml;
+			case "*.xaml":
+				return FileType.Xaml;
+			case "*.razor":
+				return FileType.Blazor;
+			default:
+				return FileType.CSharp;
+		}
 	}
 }

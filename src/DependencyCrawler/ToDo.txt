@@ -1,1 +1,44 @@
-﻿- count potential projects of codebase = 2^n - 1
+- count potential projects of codebase = 2^n - 1
+
+- RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
+
+LoadProcess:
+- recognize versions
+- module types: internal, external, not found
+- 
+
+DataCore:
+- name datacore
+
+DataSource:
+- name datasource
+- show cores? get meta info?
+
+Diagram:
+- show node information control: https://blazor-diagrams.zhaytam.com/documentation/controls-customization
+- show connected on hover
+- performance?
+- custom node model https://blazor-diagrams.zhaytam.com/documentation/nodes-customization
+
+Blazor.UI:
+- module list?
+- datacore list?
+
+Infrastructure:
+- configuration:
+	- for each component
+	- change via UI
+
+DataSources:
+- json
+- mongoDb:
+	- ID as unique?
+- SQLite:
+	- disable logging
+	- dotnet ef migrations add InitialCreate --verbose --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
+	- dotnet ef database update --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
+
+Performance:
+- benchmark CreateDataCoreDTO 
+
+   

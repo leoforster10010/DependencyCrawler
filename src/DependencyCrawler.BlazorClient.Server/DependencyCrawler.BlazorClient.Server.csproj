@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DependencyCrawler.BlazorClient\DependencyCrawler.BlazorClient.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.Data.Sqlite\DependencyCrawler.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.DataCore\DependencyCrawler.DataCore.csproj" />
+  </ItemGroup>
+
+</Project>

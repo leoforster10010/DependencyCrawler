@@ -1,35 +1,26 @@
-using DependencyCrawler.Contracts.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DependencyCrawler.QueryClient;
 
-public class Worker : IHostedService
+internal class Worker(ILogger<Worker> logger, IDependencyCrawler dependencyCrawler) : IHostedService
 {
-	private readonly IDependencyCrawler _dependencyCrawler;
-	private readonly ILogger<Worker> _logger;
 	private CancellationTokenSource _cts = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken.None);
 	private Task? _task;
 
-	public Worker(ILogger<Worker> logger, IDependencyCrawler dependencyCrawler)
-	{
-		_logger = logger;
-		_dependencyCrawler = dependencyCrawler;
-	}
-
 	public Task StartAsync(CancellationToken cancellationToken)
 	{
-		_logger.LogInformation("StartUp");
+		logger.LogInformation("StartUp");
 
 		try
 		{
 			_cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-			_task = Task.Run(() => _dependencyCrawler.Run(), _cts.Token);
+			_task = Task.Run(dependencyCrawler.Run, _cts.Token);
 			return _task;
 		}
 		catch (Exception e)
 		{
-			_logger.LogCritical(e.ToString());
+			logger.LogCritical(e.ToString());
 		}
 
 		return Task.CompletedTask;
@@ -37,7 +28,7 @@ public class Worker : IHostedService
 
 	public async Task StopAsync(CancellationToken cancellationToken)
 	{
-		_logger.LogInformation("ShutDown");
+		logger.LogInformation("ShutDown");
 
 		try
 		{
@@ -51,7 +42,7 @@ public class Worker : IHostedService
 		}
 		catch (Exception e)
 		{
-			_logger.LogCritical(e.ToString());
+			logger.LogCritical(e.ToString());
 		}
 	}
 }

@@ -1,33 +1,41 @@
 ﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Data.Contracts.Enum;
 using DependencyCrawler.Framework.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
 
 internal class DllFileProvider : IDllFileProvider
 {
 	private const string Extension = "*.dll";
-	private readonly List<string> _dllFiles;
+	private readonly IConfiguration _configuration;
+	private List<string>? _dllFiles;
 
-	private readonly string _nugetPath =
-		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget");
-
-	public DllFileProvider()
+	public DllFileProvider(IConfiguration configuration)
 	{
-		_dllFiles = Directory.GetFiles(_nugetPath, Extension, SearchOption.AllDirectories).ToList();
+		_configuration = configuration;
 	}
 
 	public IEnumerable<string> GetDllFiles()
 	{
+		if (_dllFiles is not null)
+		{
+			return _dllFiles;
+		}
+
+		var path = _configuration[ConfigurationKeys.DllDirectory.ToString()];
+		_dllFiles = Directory.GetFiles(path!, Extension, SearchOption.AllDirectories).ToList();
+
 		return _dllFiles;
 	}
 
 	public string? GetDllFile(string projectName)
 	{
-		return _dllFiles.FirstOrDefault(x => x.GetDllName() == projectName);
+		return GetDllFiles().FirstOrDefault(x => x.GetDllName() == projectName);
 	}
 
 	public bool GetIsExternal(string projectName)
 	{
-		return _dllFiles.Any(x => x.GetDllName() == projectName);
+		return GetDllFiles().Any(x => x.GetDllName() == projectName);
 	}
 }

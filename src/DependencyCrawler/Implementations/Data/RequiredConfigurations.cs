@@ -1,12 +1,14 @@
-using DependencyCrawler.Implementations.Data.Enum;
+using DependencyCrawler.Data.Contracts.Enum;
+using DependencyCrawler.Data.Contracts.Interfaces;
 
 namespace DependencyCrawler.Implementations.Data;
 
-public static class RequiredConfigurations
+internal class RequiredConfigurations : IRequiredConfigurations
 {
-    public static IReadOnlyDictionary<ConfigurationKeys, ConfigurationTypes> Entries =>
-        new Dictionary<ConfigurationKeys, ConfigurationTypes>
-        {
-            {ConfigurationKeys.RootDirectory, ConfigurationTypes.Path}
-        };
+	public IReadOnlyDictionary<ConfigurationKeys, ConfigurationTypes> Entries =>
+		new Dictionary<ConfigurationKeys, ConfigurationTypes>
+		{
+			{ ConfigurationKeys.RootDirectory, ConfigurationTypes.Path },
+			{ ConfigurationKeys.DllDirectory, ConfigurationTypes.Path }
+		};
 }

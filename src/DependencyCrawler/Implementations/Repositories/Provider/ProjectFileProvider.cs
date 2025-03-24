@@ -1,6 +1,6 @@
-﻿using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Contracts.Interfaces.Repositories;
+using DependencyCrawler.Data.Contracts.Enum;
 using DependencyCrawler.Framework.Extensions;
-using DependencyCrawler.Implementations.Data.Enum;
 using Microsoft.Extensions.Configuration;
 
 namespace DependencyCrawler.Implementations.Repositories.Provider;
@@ -9,7 +9,7 @@ internal class ProjectFileProvider : IProjectFileProvider
 {
 	private const string Extension = "*.csproj";
 	private readonly IConfiguration _configuration;
-	private IEnumerable<string>? _projectFiles;
+	private List<string>? _projectFiles;
 
 	public ProjectFileProvider(IConfiguration configuration)
 	{
@@ -24,7 +24,7 @@ internal class ProjectFileProvider : IProjectFileProvider
 		}
 
 		var path = _configuration[ConfigurationKeys.RootDirectory.ToString()];
-		_projectFiles = Directory.GetFiles(path!, Extension, SearchOption.AllDirectories);
+		_projectFiles = Directory.GetFiles(path!, Extension, SearchOption.AllDirectories).ToList();
 
 		return _projectFiles;
 	}
