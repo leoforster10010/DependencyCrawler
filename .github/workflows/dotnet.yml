@@ -15,14 +15,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+        
     - name: Restore dependencies
+      working-directory: src
       run: dotnet restore
+      
     - name: Build
+      working-directory: src
       run: dotnet build --no-restore
+      
     - name: Test
+      working-directory: src
       run: dotnet test --no-build --verbosity normal
