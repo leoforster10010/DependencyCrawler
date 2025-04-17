@@ -7,6 +7,10 @@ LoadProcess:
 - module types: not found
 - 
 
+CSharpCodeAnalysis:
+- add gRPC server + client
+- add REST + gRPC to aspire
+
 DataCore:
 - name datacore
 
@@ -33,6 +37,7 @@ DataSources:
 - mongoDb:
 	- ID as unique?
 - SQLite:
+	- add migration service
 	- disable logging
 	- dotnet ef migrations add InitialCreate --verbose --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
 	- dotnet ef database update --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
