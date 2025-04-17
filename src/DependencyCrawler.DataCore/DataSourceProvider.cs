@@ -1,11 +1,10 @@
-using System.Collections.Concurrent;
 using DependencyCrawler.DataCore.DataAccess;
 
 namespace DependencyCrawler.DataCore;
 
 internal class DataSourceProvider : IDataSourceProvider
 {
-	private readonly IDictionary<Guid, IDataSource> _dataSources = new ConcurrentDictionary<Guid, IDataSource>();
+	private readonly Dictionary<Guid, IDataSource> _dataSources = new();
 
 	public DataSourceProvider(IEnumerable<IDataSource> dataSources)
 	{

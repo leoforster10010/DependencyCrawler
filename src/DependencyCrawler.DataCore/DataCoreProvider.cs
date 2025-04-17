@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using DependencyCrawler.DataCore.DataAccess;
+﻿using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
 using DependencyCrawler.DataCore.ValueAccess;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,7 @@ namespace DependencyCrawler.DataCore;
 
 internal partial class DataCoreProvider : IDataCoreProvider
 {
-	private readonly ConcurrentDictionary<Guid, IDataCore> _dataCores = new();
+	private readonly Dictionary<Guid, IDataCore> _dataCores = new();
 	private readonly ILogger<DataCoreProvider> _logger;
 
 	public DataCoreProvider(ILogger<DataCoreProvider> logger)
@@ -31,19 +30,29 @@ internal partial class DataCoreProvider : IDataCoreProvider
 	{
 		var dataCore = GetOrCreateDataCore(dataCoreDto.Id);
 
-		foreach (var valueModule in dataCoreDto.ModuleValues)
+		foreach (var valueModule in dataCoreDto.ModuleValues.Values)
 		{
-			var module = dataCore.GetOrCreateModule(valueModule.Name);
+			var module = dataCore.GetOrCreateModule(valueModule.Name, valueModule.Type);
 
 			foreach (var dependency in valueModule.DependencyValues)
 			{
-				var dependencyModule = dataCore.GetOrCreateModule(dependency);
+				if (!dataCoreDto.ModuleValues.TryGetValue(dependency, out var dependencyValueModule))
+				{
+					continue;
+				}
+
+				var dependencyModule = dataCore.GetOrCreateModule(dependency, dependencyValueModule.Type);
 				module.AddDependency(dependencyModule);
 			}
 
 			foreach (var reference in valueModule.ReferenceValues)
 			{
-				var referenceModule = dataCore.GetOrCreateModule(reference);
+				if (!dataCoreDto.ModuleValues.TryGetValue(reference, out var referenceValueModule))
+				{
+					continue;
+				}
+
+				var referenceModule = dataCore.GetOrCreateModule(reference, referenceValueModule.Type);
 				module.AddReference(referenceModule);
 			}
 		}

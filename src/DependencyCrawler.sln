@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Framework
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Sqlite", "DependencyCrawler.Data.Sqlite\DependencyCrawler.Data.Sqlite.csproj", "{589FFE3B-159B-4C7D-8504-1D8569BF442B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.AppHost", "DependencyCrawler.AppHost\DependencyCrawler.AppHost.csproj", "{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,10 @@ Global
 		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

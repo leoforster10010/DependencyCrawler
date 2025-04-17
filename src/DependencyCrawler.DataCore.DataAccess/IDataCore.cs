@@ -1,4 +1,5 @@
 ﻿using DependencyCrawler.DataCore.ReadOnlyAccess;
+using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore.DataAccess;
 
@@ -10,5 +11,5 @@ public interface IDataCore : IReadOnlyDataCore
 	bool IsEmpty => !Entities.Any();
 	void Activate();
 	void Delete();
-	IModule GetOrCreateModule(string name);
+	IModule GetOrCreateModule(string name, ModuleType type);
 }

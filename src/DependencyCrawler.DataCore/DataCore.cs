@@ -26,14 +26,14 @@ internal partial class DataCoreProvider
 			_dataCoreProvider._dataCores.TryAdd(Id, this);
 		}
 
-		public IReadOnlyList<IValueModule> ModuleValues => _modules.Values.ToList();
-		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => _modules.ToDictionary(key => key.Key, IReadOnlyModule (value) => value.Value);
+		public IReadOnlyDictionary<string, IValueModule> ModuleValues => new ReadOnlyDictionaryWrapper<string, IValueModule, IModule>(_modules);
+		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => new ReadOnlyDictionaryWrapper<string, IReadOnlyModule, IModule>(_modules);
 
 		public Guid Id { get; }
 		public IDataCoreProvider DataCoreProvider => _dataCoreProvider;
 		public bool IsActive => _dataCoreProvider.ActiveCore == this;
 		public IReadOnlyDictionary<string, IModule> Modules => _modules.AsReadOnly();
-		public IReadOnlyList<IEntity> Entities => _modules.Values.ToList();
+		public IReadOnlyList<IEntity> Entities => new ReadOnlyListWrapper<IModule, IEntity>(_modules.Values);
 
 		public void Activate()
 		{
@@ -54,9 +54,9 @@ internal partial class DataCoreProvider
 			_dataCoreProvider._logger.LogInformation($"DataCore {Id.ToString()} deleted.");
 		}
 
-		public IModule GetOrCreateModule(string name)
+		public IModule GetOrCreateModule(string name, ModuleType type)
 		{
-			return Modules.ContainsKey(name) ? Modules[name] : new Module(this, name);
+			return Modules.ContainsKey(name) ? Modules[name] : new Module(this, name, type);
 		}
 	}
 }

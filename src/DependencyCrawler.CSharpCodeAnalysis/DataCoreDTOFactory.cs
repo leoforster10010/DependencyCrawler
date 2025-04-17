@@ -19,7 +19,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 		//find all project files
 		var projectFiles = Directory.GetFiles(path, csProjSearchPattern, SearchOption.AllDirectories);
 
-		var modules = new Dictionary<string, ModuleDTO>();
+		var modules = new Dictionary<string, IValueModule>();
 		var requiredDependencies = new HashSet<string>();
 
 		//extract info to ModuleDTO
@@ -41,6 +41,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 			modules.TryAdd(name, new ModuleDTO
 			{
 				Name = name,
+				Type = ModuleType.Internal,
 				DependencyValues = dependencies,
 				ReferenceValues = new List<string>()
 			});
@@ -88,6 +89,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 				modules.TryAdd(name, new ModuleDTO
 				{
 					Name = name,
+					Type = ModuleType.External,
 					DependencyValues = dependencies,
 					ReferenceValues = new List<string>()
 				});
@@ -101,7 +103,7 @@ public class DataCoreDTOFactory(IConfiguration configuration) : IDataCoreDTOFact
 		return new DataCoreDTO
 		{
 			Id = Guid.NewGuid(),
-			ModuleValues = modules.Values.ToList()
+			ModuleValues = modules
 		};
 	}
 

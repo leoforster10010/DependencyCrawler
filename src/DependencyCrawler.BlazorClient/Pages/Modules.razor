@@ -6,12 +6,17 @@
 @using Blazor.Diagrams.Options
 @using DependencyCrawler.DataCore.ReadOnlyAccess
 @using Blazor.Diagrams.Components
+@using DependencyCrawler.DataCore.ValueAccess
 @using Point = Blazor.Diagrams.Core.Geometry.Point
 @inject IReadOnlyDataAccess ReadOnlyDataAccess
 @implements IDisposable
 
 <div class="diagram-container">
-	<CascadingValue Value="Diagram" IsFixed="true">
+@* 	<MudBlazor.MudSelect T="ModuleType" @bind-Value="_selectedModuleType" Label="Module Type">
+		<MudBlazor.MudSelectItem Value="ModuleType.Internal">Internal</MudBlazor.MudSelectItem>
+		<MudBlazor.MudSelectItem Value="ModuleType.External">External</MudBlazor.MudSelectItem>
+	</MudBlazor.MudSelect> *@
+	<CascadingValue Value="Diagram" IsFixed="false">
 		<DiagramCanvas></DiagramCanvas>
 	</CascadingValue>
 </div>
@@ -33,6 +38,8 @@
 		},
 	});
 
+	private ModuleType _selectedModuleType = ModuleType.Internal;
+
     protected override async Task OnInitializedAsync()
     {
 	    ReadOnlyDataAccess.DataCoreActivated += OnDataCoreActivated;
@@ -41,7 +48,9 @@
 
     private void LoadDiagram()
     {
-	    var modules = ReadOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly.ToList();
+	    var modules = ReadOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly
+		    .Where(m => m.Value.Type == _selectedModuleType)
+		    .ToList();	    
 	    var modulesGrouped = modules.GroupBy(x => x.Value.ReferenceLayer).ToList();
 	    var nodes = new Dictionary<string, NodeModel>();
 
@@ -67,6 +76,11 @@
 	    {
 		    foreach (var dependency in module.Value.DependenciesReadOnly)
 		    {
+				if (!nodes.ContainsKey(module.Value.Name) || !nodes.ContainsKey(dependency.Value.Name))
+			    {
+				    continue;
+			    }
+
 			    var sourceNode = nodes[module.Value.Name];
 			    var target = nodes[dependency.Value.Name];
 

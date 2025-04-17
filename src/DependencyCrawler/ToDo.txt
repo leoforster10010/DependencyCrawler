@@ -4,7 +4,7 @@
 
 LoadProcess:
 - recognize versions
-- module types: internal, external, not found
+- module types: not found
 - 
 
 DataCore:
@@ -30,7 +30,6 @@ Infrastructure:
 	- change via UI
 
 DataSources:
-- json
 - mongoDb:
 	- ID as unique?
 - SQLite:
@@ -40,5 +39,3 @@ DataSources:
 
 Performance:
 - benchmark CreateDataCoreDTO 
-
-   

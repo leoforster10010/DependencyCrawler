@@ -1,3 +1,4 @@
+using DependencyCrawler.DataCore.ValueAccess;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DependencyCrawler.DataCore.Tests;
@@ -22,7 +23,7 @@ internal class DataCoreTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.GetOrCreateModule("test");
+		var newModule = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		Assert.Multiple(() =>
 		{
@@ -38,7 +39,7 @@ internal class DataCoreTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.GetOrCreateModule("test");
+		var newModule = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		newModule.Delete();
 		Assert.Multiple(() =>

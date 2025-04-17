@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddCors(options => { options.AddPolicy("PolicyName", corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); });
+builder.Services.AddCors(options => { options.AddPolicy("PolicyName", corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()); });
 builder.Services.AddOpenApi();
 builder.Services.AddTransient<IDataCoreDTOFactory, DataCoreDTOFactory>();
 
@@ -26,5 +26,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/api/DataCoreDTO", (IDataCoreDTOFactory dataCoreDTOFactory, string? filePath) => dataCoreDTOFactory.CreateDataCoreDTO(filePath));
 
 app.Run();

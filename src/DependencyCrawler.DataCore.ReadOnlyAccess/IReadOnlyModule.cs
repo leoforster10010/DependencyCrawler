@@ -31,6 +31,27 @@ public interface IReadOnlyModule : IValueModule
 		return DependenciesReadOnly.Values.Any(x => x.DependsOn(module));
 	}
 
+	//todo
+	//public bool ReferencedBy(IReadOnlyModule module)
+	//{
+	//	if (this == module)
+	//	{
+	//		return true;
+	//	}
+
+	//	if (DependencyLayer <= module.DependencyLayer)
+	//	{
+	//		return false;
+	//	}
+
+	//	if (DependenciesReadOnly.ContainsKey(module.Name))
+	//	{
+	//		return true;
+	//	}
+
+	//	return DependenciesReadOnly.Values.Any(x => x.DependsOn(module));
+	//}
+
 	public IDictionary<string, IReadOnlyModule> GetAllDependencies()
 	{
 		return CollectDependencies(this, new Dictionary<string, IReadOnlyModule>());

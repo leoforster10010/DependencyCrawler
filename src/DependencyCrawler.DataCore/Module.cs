@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
-using DependencyCrawler.DataCore.DataAccess;
+﻿using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ReadOnlyAccess;
+using DependencyCrawler.DataCore.ValueAccess;
 
 namespace DependencyCrawler.DataCore;
 
@@ -10,26 +10,28 @@ internal partial class DataCoreProvider
 	{
 		private class Module : Entity, IModule
 		{
-			private readonly IDictionary<string, IModule> _dependencies = new ConcurrentDictionary<string, IModule>();
-			private readonly IDictionary<string, IModule> _references = new ConcurrentDictionary<string, IModule>();
+			private readonly Dictionary<string, IModule> _dependencies = new();
+			private readonly Dictionary<string, IModule> _references = new();
 
 
-			public Module(DataCore dataCore, string name) : base(dataCore)
+			public Module(DataCore dataCore, string name, ModuleType type) : base(dataCore)
 			{
 				Name = name;
+				Type = type;
 				dataCore._modules.Add(Name, this);
 			}
 
 			public string Name { get; }
+			public ModuleType Type { get; }
 
 			public IReadOnlyDictionary<string, IModule> Dependencies => _dependencies.AsReadOnly();
 			public IReadOnlyDictionary<string, IModule> References => _references.AsReadOnly();
 
-			public IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly => _dependencies.ToDictionary(x => x.Key, IReadOnlyModule (y) => y.Value);
-			public IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly => _references.ToDictionary(x => x.Key, IReadOnlyModule (y) => y.Value);
+			public IReadOnlyDictionary<string, IReadOnlyModule> DependenciesReadOnly => new ReadOnlyDictionaryWrapper<string, IReadOnlyModule, IModule>(_dependencies);
+			public IReadOnlyDictionary<string, IReadOnlyModule> ReferencesReadOnly => new ReadOnlyDictionaryWrapper<string, IReadOnlyModule, IModule>(_references);
 
-			public IReadOnlyList<string> DependencyValues => _dependencies.Keys.ToList();
-			public IReadOnlyList<string> ReferenceValues => _references.Keys.ToList();
+			public IReadOnlyList<string> DependencyValues => new ReadOnlyListWrapper<string, string>(_dependencies.Keys);
+			public IReadOnlyList<string> ReferenceValues => new ReadOnlyListWrapper<string, string>(_references.Keys);
 
 			public int DependencyLayer => !Dependencies.Any() ? 0 : 1 + Dependencies.Max(x => x.Value.DependencyLayer);
 			public int ReferenceLayer => !References.Any() ? 0 : 1 + References.Max(x => x.Value.ReferenceLayer);
@@ -37,8 +39,8 @@ internal partial class DataCoreProvider
 			public bool IsTopLevel => !Dependencies.Any();
 			public bool IsSubLevel => !References.Any();
 
-			public override IReadOnlyList<IEntity> IngoingReferences => _references.Values.ToList();
-			public override IReadOnlyList<IEntity> OutgoingReferences => _dependencies.Values.ToList();
+			public override IReadOnlyList<IEntity> IngoingReferences => new ReadOnlyListWrapper<IModule, IEntity>(_references.Values);
+			public override IReadOnlyList<IEntity> OutgoingReferences => new ReadOnlyListWrapper<IModule, IEntity>(_dependencies.Values);
 
 			public void AddDependency(IModule module)
 			{

@@ -8,7 +8,7 @@ internal class CSharpCodeAnalysisClient(IDataCoreProvider dataCoreProvider, Http
 {
 	public async Task Load(string? filePath = null)
 	{
-		var url = "api/CSharpCodeAnalysis";
+		var url = "api/DataCoreDTO";
 		if (!string.IsNullOrEmpty(filePath))
 		{
 			url += $"?filePath={Uri.EscapeDataString(filePath)}";

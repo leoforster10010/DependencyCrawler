@@ -1,3 +1,4 @@
+using DependencyCrawler.DataCore.ValueAccess;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DependencyCrawler.DataCore.Tests;
@@ -9,7 +10,7 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.GetOrCreateModule("test");
+		var newModule = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		Assert.Multiple(() =>
 		{
@@ -28,8 +29,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var newModule = dataCore.GetOrCreateModule("test");
-		var duplicateModule = dataCore.GetOrCreateModule("test");
+		var newModule = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var duplicateModule = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		Assert.That(duplicateModule, Is.SameAs(newModule));
 	}
@@ -39,8 +40,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var dependency = dataCore.GetOrCreateModule("dependency");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var dependency = dataCore.GetOrCreateModule("dependency", ModuleType.Internal);
 
 		module.AddDependency(dependency);
 
@@ -73,10 +74,10 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		var dataCore2 = dataCoreProvider.CreateDataCore();
-		var wrongDependency = dataCore2.GetOrCreateModule("dependency");
+		var wrongDependency = dataCore2.GetOrCreateModule("dependency", ModuleType.Internal);
 
 		module.AddDependency(wrongDependency);
 
@@ -88,8 +89,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var dependency = dataCore.GetOrCreateModule("dependency");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var dependency = dataCore.GetOrCreateModule("dependency", ModuleType.Internal);
 
 		module.AddDependency(dependency);
 
@@ -102,8 +103,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var reference = dataCore.GetOrCreateModule("dependency");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var reference = dataCore.GetOrCreateModule("dependency", ModuleType.Internal);
 
 		module.AddReference(reference);
 
@@ -136,10 +137,10 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
 
 		var dataCore2 = dataCoreProvider.CreateDataCore();
-		var wrongReference = dataCore2.GetOrCreateModule("reference");
+		var wrongReference = dataCore2.GetOrCreateModule("reference", ModuleType.Internal);
 
 		module.AddReference(wrongReference);
 
@@ -151,8 +152,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var reference = dataCore.GetOrCreateModule("reference");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var reference = dataCore.GetOrCreateModule("reference", ModuleType.Internal);
 
 		module.AddReference(reference);
 
@@ -166,8 +167,8 @@ internal class ModuleTests
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
 
-		var module = dataCore.GetOrCreateModule("test");
-		var dependency = dataCore.GetOrCreateModule("dependency");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var dependency = dataCore.GetOrCreateModule("dependency", ModuleType.Internal);
 
 		module.AddDependency(dependency);
 		module.RemoveDependency(dependency);
@@ -184,8 +185,8 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var reference = dataCore.GetOrCreateModule("reference");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var reference = dataCore.GetOrCreateModule("reference", ModuleType.Internal);
 
 		module.AddReference(reference);
 		module.RemoveReference(reference);
@@ -202,10 +203,10 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var dependency1 = dataCore.GetOrCreateModule("dependency1");
-		var dependency2 = dataCore.GetOrCreateModule("dependency2");
-		var dependency3 = dataCore.GetOrCreateModule("dependency3");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var dependency1 = dataCore.GetOrCreateModule("dependency1", ModuleType.Internal);
+		var dependency2 = dataCore.GetOrCreateModule("dependency2", ModuleType.Internal);
+		var dependency3 = dataCore.GetOrCreateModule("dependency3", ModuleType.Internal);
 
 		module.AddDependency(dependency1);
 		dependency1.AddDependency(dependency2);
@@ -230,10 +231,10 @@ internal class ModuleTests
 	{
 		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
 		var dataCore = dataCoreProvider.ActiveCore;
-		var module = dataCore.GetOrCreateModule("test");
-		var reference1 = dataCore.GetOrCreateModule("reference1");
-		var reference2 = dataCore.GetOrCreateModule("reference2");
-		var reference3 = dataCore.GetOrCreateModule("reference3");
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+		var reference1 = dataCore.GetOrCreateModule("reference1", ModuleType.Internal);
+		var reference2 = dataCore.GetOrCreateModule("reference2", ModuleType.Internal);
+		var reference3 = dataCore.GetOrCreateModule("reference3", ModuleType.Internal);
 
 		module.AddReference(reference1);
 		reference1.AddReference(reference2);
@@ -251,5 +252,40 @@ internal class ModuleTests
 			Assert.That(allReferences["reference2"], Is.SameAs(reference2));
 			Assert.That(allReferences["reference3"], Is.SameAs(reference3));
 		});
+	}
+
+
+	[Test]
+	public void TestCollectionConsistency()
+	{
+		var dataCoreProvider = new DataCoreProvider(new NullLogger<DataCoreProvider>());
+		var dataCore = dataCoreProvider.ActiveCore;
+		var module = dataCore.GetOrCreateModule("test", ModuleType.Internal);
+
+
+		var dependencies = module.Dependencies;
+		var dependenciesReadOnly = module.DependenciesReadOnly;
+		var dependencyValues = module.DependencyValues;
+		var outgoingReferences = module.OutgoingReferences;
+
+		var references = module.References;
+		var referencesReadOnly = module.ReferencesReadOnly;
+		var referenceValues = module.ReferenceValues;
+		var ingoingReferences = module.IngoingReferences;
+
+		var dependency1 = dataCore.GetOrCreateModule("dependency1", ModuleType.Internal);
+		module.AddDependency(dependency1);
+		var reference1 = dataCore.GetOrCreateModule("reference1", ModuleType.Internal);
+		module.AddReference(reference1);
+
+
+		Assert.That(dependencies, Has.Count.EqualTo(1));
+		Assert.That(dependenciesReadOnly, Has.Count.EqualTo(1));
+		Assert.That(dependencyValues, Has.Count.EqualTo(1));
+		Assert.That(outgoingReferences, Has.Count.EqualTo(1));
+		Assert.That(references, Has.Count.EqualTo(1));
+		Assert.That(referencesReadOnly, Has.Count.EqualTo(1));
+		Assert.That(referenceValues, Has.Count.EqualTo(1));
+		Assert.That(ingoingReferences, Has.Count.EqualTo(1));
 	}
 }
