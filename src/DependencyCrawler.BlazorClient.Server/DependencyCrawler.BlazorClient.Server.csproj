@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DependencyCrawler.BlazorClient\DependencyCrawler.BlazorClient.csproj" />
-    <ProjectReference Include="..\DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.Data.Postgresql\DependencyCrawler.Data.Postgresql.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.DataDiscovery.CSharp.RESTClient\DependencyCrawler.DataDiscovery.CSharp.RESTClient.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.DataDiscovery.CSharp\DependencyCrawler.DataDiscovery.CSharp.csproj" />
     <ProjectReference Include="..\DependencyCrawler.Data.Json\DependencyCrawler.Data.Json.csproj" />
     <ProjectReference Include="..\DependencyCrawler.Data.MongoDB\DependencyCrawler.Data.MongoDB.csproj" />
-    <ProjectReference Include="..\DependencyCrawler.Data.Sqlite\DependencyCrawler.Data.Sqlite.csproj" />
     <ProjectReference Include="..\DependencyCrawler.DataCore\DependencyCrawler.DataCore.csproj" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@
 @inherits LayoutComponentBase
 @inject IDataCoreProvider DataCoreProvider
 @inject IDataSourceProvider DataSourceProvider
-@inject ICodeAnalysisProvider CodeAnalysisProvider
+@inject IDataDiscoveryProvider DataDiscoveryProvider
 @inject IDialogService DialogService
 @inject IEventLogProvider EventLogProvider
 @inject ISnackbar SnackBar
@@ -38,12 +38,12 @@
 		</MudMenu>
 
 		<MudMenu Label="CodeAnalyses">
-			@foreach (var codeAnalysis in CodeAnalysisProvider.CodeAnalyses)
+			@foreach (var dataDiscovery in DataDiscoveryProvider.DataDiscoveries)
 			{
 				<MudMenuItem>
-					@codeAnalysis.GetType().Name
-					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => codeAnalysis.Load()">Load</MudButton>
-					<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => ShowFilePathDialog(codeAnalysis)">Load with File Path</MudButton>
+					@dataDiscovery.Value.Name
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => dataDiscovery.Value.Load()">Load</MudButton>
+					<MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => ShowFilePathDialog(dataDiscovery.Value)">Load with File Path</MudButton>
 				</MudMenuItem>
 			}
 		</MudMenu>
@@ -52,7 +52,7 @@
 			@foreach (var dataSource in DataSourceProvider.DataSources)
 			{
 				<MudMenuItem>
-					@dataSource.Key.ToString()
+					@dataSource.Value.Name
 					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="dataSource.Value.Load">Load</MudButton>
 					<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Tertiary" OnClick="dataSource.Value.Save">Save</MudButton>
 				</MudMenuItem>
@@ -118,9 +118,9 @@
 		_drawerOpen = !_drawerOpen;
 	}
 
-	private Task ShowFilePathDialog(ICodeAnalysis codeAnalysis)
+	private Task ShowFilePathDialog(IDataDiscovery dataDiscovery)
 	{
-		var parameters = new DialogParameters<FilePathDialog> { { x => x.CodeAnalysis, codeAnalysis } };
+		var parameters = new DialogParameters<FilePathDialog> { { x => x.CodeAnalysis, dataDiscovery } };
 		return DialogService.ShowAsync<FilePathDialog>("Load from filepath", parameters);
 	}
 }

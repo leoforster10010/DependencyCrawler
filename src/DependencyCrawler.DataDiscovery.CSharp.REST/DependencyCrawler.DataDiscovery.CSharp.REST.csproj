@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="8.5.1" />
-    <PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.DataDiscovery.CSharp\DependencyCrawler.DataDiscovery.CSharp.csproj" />
     <ProjectReference Include="..\DependencyCrawler.Framework\DependencyCrawler.Framework.csproj" />
   </ItemGroup>
 

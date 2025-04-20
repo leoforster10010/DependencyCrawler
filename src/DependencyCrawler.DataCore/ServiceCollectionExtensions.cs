@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddSingleton<IDataCoreProvider, DataCoreProvider>();
 		services.AddScoped<IDataSourceProvider, DataSourceProvider>();
-		services.AddSingleton<ICodeAnalysisProvider, CodeAnalysisProvider>();
+		services.AddSingleton<IDataDiscoveryProvider, DataDiscoveryProvider>();
 
 		services.AddSingleton<IReadOnlyDataAccess>(sp => sp.GetService<IDataCoreProvider>()!);
 		services.AddSingleton<IValueDataAccess>(sp => sp.GetService<IDataCoreProvider>()!);

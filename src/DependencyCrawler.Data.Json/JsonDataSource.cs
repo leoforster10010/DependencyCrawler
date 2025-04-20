@@ -44,4 +44,6 @@ public class JsonDataSource(IDataCoreProvider dataCoreProvider, ILogger<JsonData
 			}
 		}
 	}
+
+	public string Name => nameof(JsonDataSource);
 }

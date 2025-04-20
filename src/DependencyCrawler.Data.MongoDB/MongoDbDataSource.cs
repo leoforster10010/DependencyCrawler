@@ -33,4 +33,6 @@ internal class MongoDbDataSource(IDataCoreProvider dataCoreProvider, IMongoDbCli
 			dataCoreProvider.GetOrCreateDataCore(dataCoreDTO);
 		}
 	}
+
+	public string Name => nameof(MongoDbDataSource);
 }

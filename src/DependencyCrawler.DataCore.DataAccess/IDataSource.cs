@@ -2,7 +2,9 @@ namespace DependencyCrawler.DataCore.DataAccess;
 
 public interface IDataSource
 {
-	Guid Id { get; }
-	Task Save();
-	Task Load();
+	public Guid Id { get; }
+	public string Name { get; }
+
+	public Task Save();
+	public Task Load();
 }

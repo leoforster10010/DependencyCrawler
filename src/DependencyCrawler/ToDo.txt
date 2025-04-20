@@ -7,15 +7,14 @@ LoadProcess:
 - module types: not found
 - 
 
-CSharpCodeAnalysis:
+DataDiscovery:
 - add gRPC server + client
-- add REST + gRPC to aspire
+- add gRPC to aspire
 
 DataCore:
 - name datacore
 
 DataSource:
-- name datasource
 - show cores? get meta info?
 
 Diagram:
@@ -36,11 +35,9 @@ Infrastructure:
 DataSources:
 - mongoDb:
 	- ID as unique?
-- SQLite:
-	- add migration service
+- postgres:
 	- disable logging
-	- dotnet ef migrations add InitialCreate --verbose --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
-	- dotnet ef database update --project DependencyCrawler.Data.Sqlite --startup-project DependencyCrawler.BlazorClient.Server
+	- dotnet ef migrations add InitialCreate --project ..\DependencyCrawler.Data.Postgresql\DependencyCrawler.Data.Postgresql.csproj
 
 Performance:
 - benchmark CreateDataCoreDTO 

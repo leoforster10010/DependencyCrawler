@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
+    <PackageReference Include="Aspire.MongoDB.Driver" Version="9.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj" />
+    <ProjectReference Include="..\DependencyCrawler.Framework\DependencyCrawler.Framework.csproj" />
   </ItemGroup>
 
 </Project>

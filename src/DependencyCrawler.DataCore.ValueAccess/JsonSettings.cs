@@ -9,6 +9,7 @@ internal static class JsonSettings
 		return new JsonSerializerOptions
 		{
 			WriteIndented = true,
+			PropertyNameCaseInsensitive = true,
 			Converters =
 			{
 				new ValueCoreConverter(),

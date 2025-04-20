@@ -5,11 +5,11 @@ namespace DependencyCrawler.QueryClient;
 
 internal class QueryClient(
 	IReadOnlyDataAccess readOnlyDataAccess,
-	ICodeAnalysisProvider codeAnalysisProvider) : IDependencyCrawler
+	IDataDiscoveryProvider dataDiscoveryProvider) : IDependencyCrawler
 {
 	public void Run()
 	{
-		codeAnalysisProvider.CodeAnalyses.First().Load();
+		dataDiscoveryProvider.DataDiscoveries.First().Value.Load();
 
 		//var allProjects = readOnlyProjectProvider.AllProjectsReadOnly;
 		var allModules = readOnlyDataAccess.ActiveCoreReadOnly.ModulesReadOnly;

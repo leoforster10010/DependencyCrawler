@@ -26,23 +26,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataCore.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "old", "old", "{DB0B504A-FB39-4293-87DA-596047C189D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.CSharpCodeAnalysis.REST", "DependencyCrawler.CSharpCodeAnalysis.REST\DependencyCrawler.CSharpCodeAnalysis.REST.csproj", "{AE8767D1-846D-4F94-9B77-E99EA4CB332B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataDiscovery.CSharp.REST", "DependencyCrawler.DataDiscovery.CSharp.REST\DependencyCrawler.DataDiscovery.CSharp.REST.csproj", "{AE8767D1-846D-4F94-9B77-E99EA4CB332B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.CSharpCodeAnalysis.Client", "DependencyCrawler.CSharpCodeAnalysis.Client\DependencyCrawler.CSharpCodeAnalysis.Client.csproj", "{751CE287-F64A-4DCE-9C03-F3DE2BA904D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataDiscovery.CSharp.RESTClient", "DependencyCrawler.DataDiscovery.CSharp.RESTClient\DependencyCrawler.DataDiscovery.CSharp.RESTClient.csproj", "{751CE287-F64A-4DCE-9C03-F3DE2BA904D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.BlazorClient.Server", "DependencyCrawler.BlazorClient.Server\DependencyCrawler.BlazorClient.Server.csproj", "{066DAC8B-E8D0-4525-93B5-3C4DA766D6DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.BlazorClient", "DependencyCrawler.BlazorClient\DependencyCrawler.BlazorClient.csproj", "{F4FBD11D-18F9-4DD9-9C59-E877FE46941F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.BlazorClient.WASM", "DependencyCrawler.BlazorClient.WASM\DependencyCrawler.BlazorClient.WASM.csproj", "{26CC59C2-DF58-4F4B-B038-AF5F8B2F0147}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.CSharpCodeAnalysis", "DependencyCrawler.CSharpCodeAnalysis\DependencyCrawler.CSharpCodeAnalysis.csproj", "{89D3EC51-E6A9-4BDA-9BC5-A70AACB5DD9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.DataDiscovery.CSharp", "DependencyCrawler.DataDiscovery.CSharp\DependencyCrawler.DataDiscovery.CSharp.csproj", "{89D3EC51-E6A9-4BDA-9BC5-A70AACB5DD9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Framework", "DependencyCrawler.Framework\DependencyCrawler.Framework.csproj", "{4B7863D6-81A4-4211-A1F7-ADA218C1B207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Sqlite", "DependencyCrawler.Data.Sqlite\DependencyCrawler.Data.Sqlite.csproj", "{589FFE3B-159B-4C7D-8504-1D8569BF442B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.AppHost", "DependencyCrawler.AppHost\DependencyCrawler.AppHost.csproj", "{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Postgresql", "DependencyCrawler.Data.Postgresql\DependencyCrawler.Data.Postgresql.csproj", "{938FEA77-FCE7-4DA5-A4EB-F2516382F427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyCrawler.Data.Postgresql.MigrationService", "DependencyCrawler.Data.Postgresql.MigrationService\DependencyCrawler.Data.Postgresql.MigrationService.csproj", "{984986C7-0510-45DC-9CAF-767CA2716CBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,10 +110,6 @@ Global
 		{F4FBD11D-18F9-4DD9-9C59-E877FE46941F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4FBD11D-18F9-4DD9-9C59-E877FE46941F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4FBD11D-18F9-4DD9-9C59-E877FE46941F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26CC59C2-DF58-4F4B-B038-AF5F8B2F0147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26CC59C2-DF58-4F4B-B038-AF5F8B2F0147}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26CC59C2-DF58-4F4B-B038-AF5F8B2F0147}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26CC59C2-DF58-4F4B-B038-AF5F8B2F0147}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89D3EC51-E6A9-4BDA-9BC5-A70AACB5DD9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89D3EC51-E6A9-4BDA-9BC5-A70AACB5DD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89D3EC51-E6A9-4BDA-9BC5-A70AACB5DD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -122,14 +118,18 @@ Global
 		{4B7863D6-81A4-4211-A1F7-ADA218C1B207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B7863D6-81A4-4211-A1F7-ADA218C1B207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B7863D6-81A4-4211-A1F7-ADA218C1B207}.Release|Any CPU.Build.0 = Release|Any CPU
-		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{589FFE3B-159B-4C7D-8504-1D8569BF442B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D5D67CF-7F25-41F8-9D5F-0C34A6D9A17D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938FEA77-FCE7-4DA5-A4EB-F2516382F427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938FEA77-FCE7-4DA5-A4EB-F2516382F427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938FEA77-FCE7-4DA5-A4EB-F2516382F427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938FEA77-FCE7-4DA5-A4EB-F2516382F427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{984986C7-0510-45DC-9CAF-767CA2716CBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{984986C7-0510-45DC-9CAF-767CA2716CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{984986C7-0510-45DC-9CAF-767CA2716CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{984986C7-0510-45DC-9CAF-767CA2716CBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
