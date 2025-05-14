@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.MongoDB.Driver" Version="9.2.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
