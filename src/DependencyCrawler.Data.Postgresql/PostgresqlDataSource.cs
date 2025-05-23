@@ -1,5 +1,7 @@
 ﻿using DependencyCrawler.DataCore.DataAccess;
 using DependencyCrawler.DataCore.ValueAccess;
+using DependencyCrawler.Framework;
+using Microsoft.EntityFrameworkCore;
 
 namespace DependencyCrawler.Data.Postgresql;
 
@@ -31,13 +33,10 @@ internal class PostgresqlDataSource(DependencyCrawlerContext dependencyCrawlerCo
 
 	public async Task Load()
 	{
-		foreach (var serializedDataCore in dependencyCrawlerContext.SerializedDataCores)
+		var serializedDataCores = await dependencyCrawlerContext.SerializedDataCores.Select(x => DataCoreDTO.Deserialize(x.Payload)).NotNull().ToListAsync();
+		foreach (var serializedDataCore in serializedDataCores)
 		{
-			var dataCoreDTO = DataCoreDTO.Deserialize(serializedDataCore.Payload);
-			if (dataCoreDTO is not null)
-			{
-				dataCoreProvider.GetOrCreateDataCore(dataCoreDTO);
-			}
+			dataCoreProvider.GetOrCreateDataCore(serializedDataCore);
 		}
 	}
 

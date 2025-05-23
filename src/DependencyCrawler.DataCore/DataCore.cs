@@ -26,8 +26,8 @@ internal partial class DataCoreProvider
 			_dataCoreProvider._dataCores.TryAdd(Id, this);
 		}
 
-		public IReadOnlyDictionary<string, IValueModule> ModuleValues => new ReadOnlyDictionaryWrapper<string, IValueModule, IModule>(_modules);
-		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => new ReadOnlyDictionaryWrapper<string, IReadOnlyModule, IModule>(_modules);
+		public IReadOnlyDictionary<string, IValueModule> ModuleValues => new ReadOnlyDictionaryWrapper<string, IValueModule, IModule>(_modules.AsReadOnly());
+		public IReadOnlyDictionary<string, IReadOnlyModule> ModulesReadOnly => new ReadOnlyDictionaryWrapper<string, IReadOnlyModule, IModule>(_modules.AsReadOnly());
 
 		public Guid Id { get; }
 		public IDataCoreProvider DataCoreProvider => _dataCoreProvider;

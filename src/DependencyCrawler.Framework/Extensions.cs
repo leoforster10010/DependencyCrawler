@@ -116,4 +116,9 @@ public static class Extensions
 
 		return app;
 	}
+
+	public static IQueryable<T> NotNull<T>(this IQueryable<T?> queryable) where T : class
+	{
+		return queryable.Where(e => e != null)!;
+	}
 }

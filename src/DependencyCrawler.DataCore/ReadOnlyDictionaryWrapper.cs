@@ -2,7 +2,7 @@
 
 namespace DependencyCrawler.DataCore;
 
-public class ReadOnlyDictionaryWrapper<TKey, TValue, TWrappedValue>(IDictionary<TKey, TWrappedValue> dictionary) : IReadOnlyDictionary<TKey, TValue>
+public class ReadOnlyDictionaryWrapper<TKey, TValue, TWrappedValue>(IReadOnlyDictionary<TKey, TWrappedValue> dictionary) : IReadOnlyDictionary<TKey, TValue>
 	where TWrappedValue : TValue
 {
 	public TValue this[TKey key] => dictionary[key];

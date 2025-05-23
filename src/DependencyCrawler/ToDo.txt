@@ -2,6 +2,11 @@
 
 - RODict covariance: https://stackoverflow.com/questions/13593900/how-to-get-around-lack-of-covariance-with-ireadonlydictionary
 
+Evaluation:
+- redundant deps:
+    - set of all deps rec per module
+    - impl Equals + GetHashCode
+
 LoadProcess:
 - recognize versions
 - module types: not found
@@ -10,6 +15,7 @@ LoadProcess:
 DataDiscovery:
 - add gRPC server + client
 - add gRPC to aspire
+- add random graph for testing
 
 DataCore:
 - name datacore
