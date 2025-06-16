@@ -12,16 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.0" />
-    <PackageReference Include="Aspire.Hosting.MongoDB" Version="9.3.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.MongoDB" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DependencyCrawler.BlazorClient.Server\DependencyCrawler.BlazorClient.Server.csproj" />
     <ProjectReference Include="..\DependencyCrawler.Data.Postgresql.MigrationService\DependencyCrawler.Data.Postgresql.MigrationService.csproj" />
     <ProjectReference Include="..\DependencyCrawler.DataDiscovery.CSharp.REST\DependencyCrawler.DataDiscovery.CSharp.REST.csproj" />
-    <ProjectReference Include="..\DependencyCrawler.Framework\DependencyCrawler.Framework.csproj"   IsAspireProjectResource="false"/>
+    <ProjectReference Include="..\DependencyCrawler.Framework\DependencyCrawler.Framework.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>
