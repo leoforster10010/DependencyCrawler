@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.MongoDB.Driver" Version="9.4.1" />
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1" />
+  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
+  <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0" />
+  <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.8" />
+  <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.1" />
+  <PackageReference Include="MudBlazor" Version="8.11.0" />
     <ProjectReference Include="..\DependencyCrawler.BlazorClient\DependencyCrawler.BlazorClient.csproj" />
     <ProjectReference Include="..\DependencyCrawler.Data.Postgresql\DependencyCrawler.Data.Postgresql.csproj" />
     <ProjectReference Include="..\DependencyCrawler.DataDiscovery.CSharp.RESTClient\DependencyCrawler.DataDiscovery.CSharp.RESTClient.csproj" />

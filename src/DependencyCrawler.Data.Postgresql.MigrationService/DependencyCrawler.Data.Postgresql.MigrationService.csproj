@@ -8,14 +8,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.8" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1" />
+      <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.1" />
       <ProjectReference Include="..\DependencyCrawler.Data.Postgresql\DependencyCrawler.Data.Postgresql.csproj" />
     </ItemGroup>
 </Project>
