@@ -7,12 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.8" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
+      <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.2" />
       <ProjectReference Include="..\DependencyCrawler.DataCore.DataAccess\DependencyCrawler.DataCore.DataAccess.csproj" />
       <ProjectReference Include="..\DependencyCrawler.Framework\DependencyCrawler.Framework.csproj" />
     </ItemGroup>
